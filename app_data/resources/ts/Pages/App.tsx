@@ -1,10 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+
+import Top from './Top';
+import Register from './Auth/Register';
+import Login from './Auth/Login';
 
 const App = () => {
     return (
         <>
-            <h1>Yarukeep</h1>
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/" element={<Top />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/login" element={<Login />} />
+                </Routes>
+            </BrowserRouter>
         </>
     );
 };
