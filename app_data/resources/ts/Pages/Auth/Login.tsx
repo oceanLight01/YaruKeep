@@ -1,20 +1,45 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 type LoginForm = {
     email: string;
     password: string;
-    rememberMe: boolean;
+    remember: boolean;
 };
 
 const Login = () => {
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm<LoginForm>({ mode: 'onBlur' });
-    const onSubmit: SubmitHandler<LoginForm> = (data) => console.log(data);
+    const navigate = useNavigate();
+
+    const onSubmit: SubmitHandler<LoginForm> = (data) => {
+        setIsLoading(true);
+
+        axios
+            .get('/sanctum/scrf-cookie')
+            .then(() => {
+                axios
+                    .post('/api/login', data)
+                    .then(() => {
+                        navigate('/home');
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                    });
+            })
+            .catch((error) => {
+                console.error(error);
+            })
+            .finally(() => {
+                setIsLoading(false);
+            });
+    };
 
     return (
         <>
@@ -32,9 +57,9 @@ const Login = () => {
                 </div>
                 <div>
                     <label>ログイン状態を保存する</label>
-                    <input type="checkbox" {...register('rememberMe', {})} />
+                    <input type="checkbox" {...register('remember', {})} />
                 </div>
-                <input type="submit" value="ログイン" />
+                <input type="submit" value="ログイン" disabled={isLoading} />
             </form>
             <Link to="/register">登録ページ</Link>
         </>

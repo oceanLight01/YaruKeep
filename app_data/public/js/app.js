@@ -2085,6 +2085,8 @@ var Register_1 = __importDefault(__webpack_require__(/*! ./Auth/Register */ "./r
 
 var Login_1 = __importDefault(__webpack_require__(/*! ./Auth/Login */ "./resources/ts/Pages/Auth/Login.tsx"));
 
+var Home_1 = __importDefault(__webpack_require__(/*! ./Home */ "./resources/ts/Pages/Home.tsx"));
+
 var App = function App() {
   return react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement(react_router_dom_1.BrowserRouter, null, react_1["default"].createElement(react_router_dom_1.Routes, null, react_1["default"].createElement(react_router_dom_1.Route, {
     path: "/",
@@ -2095,6 +2097,9 @@ var App = function App() {
   }), react_1["default"].createElement(react_router_dom_1.Route, {
     path: "/login",
     element: react_1["default"].createElement(Login_1["default"], null)
+  }), react_1["default"].createElement(react_router_dom_1.Route, {
+    path: "/home",
+    element: react_1["default"].createElement(Home_1["default"], null)
   }))));
 };
 
@@ -2131,6 +2136,40 @@ var __assign = this && this.__assign || function () {
   return __assign.apply(this, arguments);
 };
 
+var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  Object.defineProperty(o, k2, {
+    enumerable: true,
+    get: function get() {
+      return m[k];
+    }
+  });
+} : function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+});
+
+var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+  Object.defineProperty(o, "default", {
+    enumerable: true,
+    value: v
+  });
+} : function (o, v) {
+  o["default"] = v;
+});
+
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  }
+
+  __setModuleDefault(result, mod);
+
+  return result;
+};
+
 var __importDefault = this && this.__importDefault || function (mod) {
   return mod && mod.__esModule ? mod : {
     "default": mod
@@ -2141,22 +2180,41 @@ Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
 
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 
 var react_hook_form_1 = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.cjs.js");
 
 var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
 
+var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
+
 var Login = function Login() {
-  var _a = (0, react_hook_form_1.useForm)({
+  var _a = (0, react_1.useState)(false),
+      isLoading = _a[0],
+      setIsLoading = _a[1];
+
+  var _b = (0, react_hook_form_1.useForm)({
     mode: 'onBlur'
   }),
-      register = _a.register,
-      handleSubmit = _a.handleSubmit,
-      errors = _a.formState.errors;
+      register = _b.register,
+      handleSubmit = _b.handleSubmit,
+      errors = _b.formState.errors;
+
+  var navigate = (0, react_router_dom_1.useNavigate)();
 
   var onSubmit = function onSubmit(data) {
-    return console.log(data);
+    setIsLoading(true);
+    axios_1["default"].get('/sanctum/scrf-cookie').then(function () {
+      axios_1["default"].post('/api/login', data).then(function () {
+        navigate('/home');
+      })["catch"](function (error) {
+        console.error(error);
+      });
+    })["catch"](function (error) {
+      console.error(error);
+    })["finally"](function () {
+      setIsLoading(false);
+    });
   };
 
   return react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("h1", null, "\u30ED\u30B0\u30A4\u30F3"), react_1["default"].createElement("form", {
@@ -2167,9 +2225,10 @@ var Login = function Login() {
     required: true
   })))), react_1["default"].createElement("div", null, react_1["default"].createElement("label", null, "\u30ED\u30B0\u30A4\u30F3\u72B6\u614B\u3092\u4FDD\u5B58\u3059\u308B"), react_1["default"].createElement("input", __assign({
     type: "checkbox"
-  }, register('rememberMe', {})))), react_1["default"].createElement("input", {
+  }, register('remember', {})))), react_1["default"].createElement("input", {
     type: "submit",
-    value: "\u30ED\u30B0\u30A4\u30F3"
+    value: "\u30ED\u30B0\u30A4\u30F3",
+    disabled: isLoading
   })), react_1["default"].createElement(react_router_dom_1.Link, {
     to: "/register"
   }, "\u767B\u9332\u30DA\u30FC\u30B8"));
@@ -2209,6 +2268,35 @@ var Register = function Register() {
 };
 
 exports["default"] = Register;
+
+/***/ }),
+
+/***/ "./resources/ts/Pages/Home.tsx":
+/*!*************************************!*\
+  !*** ./resources/ts/Pages/Home.tsx ***!
+  \*************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var Home = function Home() {
+  return react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("h1", null, "\u30DB\u30FC\u30E0\u753B\u9762"));
+};
+
+exports["default"] = Home;
 
 /***/ }),
 
