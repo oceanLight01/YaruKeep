@@ -1,13 +1,14 @@
+import axios from 'axios';
 import React, { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 type RegisterForm = {
     name: string;
-    screenName: string;
+    screen_name: string;
     email: string;
     password: string;
-    passwordConfirmation: string;
+    password_confirmation: string;
 };
 
 const Register = () => {
@@ -18,7 +19,23 @@ const Register = () => {
         formState: { errors },
         getValues,
     } = useForm<RegisterForm>({ mode: 'onBlur' });
-    const onSubmit: SubmitHandler<RegisterForm> = (data) => console.log(data);
+    const navigate = useNavigate();
+
+    const onSubmit: SubmitHandler<RegisterForm> = (data) => {
+        setIsLoading(true);
+
+        axios
+            .post('/api/register', data)
+            .then(() => {
+                navigate('/home');
+            })
+            .catch((error) => {
+                console.error(error);
+            })
+            .finally(() => {
+                setIsLoading(false);
+            });
+    };
 
     return (
         <>
@@ -33,26 +50,26 @@ const Register = () => {
                     <input
                         type="text"
                         maxLength={30}
-                        autoComplete="off"
+                        autoComplete="on"
                         {...register('name', { required: true, maxLength: 30 })}
                     />
                 </div>
                 <div>
-                    {errors.screenName?.type === 'required' && (
+                    {errors.screen_name?.type === 'required' && (
                         <p>アカウントIDを入力してください。</p>
                     )}
-                    {errors.screenName?.type === 'maxLength' && (
+                    {errors.screen_name?.type === 'maxLength' && (
                         <p>アカウントIDは20文字以下で入力してください。</p>
                     )}
-                    {errors.screenName?.type === 'pattern' && (
+                    {errors.screen_name?.type === 'pattern' && (
                         <p>アカウントIDは半角英数字のみ使用できます。</p>
                     )}
                     <label>アカウントID</label>
                     <input
                         type="text"
                         maxLength={20}
-                        autoComplete="off"
-                        {...register('screenName', {
+                        autoComplete="on"
+                        {...register('screen_name', {
                             required: true,
                             maxLength: 20,
                             pattern: /^(?=.*?[a-zA-Z\d])[a-zA-Z\d]+$/,
@@ -109,10 +126,10 @@ const Register = () => {
                 </div>
 
                 <div>
-                    {errors.passwordConfirmation?.type === 'required' && (
+                    {errors.password_confirmation?.type === 'required' && (
                         <p>確認用パスワードを入力してください。</p>
                     )}
-                    {errors.passwordConfirmation?.type === 'validate' && (
+                    {errors.password_confirmation?.type === 'validate' && (
                         <p>パスワードが一致しません。</p>
                     )}
                     <label>パスワード確認</label>
@@ -120,13 +137,13 @@ const Register = () => {
                         type="password"
                         autoComplete="off"
                         maxLength={64}
-                        {...register('passwordConfirmation', {
+                        {...register('password_confirmation', {
                             required: true,
                             validate: (value) => value === getValues('password'),
                         })}
                     />
                 </div>
-                <input type="submit" value="ログイン" disabled={isLoading} />
+                <input type="submit" value="登録" disabled={isLoading} />
             </form>
             <Link to="/login">ログインページ</Link>
         </>

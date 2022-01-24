@@ -2297,9 +2297,17 @@ var __importStar = this && this.__importStar || function (mod) {
   return result;
 };
 
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
+
+var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
 
 var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 
@@ -2322,8 +2330,17 @@ var Register = function Register() {
       errors = _r.formState.errors,
       getValues = _r.getValues;
 
+  var navigate = (0, react_router_dom_1.useNavigate)();
+
   var onSubmit = function onSubmit(data) {
-    return console.log(data);
+    setIsLoading(true);
+    axios_1["default"].post('/api/register', data).then(function () {
+      navigate('/home');
+    })["catch"](function (error) {
+      console.error(error);
+    })["finally"](function () {
+      setIsLoading(false);
+    });
   };
 
   return react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("h1", null, "\u30A2\u30AB\u30A6\u30F3\u30C8\u767B\u9332"), react_1["default"].createElement("form", {
@@ -2331,15 +2348,15 @@ var Register = function Register() {
   }, react_1["default"].createElement("div", null, ((_a = errors.name) === null || _a === void 0 ? void 0 : _a.type) === 'maxLength' && react_1["default"].createElement("p", null, "\u30A2\u30AB\u30A6\u30F3\u30C8\u540D\u306F30\u6587\u5B57\u4EE5\u4E0B\u3067\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), ((_b = errors.name) === null || _b === void 0 ? void 0 : _b.type) === 'required' && react_1["default"].createElement("p", null, "\u30A2\u30AB\u30A6\u30F3\u30C8\u540D\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), react_1["default"].createElement("label", null, "\u30A2\u30AB\u30A6\u30F3\u30C8\u540D"), react_1["default"].createElement("input", __assign({
     type: "text",
     maxLength: 30,
-    autoComplete: "off"
+    autoComplete: "on"
   }, register('name', {
     required: true,
     maxLength: 30
-  })))), react_1["default"].createElement("div", null, ((_c = errors.screenName) === null || _c === void 0 ? void 0 : _c.type) === 'required' && react_1["default"].createElement("p", null, "\u30A2\u30AB\u30A6\u30F3\u30C8ID\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), ((_d = errors.screenName) === null || _d === void 0 ? void 0 : _d.type) === 'maxLength' && react_1["default"].createElement("p", null, "\u30A2\u30AB\u30A6\u30F3\u30C8ID\u306F20\u6587\u5B57\u4EE5\u4E0B\u3067\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), ((_e = errors.screenName) === null || _e === void 0 ? void 0 : _e.type) === 'pattern' && react_1["default"].createElement("p", null, "\u30A2\u30AB\u30A6\u30F3\u30C8ID\u306F\u534A\u89D2\u82F1\u6570\u5B57\u306E\u307F\u4F7F\u7528\u3067\u304D\u307E\u3059\u3002"), react_1["default"].createElement("label", null, "\u30A2\u30AB\u30A6\u30F3\u30C8ID"), react_1["default"].createElement("input", __assign({
+  })))), react_1["default"].createElement("div", null, ((_c = errors.screen_name) === null || _c === void 0 ? void 0 : _c.type) === 'required' && react_1["default"].createElement("p", null, "\u30A2\u30AB\u30A6\u30F3\u30C8ID\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), ((_d = errors.screen_name) === null || _d === void 0 ? void 0 : _d.type) === 'maxLength' && react_1["default"].createElement("p", null, "\u30A2\u30AB\u30A6\u30F3\u30C8ID\u306F20\u6587\u5B57\u4EE5\u4E0B\u3067\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), ((_e = errors.screen_name) === null || _e === void 0 ? void 0 : _e.type) === 'pattern' && react_1["default"].createElement("p", null, "\u30A2\u30AB\u30A6\u30F3\u30C8ID\u306F\u534A\u89D2\u82F1\u6570\u5B57\u306E\u307F\u4F7F\u7528\u3067\u304D\u307E\u3059\u3002"), react_1["default"].createElement("label", null, "\u30A2\u30AB\u30A6\u30F3\u30C8ID"), react_1["default"].createElement("input", __assign({
     type: "text",
     maxLength: 20,
-    autoComplete: "off"
-  }, register('screenName', {
+    autoComplete: "on"
+  }, register('screen_name', {
     required: true,
     maxLength: 20,
     pattern: /^(?=.*?[a-zA-Z\d])[a-zA-Z\d]+$/
@@ -2360,18 +2377,18 @@ var Register = function Register() {
     minLength: 8,
     maxLength: 64,
     pattern: /^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\d)[a-zA-Z\d]+$/
-  })))), react_1["default"].createElement("div", null, ((_o = errors.passwordConfirmation) === null || _o === void 0 ? void 0 : _o.type) === 'required' && react_1["default"].createElement("p", null, "\u78BA\u8A8D\u7528\u30D1\u30B9\u30EF\u30FC\u30C9\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), ((_p = errors.passwordConfirmation) === null || _p === void 0 ? void 0 : _p.type) === 'validate' && react_1["default"].createElement("p", null, "\u30D1\u30B9\u30EF\u30FC\u30C9\u304C\u4E00\u81F4\u3057\u307E\u305B\u3093\u3002"), react_1["default"].createElement("label", null, "\u30D1\u30B9\u30EF\u30FC\u30C9\u78BA\u8A8D"), react_1["default"].createElement("input", __assign({
+  })))), react_1["default"].createElement("div", null, ((_o = errors.password_confirmation) === null || _o === void 0 ? void 0 : _o.type) === 'required' && react_1["default"].createElement("p", null, "\u78BA\u8A8D\u7528\u30D1\u30B9\u30EF\u30FC\u30C9\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), ((_p = errors.password_confirmation) === null || _p === void 0 ? void 0 : _p.type) === 'validate' && react_1["default"].createElement("p", null, "\u30D1\u30B9\u30EF\u30FC\u30C9\u304C\u4E00\u81F4\u3057\u307E\u305B\u3093\u3002"), react_1["default"].createElement("label", null, "\u30D1\u30B9\u30EF\u30FC\u30C9\u78BA\u8A8D"), react_1["default"].createElement("input", __assign({
     type: "password",
     autoComplete: "off",
     maxLength: 64
-  }, register('passwordConfirmation', {
+  }, register('password_confirmation', {
     required: true,
     validate: function validate(value) {
       return value === getValues('password');
     }
   })))), react_1["default"].createElement("input", {
     type: "submit",
-    value: "\u30ED\u30B0\u30A4\u30F3",
+    value: "\u767B\u9332",
     disabled: isLoading
   })), react_1["default"].createElement(react_router_dom_1.Link, {
     to: "/login"
