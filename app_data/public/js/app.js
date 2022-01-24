@@ -2054,6 +2054,51 @@ module.exports = {
 
 /***/ }),
 
+/***/ "./resources/ts/Components/atoms/LogoutButton.tsx":
+/*!********************************************************!*\
+  !*** ./resources/ts/Components/atoms/LogoutButton.tsx ***!
+  \********************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
+
+var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
+
+var LogoutButton = function LogoutButton() {
+  var navigate = (0, react_router_dom_1.useNavigate)();
+
+  var logout = function logout() {
+    axios_1["default"].post('/api/logout').then(function () {
+      navigate('/login');
+    })["catch"](function (error) {
+      console.log(error);
+    });
+  };
+
+  return react_1["default"].createElement("button", {
+    onClick: logout
+  }, "\u30ED\u30B0\u30A2\u30A6\u30C8");
+};
+
+exports["default"] = LogoutButton;
+
+/***/ }),
+
 /***/ "./resources/ts/Pages/App.tsx":
 /*!************************************!*\
   !*** ./resources/ts/Pages/App.tsx ***!
@@ -2420,8 +2465,10 @@ Object.defineProperty(exports, "__esModule", ({
 
 var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 
+var LogoutButton_1 = __importDefault(__webpack_require__(/*! ../Components/atoms/LogoutButton */ "./resources/ts/Components/atoms/LogoutButton.tsx"));
+
 var Home = function Home() {
-  return react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("h1", null, "\u30DB\u30FC\u30E0\u753B\u9762"));
+  return react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("h1", null, "\u30DB\u30FC\u30E0\u753B\u9762"), react_1["default"].createElement(LogoutButton_1["default"], null));
 };
 
 exports["default"] = Home;
