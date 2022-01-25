@@ -2054,6 +2054,69 @@ module.exports = {
 
 /***/ }),
 
+/***/ "./resources/ts/Components/Authenticate.tsx":
+/*!**************************************************!*\
+  !*** ./resources/ts/Components/Authenticate.tsx ***!
+  \**************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.PublicRoute = exports.PrivateRoute = void 0;
+
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
+/**
+ * ユーザが認証されている状態のときのみに表示するコンポーネントを返す
+ * 認証されていなければ/loginへリダイレクトする
+ *
+ * @param {JSX.Element}children 認証状態のときに表示する子コンポーネント
+ * @param {boolean} auth 認証状態の真偽値
+ */
+
+
+var PrivateRoute = function PrivateRoute(_a) {
+  var children = _a.children,
+      auth = _a.auth;
+  return auth ? children : react_1["default"].createElement(react_router_dom_1.Navigate, {
+    to: "/login",
+    replace: true
+  });
+};
+
+exports.PrivateRoute = PrivateRoute;
+/**
+ * ユーザが認証されていない状態のときのみに表示するコンポーネントを返す
+ * 認証されていれば/homeへリダイレクトする
+ *
+ * @param children 認証されていないときに表示する子コンポーネント
+ * @param {boolean} auth 認証状態の真偽値
+ */
+
+var PublicRoute = function PublicRoute(_a) {
+  var children = _a.children,
+      auth = _a.auth;
+  return auth ? react_1["default"].createElement(react_router_dom_1.Navigate, {
+    to: "/home",
+    replace: true
+  }) : children;
+};
+
+exports.PublicRoute = PublicRoute;
+
+/***/ }),
+
 /***/ "./resources/ts/Components/atoms/LogoutButton.tsx":
 /*!********************************************************!*\
   !*** ./resources/ts/Components/atoms/LogoutButton.tsx ***!
@@ -2108,6 +2171,40 @@ exports["default"] = LogoutButton;
 "use strict";
 
 
+var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  Object.defineProperty(o, k2, {
+    enumerable: true,
+    get: function get() {
+      return m[k];
+    }
+  });
+} : function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+});
+
+var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+  Object.defineProperty(o, "default", {
+    enumerable: true,
+    value: v
+  });
+} : function (o, v) {
+  o["default"] = v;
+});
+
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  }
+
+  __setModuleDefault(result, mod);
+
+  return result;
+};
+
 var __importDefault = this && this.__importDefault || function (mod) {
   return mod && mod.__esModule ? mod : {
     "default": mod
@@ -2118,11 +2215,13 @@ Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
 
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 
 var react_dom_1 = __importDefault(__webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js"));
 
 var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
+
+var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
 
 var Top_1 = __importDefault(__webpack_require__(/*! ./Top */ "./resources/ts/Pages/Top.tsx"));
 
@@ -2132,19 +2231,44 @@ var Login_1 = __importDefault(__webpack_require__(/*! ./Auth/Login */ "./resourc
 
 var Home_1 = __importDefault(__webpack_require__(/*! ./Home */ "./resources/ts/Pages/Home.tsx"));
 
+var Authenticate_1 = __webpack_require__(/*! ../Components/Authenticate */ "./resources/ts/Components/Authenticate.tsx");
+
 var App = function App() {
+  var _a = (0, react_1.useState)(false),
+      isLogin = _a[0],
+      setIsLogin = _a[1];
+
+  (0, react_1.useEffect)(function () {
+    axios_1["default"].get('/api/user').then(function (res) {
+      if (res.data.isLogin) {
+        setIsLogin(true);
+      } else {
+        setIsLogin(false);
+      }
+    })["catch"](function (error) {
+      console.log(error);
+    });
+  }, []);
   return react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement(react_router_dom_1.BrowserRouter, null, react_1["default"].createElement(react_router_dom_1.Routes, null, react_1["default"].createElement(react_router_dom_1.Route, {
     path: "/",
-    element: react_1["default"].createElement(Top_1["default"], null)
-  }), react_1["default"].createElement(react_router_dom_1.Route, {
-    path: "/register",
-    element: react_1["default"].createElement(Register_1["default"], null)
+    element: react_1["default"].createElement(Authenticate_1.PublicRoute, {
+      auth: isLogin
+    }, react_1["default"].createElement(Top_1["default"], null))
   }), react_1["default"].createElement(react_router_dom_1.Route, {
     path: "/login",
-    element: react_1["default"].createElement(Login_1["default"], null)
+    element: react_1["default"].createElement(Authenticate_1.PublicRoute, {
+      auth: isLogin
+    }, react_1["default"].createElement(Login_1["default"], null))
+  }), react_1["default"].createElement(react_router_dom_1.Route, {
+    path: "/register",
+    element: react_1["default"].createElement(Authenticate_1.PublicRoute, {
+      auth: isLogin
+    }, react_1["default"].createElement(Register_1["default"], null))
   }), react_1["default"].createElement(react_router_dom_1.Route, {
     path: "/home",
-    element: react_1["default"].createElement(Home_1["default"], null)
+    element: react_1["default"].createElement(Authenticate_1.PrivateRoute, {
+      auth: isLogin
+    }, react_1["default"].createElement(Home_1["default"], null))
   }))));
 };
 
