@@ -1,24 +1,26 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-
-import Loading from './../Components/Loading';
-import Top from './Top';
-import Register from './Auth/Register';
-import Login from './Auth/Login';
-import EmailVerified from './Auth/EmailVerified';
-import Home from './Home';
 import ProvideAuth, {
     EmailVerifiedRoute,
     PrivateRoute,
     PublicRoute,
 } from '../Components/Authenticate';
 
+import Loading from './../Components/Loading';
+import Header from '../Components/Header';
+import Top from './Top';
+import Login from './Auth/Login';
+import Register from './Auth/Register';
+import EmailVerified from './Auth/EmailVerified';
+import Home from './Home';
+
 const App = () => {
     return (
         <ProvideAuth>
             <Loading>
                 <BrowserRouter>
+                    <Header />
                     <Routes>
                         <Route
                             path="/"

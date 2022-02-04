@@ -2420,6 +2420,44 @@ exports.PublicRoute = PublicRoute;
 
 /***/ }),
 
+/***/ "./resources/ts/Components/Header.tsx":
+/*!********************************************!*\
+  !*** ./resources/ts/Components/Header.tsx ***!
+  \********************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
+
+var Authenticate_1 = __webpack_require__(/*! ./Authenticate */ "./resources/ts/Components/Authenticate.tsx");
+
+var Header = function Header() {
+  var _a;
+
+  var auth = (0, Authenticate_1.useAuth)();
+  return react_1["default"].createElement("header", null, react_1["default"].createElement(react_router_dom_1.Link, {
+    to: "/"
+  }, "Yarukeep"), react_1["default"].createElement("p", null, (_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.name));
+};
+
+exports["default"] = Header;
+
+/***/ }),
+
 /***/ "./resources/ts/Components/Loading.tsx":
 /*!*********************************************!*\
   !*** ./resources/ts/Components/Loading.tsx ***!
@@ -2560,22 +2598,24 @@ var react_dom_1 = __importDefault(__webpack_require__(/*! react-dom */ "./node_m
 
 var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
 
+var Authenticate_1 = __importStar(__webpack_require__(/*! ../Components/Authenticate */ "./resources/ts/Components/Authenticate.tsx"));
+
 var Loading_1 = __importDefault(__webpack_require__(/*! ./../Components/Loading */ "./resources/ts/Components/Loading.tsx"));
+
+var Header_1 = __importDefault(__webpack_require__(/*! ../Components/Header */ "./resources/ts/Components/Header.tsx"));
 
 var Top_1 = __importDefault(__webpack_require__(/*! ./Top */ "./resources/ts/Pages/Top.tsx"));
 
-var Register_1 = __importDefault(__webpack_require__(/*! ./Auth/Register */ "./resources/ts/Pages/Auth/Register.tsx"));
-
 var Login_1 = __importDefault(__webpack_require__(/*! ./Auth/Login */ "./resources/ts/Pages/Auth/Login.tsx"));
+
+var Register_1 = __importDefault(__webpack_require__(/*! ./Auth/Register */ "./resources/ts/Pages/Auth/Register.tsx"));
 
 var EmailVerified_1 = __importDefault(__webpack_require__(/*! ./Auth/EmailVerified */ "./resources/ts/Pages/Auth/EmailVerified.tsx"));
 
 var Home_1 = __importDefault(__webpack_require__(/*! ./Home */ "./resources/ts/Pages/Home.tsx"));
 
-var Authenticate_1 = __importStar(__webpack_require__(/*! ../Components/Authenticate */ "./resources/ts/Components/Authenticate.tsx"));
-
 var App = function App() {
-  return react_1["default"].createElement(Authenticate_1["default"], null, react_1["default"].createElement(Loading_1["default"], null, react_1["default"].createElement(react_router_dom_1.BrowserRouter, null, react_1["default"].createElement(react_router_dom_1.Routes, null, react_1["default"].createElement(react_router_dom_1.Route, {
+  return react_1["default"].createElement(Authenticate_1["default"], null, react_1["default"].createElement(Loading_1["default"], null, react_1["default"].createElement(react_router_dom_1.BrowserRouter, null, react_1["default"].createElement(Header_1["default"], null), react_1["default"].createElement(react_router_dom_1.Routes, null, react_1["default"].createElement(react_router_dom_1.Route, {
     path: "/",
     element: react_1["default"].createElement(Authenticate_1.PublicRoute, null, react_1["default"].createElement(Top_1["default"], null))
   }), react_1["default"].createElement(react_router_dom_1.Route, {

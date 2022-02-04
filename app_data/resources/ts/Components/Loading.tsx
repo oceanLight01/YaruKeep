@@ -2,7 +2,7 @@ import React from 'react';
 import { useAuth } from './Authenticate';
 
 type Props = {
-    children: JSX.Element;
+    children: React.ReactNode;
 };
 
 const Loading = ({ children }: Props) => {
