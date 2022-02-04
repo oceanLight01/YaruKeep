@@ -2063,6 +2063,183 @@ module.exports = {
 "use strict";
 
 
+var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  Object.defineProperty(o, k2, {
+    enumerable: true,
+    get: function get() {
+      return m[k];
+    }
+  });
+} : function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+});
+
+var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+  Object.defineProperty(o, "default", {
+    enumerable: true,
+    value: v
+  });
+} : function (o, v) {
+  o["default"] = v;
+});
+
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  }
+
+  __setModuleDefault(result, mod);
+
+  return result;
+};
+
+var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+var __generator = this && this.__generator || function (thisArg, body) {
+  var _ = {
+    label: 0,
+    sent: function sent() {
+      if (t[0] & 1) throw t[1];
+      return t[1];
+    },
+    trys: [],
+    ops: []
+  },
+      f,
+      y,
+      t,
+      g;
+  return g = {
+    next: verb(0),
+    "throw": verb(1),
+    "return": verb(2)
+  }, typeof Symbol === "function" && (g[Symbol.iterator] = function () {
+    return this;
+  }), g;
+
+  function verb(n) {
+    return function (v) {
+      return step([n, v]);
+    };
+  }
+
+  function step(op) {
+    if (f) throw new TypeError("Generator is already executing.");
+
+    while (_) {
+      try {
+        if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+        if (y = 0, t) op = [op[0] & 2, t.value];
+
+        switch (op[0]) {
+          case 0:
+          case 1:
+            t = op;
+            break;
+
+          case 4:
+            _.label++;
+            return {
+              value: op[1],
+              done: false
+            };
+
+          case 5:
+            _.label++;
+            y = op[1];
+            op = [0];
+            continue;
+
+          case 7:
+            op = _.ops.pop();
+
+            _.trys.pop();
+
+            continue;
+
+          default:
+            if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) {
+              _ = 0;
+              continue;
+            }
+
+            if (op[0] === 3 && (!t || op[1] > t[0] && op[1] < t[3])) {
+              _.label = op[1];
+              break;
+            }
+
+            if (op[0] === 6 && _.label < t[1]) {
+              _.label = t[1];
+              t = op;
+              break;
+            }
+
+            if (t && _.label < t[2]) {
+              _.label = t[2];
+
+              _.ops.push(op);
+
+              break;
+            }
+
+            if (t[2]) _.ops.pop();
+
+            _.trys.pop();
+
+            continue;
+        }
+
+        op = body.call(thisArg, _);
+      } catch (e) {
+        op = [6, e];
+        y = 0;
+      } finally {
+        f = t = 0;
+      }
+    }
+
+    if (op[0] & 5) throw op[1];
+    return {
+      value: op[0] ? op[1] : void 0,
+      done: true
+    };
+  }
+};
+
 var __importDefault = this && this.__importDefault || function (mod) {
   return mod && mod.__esModule ? mod : {
     "default": mod
@@ -2072,27 +2249,126 @@ var __importDefault = this && this.__importDefault || function (mod) {
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.PublicRoute = exports.PrivateRoute = void 0;
+exports.PublicRoute = exports.PrivateRoute = exports.useAuth = void 0;
 
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
+
+var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 
 var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
+/**
+ * 認証に関するコンテキストフック
+ */
+
+
+var AuthContext = (0, react_1.createContext)(null);
+
+var useAuth = function useAuth() {
+  return (0, react_1.useContext)(AuthContext);
+};
+
+exports.useAuth = useAuth;
+
+var ProvideAuth = function ProvideAuth(_a) {
+  var children = _a.children;
+  var auth = useProvideAuth();
+  return react_1["default"].createElement(AuthContext.Provider, {
+    value: auth
+  }, children);
+};
+
+exports["default"] = ProvideAuth;
+
+var useProvideAuth = function useProvideAuth() {
+  var _a = (0, react_1.useState)(null),
+      userData = _a[0],
+      setUserData = _a[1];
+
+  var _b = (0, react_1.useState)(false),
+      isRender = _b[0],
+      setIsRender = _b[1];
+
+  var getUser = function getUser() {
+    axios_1["default"].get('/api/user').then(function (res) {
+      setUserData(res.data.data.user);
+    })["catch"](function (error) {
+      setUserData(null);
+      console.error(error);
+    })["finally"](function () {
+      setIsRender(!isRender);
+    });
+  };
+
+  var register = function register(registerData) {
+    return axios_1["default"].post('/api/register', registerData).then(function () {
+      getUser();
+    })["catch"](function (error) {
+      console.error(error);
+    });
+  };
+
+  var login = function login(loginData) {
+    return __awaiter(void 0, void 0, void 0, function () {
+      return __generator(this, function (_a) {
+        switch (_a.label) {
+          case 0:
+            return [4
+            /*yield*/
+            , axios_1["default"].post('/api/login', loginData)["catch"](function (error) {
+              return console.log(error);
+            })];
+
+          case 1:
+            _a.sent();
+
+            return [2
+            /*return*/
+            , axios_1["default"].get('/api/user').then(function (res) {
+              setUserData(res.data.data.user);
+            })["catch"](function (error) {
+              setUserData(null);
+              console.error(error);
+            })];
+        }
+      });
+    });
+  };
+
+  var logout = function logout() {
+    return axios_1["default"].post('/api/logout').then(function () {
+      setUserData(null);
+    })["catch"](function (error) {
+      console.error(error);
+    });
+  };
+
+  (0, react_1.useEffect)(function () {
+    getUser();
+  }, []);
+  return {
+    register: register,
+    login: login,
+    logout: logout,
+    userData: userData,
+    isRender: isRender
+  };
+};
 /**
  * ユーザが認証されている状態のときのみに表示するコンポーネントを返す
  * 認証されていなければ/loginへリダイレクトする
  *
- * @param {JSX.Element}children 認証状態のときに表示する子コンポーネント
- * @param {boolean} auth 認証状態の真偽値
+ * @param {JSX.Element} children 認証状態のときに表示する子コンポーネント
+ * @returns {(JSX.Element | Navigate)}
  */
 
 
 var PrivateRoute = function PrivateRoute(_a) {
-  var children = _a.children,
-      auth = _a.auth;
-  return auth ? children : react_1["default"].createElement(react_router_dom_1.Navigate, {
+  var children = _a.children;
+  var auth = (0, exports.useAuth)();
+  return (auth === null || auth === void 0 ? void 0 : auth.userData) === null ? react_1["default"].createElement(react_router_dom_1.Navigate, {
     to: "/login",
     replace: true
-  });
+  }) : children;
 };
 
 exports.PrivateRoute = PrivateRoute;
@@ -2100,20 +2376,53 @@ exports.PrivateRoute = PrivateRoute;
  * ユーザが認証されていない状態のときのみに表示するコンポーネントを返す
  * 認証されていれば/homeへリダイレクトする
  *
- * @param children 認証されていないときに表示する子コンポーネント
- * @param {boolean} auth 認証状態の真偽値
+ * @param children 非認証状態のときに表示する子コンポーネント
+ * @returns {(JSX.Element | Navigate)}
  */
 
 var PublicRoute = function PublicRoute(_a) {
-  var children = _a.children,
-      auth = _a.auth;
-  return auth ? react_1["default"].createElement(react_router_dom_1.Navigate, {
+  var children = _a.children;
+  var auth = (0, exports.useAuth)();
+  return (auth === null || auth === void 0 ? void 0 : auth.userData) === null ? children : react_1["default"].createElement(react_router_dom_1.Navigate, {
     to: "/home",
     replace: true
-  }) : children;
+  });
 };
 
 exports.PublicRoute = PublicRoute;
+
+/***/ }),
+
+/***/ "./resources/ts/Components/Loading.tsx":
+/*!*********************************************!*\
+  !*** ./resources/ts/Components/Loading.tsx ***!
+  \*********************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var Authenticate_1 = __webpack_require__(/*! ./Authenticate */ "./resources/ts/Components/Authenticate.tsx");
+
+var Loading = function Loading(_a) {
+  var children = _a.children;
+  var auth = (0, Authenticate_1.useAuth)();
+  return react_1["default"].createElement("div", null, (auth === null || auth === void 0 ? void 0 : auth.isRender) ? children : react_1["default"].createElement("p", null, "Loading..."));
+};
+
+exports["default"] = Loading;
 
 /***/ }),
 
@@ -2138,19 +2447,22 @@ Object.defineProperty(exports, "__esModule", ({
 
 var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 
-var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
-
 var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
+
+var Authenticate_1 = __webpack_require__(/*! ../../Components/Authenticate */ "./resources/ts/Components/Authenticate.tsx");
 
 var LogoutButton = function LogoutButton() {
   var navigate = (0, react_router_dom_1.useNavigate)();
+  var auth = (0, Authenticate_1.useAuth)();
 
   var logout = function logout() {
-    axios_1["default"].post('/api/logout').then(function () {
-      navigate('/login');
-    })["catch"](function (error) {
-      console.log(error);
-    });
+    if (window.confirm('ログアウトします。よろしいですか？')) {
+      auth === null || auth === void 0 ? void 0 : auth.logout().then(function () {
+        navigate('/login');
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    }
   };
 
   return react_1["default"].createElement("button", {
@@ -2215,13 +2527,13 @@ Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
 
-var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 
 var react_dom_1 = __importDefault(__webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js"));
 
 var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
 
-var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
+var Loading_1 = __importDefault(__webpack_require__(/*! ./../Components/Loading */ "./resources/ts/Components/Loading.tsx"));
 
 var Top_1 = __importDefault(__webpack_require__(/*! ./Top */ "./resources/ts/Pages/Top.tsx"));
 
@@ -2231,45 +2543,22 @@ var Login_1 = __importDefault(__webpack_require__(/*! ./Auth/Login */ "./resourc
 
 var Home_1 = __importDefault(__webpack_require__(/*! ./Home */ "./resources/ts/Pages/Home.tsx"));
 
-var Authenticate_1 = __webpack_require__(/*! ../Components/Authenticate */ "./resources/ts/Components/Authenticate.tsx");
+var Authenticate_1 = __importStar(__webpack_require__(/*! ../Components/Authenticate */ "./resources/ts/Components/Authenticate.tsx"));
 
 var App = function App() {
-  var _a = (0, react_1.useState)(false),
-      isLogin = _a[0],
-      setIsLogin = _a[1];
-
-  (0, react_1.useEffect)(function () {
-    axios_1["default"].get('/api/user').then(function (res) {
-      if (res.data.isLogin) {
-        setIsLogin(true);
-      } else {
-        setIsLogin(false);
-      }
-    })["catch"](function (error) {
-      console.log(error);
-    });
-  }, []);
-  return react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement(react_router_dom_1.BrowserRouter, null, react_1["default"].createElement(react_router_dom_1.Routes, null, react_1["default"].createElement(react_router_dom_1.Route, {
+  return react_1["default"].createElement(Authenticate_1["default"], null, react_1["default"].createElement(Loading_1["default"], null, react_1["default"].createElement(react_router_dom_1.BrowserRouter, null, react_1["default"].createElement(react_router_dom_1.Routes, null, react_1["default"].createElement(react_router_dom_1.Route, {
     path: "/",
-    element: react_1["default"].createElement(Authenticate_1.PublicRoute, {
-      auth: isLogin
-    }, react_1["default"].createElement(Top_1["default"], null))
+    element: react_1["default"].createElement(Authenticate_1.PublicRoute, null, react_1["default"].createElement(Top_1["default"], null))
   }), react_1["default"].createElement(react_router_dom_1.Route, {
     path: "/login",
-    element: react_1["default"].createElement(Authenticate_1.PublicRoute, {
-      auth: isLogin
-    }, react_1["default"].createElement(Login_1["default"], null))
+    element: react_1["default"].createElement(Authenticate_1.PublicRoute, null, react_1["default"].createElement(Login_1["default"], null))
   }), react_1["default"].createElement(react_router_dom_1.Route, {
     path: "/register",
-    element: react_1["default"].createElement(Authenticate_1.PublicRoute, {
-      auth: isLogin
-    }, react_1["default"].createElement(Register_1["default"], null))
+    element: react_1["default"].createElement(Authenticate_1.PublicRoute, null, react_1["default"].createElement(Register_1["default"], null))
   }), react_1["default"].createElement(react_router_dom_1.Route, {
     path: "/home",
-    element: react_1["default"].createElement(Authenticate_1.PrivateRoute, {
-      auth: isLogin
-    }, react_1["default"].createElement(Home_1["default"], null))
-  }))));
+    element: react_1["default"].createElement(Authenticate_1.PrivateRoute, null, react_1["default"].createElement(Home_1["default"], null))
+  })))));
 };
 
 exports["default"] = App;
@@ -2357,6 +2646,8 @@ var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_mod
 
 var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
 
+var Authenticate_1 = __webpack_require__(/*! ../../Components/Authenticate */ "./resources/ts/Components/Authenticate.tsx");
+
 var Login = function Login() {
   var _a = (0, react_1.useState)(false),
       isLoading = _a[0],
@@ -2370,11 +2661,12 @@ var Login = function Login() {
       errors = _b.formState.errors;
 
   var navigate = (0, react_router_dom_1.useNavigate)();
+  var auth = (0, Authenticate_1.useAuth)();
 
   var onSubmit = function onSubmit(data) {
     setIsLoading(true);
     axios_1["default"].get('/sanctum/scrf-cookie').then(function () {
-      axios_1["default"].post('/api/login', data).then(function () {
+      auth === null || auth === void 0 ? void 0 : auth.login(data).then(function () {
         navigate('/home');
       })["catch"](function (error) {
         console.error(error);
@@ -2466,23 +2758,17 @@ var __importStar = this && this.__importStar || function (mod) {
   return result;
 };
 
-var __importDefault = this && this.__importDefault || function (mod) {
-  return mod && mod.__esModule ? mod : {
-    "default": mod
-  };
-};
-
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-
-var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
 
 var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 
 var react_hook_form_1 = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.cjs.js");
 
 var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
+
+var Authenticate_1 = __webpack_require__(/*! ../../Components/Authenticate */ "./resources/ts/Components/Authenticate.tsx");
 
 var Register = function Register() {
   var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p;
@@ -2500,10 +2786,11 @@ var Register = function Register() {
       getValues = _r.getValues;
 
   var navigate = (0, react_router_dom_1.useNavigate)();
+  var auth = (0, Authenticate_1.useAuth)();
 
   var onSubmit = function onSubmit(data) {
     setIsLoading(true);
-    axios_1["default"].post('/api/register', data).then(function () {
+    auth === null || auth === void 0 ? void 0 : auth.register(data).then(function () {
       navigate('/home');
     })["catch"](function (error) {
       console.error(error);
@@ -2591,8 +2878,13 @@ var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/r
 
 var LogoutButton_1 = __importDefault(__webpack_require__(/*! ../Components/atoms/LogoutButton */ "./resources/ts/Components/atoms/LogoutButton.tsx"));
 
+var Authenticate_1 = __webpack_require__(/*! ../Components/Authenticate */ "./resources/ts/Components/Authenticate.tsx");
+
 var Home = function Home() {
-  return react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("h1", null, "\u30DB\u30FC\u30E0\u753B\u9762"), react_1["default"].createElement(LogoutButton_1["default"], null));
+  var _a;
+
+  var auth = (0, Authenticate_1.useAuth)();
+  return react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("h1", null, "\u30DB\u30FC\u30E0\u753B\u9762"), react_1["default"].createElement("p", null, "\u30E6\u30FC\u30B6\u540D\uFF1A", (_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.name), react_1["default"].createElement(LogoutButton_1["default"], null));
 };
 
 exports["default"] = Home;

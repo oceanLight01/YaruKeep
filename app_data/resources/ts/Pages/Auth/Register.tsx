@@ -1,7 +1,7 @@
-import axios from 'axios';
 import React, { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../Components/Authenticate';
 
 type RegisterForm = {
     name: string;
@@ -20,12 +20,12 @@ const Register = () => {
         getValues,
     } = useForm<RegisterForm>({ mode: 'onBlur' });
     const navigate = useNavigate();
+    const auth = useAuth();
 
     const onSubmit: SubmitHandler<RegisterForm> = (data) => {
         setIsLoading(true);
 
-        axios
-            .post('/api/register', data)
+        auth?.register(data)
             .then(() => {
                 navigate('/home');
             })

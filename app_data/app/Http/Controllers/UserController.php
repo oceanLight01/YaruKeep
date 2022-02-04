@@ -3,23 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\LoginUserResource;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
     /**
-     * ユーザがログインしているかを判定
+     * ログインユーザのデータを取得
      *
      * @return \Illuminate\Http\Response
      */
-    public function checkLogin()
+    public function getLoginUserInfo()
     {
-        if (Auth::check())
+        if(Auth::check())
         {
-            return response(["isLogin" => true], 200);
+            return new LoginUserResource(User::find(Auth::id()));
         } else {
-            return response(["isLogin" => false], 200);
+            return response(['error' => 'Authorization failed.'], 401);
         }
     }
 }

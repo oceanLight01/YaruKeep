@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useAuth } from '../../Components/Authenticate';
 
 type LoginForm = {
     email: string;
@@ -17,6 +18,7 @@ const Login = () => {
         formState: { errors },
     } = useForm<LoginForm>({ mode: 'onBlur' });
     const navigate = useNavigate();
+    const auth = useAuth();
 
     const onSubmit: SubmitHandler<LoginForm> = (data) => {
         setIsLoading(true);
@@ -24,8 +26,7 @@ const Login = () => {
         axios
             .get('/sanctum/scrf-cookie')
             .then(() => {
-                axios
-                    .post('/api/login', data)
+                auth?.login(data)
                     .then(() => {
                         navigate('/home');
                     })

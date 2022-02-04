@@ -14,4 +14,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/user', 'UserController@checkLogin');
+Route::get('/user', 'UserController@getLoginUserInfo');
