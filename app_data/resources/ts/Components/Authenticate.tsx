@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { createContext, ReactChildren, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Route, Navigate } from 'react-router-dom';
 
 type UserData = {
@@ -75,7 +75,7 @@ const useProvideAuth = () => {
                 console.error(error);
             })
             .finally(() => {
-                setIsRender(!isRender);
+                setIsRender(true);
             });
     };
 
@@ -83,6 +83,7 @@ const useProvideAuth = () => {
         return axios
             .post('/api/register', registerData)
             .then(() => {
+                setIsRender(false);
                 getUser();
             })
             .catch((error) => {
@@ -137,7 +138,21 @@ const useProvideAuth = () => {
  */
 export const PrivateRoute = ({ children }: Route) => {
     const auth = useAuth();
-    return auth?.userData === null ? <Navigate to="/login" replace /> : children;
+    const emailVerified =
+        auth?.userData?.email_verified_at === null ? <Navigate to="/verified" replace /> : children;
+    return auth?.userData === null ? <Navigate to="/login" replace /> : emailVerified;
+};
+
+/**
+ * ユーザがメール認証が未完了時に/verifiedへリダイレクトする
+ * メール認証が完了している際は/verifiedにアクセスすると/homeへリダイレクトする
+ *
+ * @param {JSX.Element} children メール認証が未完了時に表示する子コンポーネント
+ * @returns {(JSX.Element | Navigate)}
+ */
+export const EmailVerifiedRoute = ({ children }: Route) => {
+    const auth = useAuth();
+    return auth?.userData?.email_verified_at === null ? children : <Navigate to="/home" replace />;
 };
 
 /**

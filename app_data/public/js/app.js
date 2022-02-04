@@ -2249,7 +2249,7 @@ var __importDefault = this && this.__importDefault || function (mod) {
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.PublicRoute = exports.PrivateRoute = exports.useAuth = void 0;
+exports.PublicRoute = exports.EmailVerifiedRoute = exports.PrivateRoute = exports.useAuth = void 0;
 
 var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
 
@@ -2295,12 +2295,13 @@ var useProvideAuth = function useProvideAuth() {
       setUserData(null);
       console.error(error);
     })["finally"](function () {
-      setIsRender(!isRender);
+      setIsRender(true);
     });
   };
 
   var register = function register(registerData) {
     return axios_1["default"].post('/api/register', registerData).then(function () {
+      setIsRender(false);
       getUser();
     })["catch"](function (error) {
       console.error(error);
@@ -2363,15 +2364,41 @@ var useProvideAuth = function useProvideAuth() {
 
 
 var PrivateRoute = function PrivateRoute(_a) {
+  var _b;
+
   var children = _a.children;
   var auth = (0, exports.useAuth)();
+  var emailVerified = ((_b = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _b === void 0 ? void 0 : _b.email_verified_at) === null ? react_1["default"].createElement(react_router_dom_1.Navigate, {
+    to: "/verified",
+    replace: true
+  }) : children;
   return (auth === null || auth === void 0 ? void 0 : auth.userData) === null ? react_1["default"].createElement(react_router_dom_1.Navigate, {
     to: "/login",
     replace: true
-  }) : children;
+  }) : emailVerified;
 };
 
 exports.PrivateRoute = PrivateRoute;
+/**
+ * ユーザがメール認証が未完了時に/verifiedへリダイレクトする
+ * メール認証が完了している際は/verifiedにアクセスすると/homeへリダイレクトする
+ *
+ * @param {JSX.Element} children メール認証が未完了時に表示する子コンポーネント
+ * @returns {(JSX.Element | Navigate)}
+ */
+
+var EmailVerifiedRoute = function EmailVerifiedRoute(_a) {
+  var _b;
+
+  var children = _a.children;
+  var auth = (0, exports.useAuth)();
+  return ((_b = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _b === void 0 ? void 0 : _b.email_verified_at) === null ? children : react_1["default"].createElement(react_router_dom_1.Navigate, {
+    to: "/home",
+    replace: true
+  });
+};
+
+exports.EmailVerifiedRoute = EmailVerifiedRoute;
 /**
  * ユーザが認証されていない状態のときのみに表示するコンポーネントを返す
  * 認証されていれば/homeへリダイレクトする
@@ -2541,6 +2568,8 @@ var Register_1 = __importDefault(__webpack_require__(/*! ./Auth/Register */ "./r
 
 var Login_1 = __importDefault(__webpack_require__(/*! ./Auth/Login */ "./resources/ts/Pages/Auth/Login.tsx"));
 
+var EmailVerified_1 = __importDefault(__webpack_require__(/*! ./Auth/EmailVerified */ "./resources/ts/Pages/Auth/EmailVerified.tsx"));
+
 var Home_1 = __importDefault(__webpack_require__(/*! ./Home */ "./resources/ts/Pages/Home.tsx"));
 
 var Authenticate_1 = __importStar(__webpack_require__(/*! ../Components/Authenticate */ "./resources/ts/Components/Authenticate.tsx"));
@@ -2556,6 +2585,9 @@ var App = function App() {
     path: "/register",
     element: react_1["default"].createElement(Authenticate_1.PublicRoute, null, react_1["default"].createElement(Register_1["default"], null))
   }), react_1["default"].createElement(react_router_dom_1.Route, {
+    path: "/verified",
+    element: react_1["default"].createElement(Authenticate_1.EmailVerifiedRoute, null, react_1["default"].createElement(EmailVerified_1["default"], null))
+  }), react_1["default"].createElement(react_router_dom_1.Route, {
     path: "/home",
     element: react_1["default"].createElement(Authenticate_1.PrivateRoute, null, react_1["default"].createElement(Home_1["default"], null))
   })))));
@@ -2566,6 +2598,87 @@ exports["default"] = App;
 if (document.getElementById('app')) {
   react_dom_1["default"].render(react_1["default"].createElement(App, null), document.getElementById('app'));
 }
+
+/***/ }),
+
+/***/ "./resources/ts/Pages/Auth/EmailVerified.tsx":
+/*!***************************************************!*\
+  !*** ./resources/ts/Pages/Auth/EmailVerified.tsx ***!
+  \***************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  Object.defineProperty(o, k2, {
+    enumerable: true,
+    get: function get() {
+      return m[k];
+    }
+  });
+} : function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+});
+
+var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+  Object.defineProperty(o, "default", {
+    enumerable: true,
+    value: v
+  });
+} : function (o, v) {
+  o["default"] = v;
+});
+
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  }
+
+  __setModuleDefault(result, mod);
+
+  return result;
+};
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
+
+var LogoutButton_1 = __importDefault(__webpack_require__(/*! ../../Components/atoms/LogoutButton */ "./resources/ts/Components/atoms/LogoutButton.tsx"));
+
+var EmailVerified = function EmailVerified() {
+  var _a = (0, react_1.useState)(false),
+      isSend = _a[0],
+      setIsSend = _a[1];
+
+  var sendVerifiedEmail = function sendVerifiedEmail() {
+    axios_1["default"].post('api/email/verification-notification').then(function () {
+      setIsSend(true);
+    })["catch"](function (error) {
+      console.error(error);
+    });
+  };
+
+  return react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("p", null, "\u4EEE\u767B\u9332\u304C\u5B8C\u4E86\u3057\u307E\u3057\u305F\u3002"), react_1["default"].createElement("p", null, "\u767B\u9332\u3055\u308C\u305F\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9\u5B9B\u306B\u672C\u767B\u9332\u7528\u30E1\u30FC\u30EB\u3092\u304A\u9001\u308A\u3057\u307E\u3057\u305F\u306E\u3067\u3001\u8A18\u8F09\u3055\u308C\u305FURL\u3088\u308A\u672C\u767B\u9332\u3092\u5B8C\u4E86\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), isSend ? react_1["default"].createElement("p", null, "\u65B0\u3057\u3044\u30E1\u30FC\u30EB\u3092\u9001\u4FE1\u3057\u307E\u3057\u305F\u3002") : null, react_1["default"].createElement("button", {
+    onClick: sendVerifiedEmail
+  }, "\u672C\u767B\u9332\u30E1\u30FC\u30EB\u3092\u518D\u9001\u4FE1\u3059\u308B"), react_1["default"].createElement(LogoutButton_1["default"], null));
+};
+
+exports["default"] = EmailVerified;
 
 /***/ }),
 

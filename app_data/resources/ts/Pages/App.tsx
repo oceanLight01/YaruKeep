@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
@@ -6,8 +6,13 @@ import Loading from './../Components/Loading';
 import Top from './Top';
 import Register from './Auth/Register';
 import Login from './Auth/Login';
+import EmailVerified from './Auth/EmailVerified';
 import Home from './Home';
-import ProvideAuth, { PrivateRoute, PublicRoute } from '../Components/Authenticate';
+import ProvideAuth, {
+    EmailVerifiedRoute,
+    PrivateRoute,
+    PublicRoute,
+} from '../Components/Authenticate';
 
 const App = () => {
     return (
@@ -37,6 +42,14 @@ const App = () => {
                                 <PublicRoute>
                                     <Register />
                                 </PublicRoute>
+                            }
+                        />
+                        <Route
+                            path="/verified"
+                            element={
+                                <EmailVerifiedRoute>
+                                    <EmailVerified />
+                                </EmailVerifiedRoute>
                             }
                         />
                         <Route
