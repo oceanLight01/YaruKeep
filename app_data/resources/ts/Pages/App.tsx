@@ -14,6 +14,7 @@ import Login from './Auth/Login';
 import Register from './Auth/Register';
 import EmailVerified from './Auth/EmailVerified';
 import Home from './Home';
+import Footer from '../Components/Footer';
 
 const App = () => {
     return (
@@ -63,6 +64,7 @@ const App = () => {
                             }
                         />
                     </Routes>
+                    <Footer />
                 </BrowserRouter>
             </Loading>
         </ProvideAuth>

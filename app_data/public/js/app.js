@@ -2420,6 +2420,35 @@ exports.PublicRoute = PublicRoute;
 
 /***/ }),
 
+/***/ "./resources/ts/Components/Footer.tsx":
+/*!********************************************!*\
+  !*** ./resources/ts/Components/Footer.tsx ***!
+  \********************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var Footer = function Footer() {
+  return react_1["default"].createElement("footer", null, react_1["default"].createElement("p", null, "yarukeep. 2022"));
+};
+
+exports["default"] = Footer;
+
+/***/ }),
+
 /***/ "./resources/ts/Components/Header.tsx":
 /*!********************************************!*\
   !*** ./resources/ts/Components/Header.tsx ***!
@@ -2614,6 +2643,8 @@ var EmailVerified_1 = __importDefault(__webpack_require__(/*! ./Auth/EmailVerifi
 
 var Home_1 = __importDefault(__webpack_require__(/*! ./Home */ "./resources/ts/Pages/Home.tsx"));
 
+var Footer_1 = __importDefault(__webpack_require__(/*! ../Components/Footer */ "./resources/ts/Components/Footer.tsx"));
+
 var App = function App() {
   return react_1["default"].createElement(Authenticate_1["default"], null, react_1["default"].createElement(Loading_1["default"], null, react_1["default"].createElement(react_router_dom_1.BrowserRouter, null, react_1["default"].createElement(Header_1["default"], null), react_1["default"].createElement(react_router_dom_1.Routes, null, react_1["default"].createElement(react_router_dom_1.Route, {
     path: "/",
@@ -2630,7 +2661,7 @@ var App = function App() {
   }), react_1["default"].createElement(react_router_dom_1.Route, {
     path: "/home",
     element: react_1["default"].createElement(Authenticate_1.PrivateRoute, null, react_1["default"].createElement(Home_1["default"], null))
-  })))));
+  })), react_1["default"].createElement(Footer_1["default"], null))));
 };
 
 exports["default"] = App;
