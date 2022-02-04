@@ -49,12 +49,12 @@ const Login = () => {
                 <div>
                     {errors.email && <p>メールアドレスを入力してください。</p>}
                     <label>メールアドレス</label>
-                    <input {...register('email', { required: true })} />
+                    <input type="email" {...register('email', { required: true })} />
                 </div>
                 <div>
                     {errors.password && <p>パスワードを入力してください。</p>}
                     <label>パスワード</label>
-                    <input {...register('password', { required: true })} />
+                    <input type="password" {...register('password', { required: true })} />
                 </div>
                 <div>
                     <label>ログイン状態を保存する</label>

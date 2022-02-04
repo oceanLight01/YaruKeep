@@ -2793,9 +2793,13 @@ var Login = function Login() {
 
   return react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("h1", null, "\u30ED\u30B0\u30A4\u30F3"), react_1["default"].createElement("form", {
     onSubmit: handleSubmit(onSubmit)
-  }, react_1["default"].createElement("div", null, errors.email && react_1["default"].createElement("p", null, "\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), react_1["default"].createElement("label", null, "\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9"), react_1["default"].createElement("input", __assign({}, register('email', {
+  }, react_1["default"].createElement("div", null, errors.email && react_1["default"].createElement("p", null, "\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), react_1["default"].createElement("label", null, "\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9"), react_1["default"].createElement("input", __assign({
+    type: "email"
+  }, register('email', {
     required: true
-  })))), react_1["default"].createElement("div", null, errors.password && react_1["default"].createElement("p", null, "\u30D1\u30B9\u30EF\u30FC\u30C9\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), react_1["default"].createElement("label", null, "\u30D1\u30B9\u30EF\u30FC\u30C9"), react_1["default"].createElement("input", __assign({}, register('password', {
+  })))), react_1["default"].createElement("div", null, errors.password && react_1["default"].createElement("p", null, "\u30D1\u30B9\u30EF\u30FC\u30C9\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), react_1["default"].createElement("label", null, "\u30D1\u30B9\u30EF\u30FC\u30C9"), react_1["default"].createElement("input", __assign({
+    type: "password"
+  }, register('password', {
     required: true
   })))), react_1["default"].createElement("div", null, react_1["default"].createElement("label", null, "\u30ED\u30B0\u30A4\u30F3\u72B6\u614B\u3092\u4FDD\u5B58\u3059\u308B"), react_1["default"].createElement("input", __assign({
     type: "checkbox"
