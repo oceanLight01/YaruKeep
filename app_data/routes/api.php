@@ -14,4 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/user', 'UserController@getLoginUserInfo');
+Route::group(['middleware' => ['auth:sanctum']], function () {
+    //ユーザに関するルーティング
+    Route::get('/user', 'UserController@getLoginUserInfo');
+    Route::get('/user/{id}', 'UserController@getUserInfo');
+});

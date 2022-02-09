@@ -2645,6 +2645,8 @@ var Home_1 = __importDefault(__webpack_require__(/*! ./Home */ "./resources/ts/P
 
 var Footer_1 = __importDefault(__webpack_require__(/*! ../Components/Footer */ "./resources/ts/Components/Footer.tsx"));
 
+var User_1 = __importDefault(__webpack_require__(/*! ./User */ "./resources/ts/Pages/User.tsx"));
+
 var App = function App() {
   return react_1["default"].createElement(Authenticate_1["default"], null, react_1["default"].createElement(Loading_1["default"], null, react_1["default"].createElement(react_router_dom_1.BrowserRouter, null, react_1["default"].createElement(Header_1["default"], null), react_1["default"].createElement(react_router_dom_1.Routes, null, react_1["default"].createElement(react_router_dom_1.Route, {
     path: "/",
@@ -2661,6 +2663,9 @@ var App = function App() {
   }), react_1["default"].createElement(react_router_dom_1.Route, {
     path: "/home",
     element: react_1["default"].createElement(Authenticate_1.PrivateRoute, null, react_1["default"].createElement(Home_1["default"], null))
+  }), react_1["default"].createElement(react_router_dom_1.Route, {
+    path: "/user/:screenName",
+    element: react_1["default"].createElement(Authenticate_1.PrivateRoute, null, react_1["default"].createElement(User_1["default"], null))
   })), react_1["default"].createElement(Footer_1["default"], null))));
 };
 
@@ -3111,6 +3116,101 @@ var Top = function Top() {
 };
 
 exports["default"] = Top;
+
+/***/ }),
+
+/***/ "./resources/ts/Pages/User.tsx":
+/*!*************************************!*\
+  !*** ./resources/ts/Pages/User.tsx ***!
+  \*************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  Object.defineProperty(o, k2, {
+    enumerable: true,
+    get: function get() {
+      return m[k];
+    }
+  });
+} : function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+});
+
+var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+  Object.defineProperty(o, "default", {
+    enumerable: true,
+    value: v
+  });
+} : function (o, v) {
+  o["default"] = v;
+});
+
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  }
+
+  __setModuleDefault(result, mod);
+
+  return result;
+};
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
+
+var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
+
+var User = function User() {
+  var screenName = (0, react_router_dom_1.useParams)().screenName;
+
+  var _a = (0, react_1.useState)(null),
+      userData = _a[0],
+      setUserData = _a[1];
+
+  var getUserData = function getUserData(screenName) {
+    axios_1["default"].get("/api/user/".concat(screenName)).then(function (res) {
+      var data = res.data.data.user;
+      setUserData({
+        id: data.id,
+        name: data.name,
+        screenName: data.screen_name,
+        profile: data.profile,
+        profileImage: data.profile_image,
+        followingCount: data.following_count,
+        followedCount: data.followed_count,
+        created_at: data.created_at,
+        updated_at: data.updated_at
+      });
+    })["catch"](function (error) {
+      console.error(error);
+    });
+  };
+
+  (0, react_1.useEffect)(function () {
+    getUserData(screenName);
+  }, []);
+  return react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("h1", null, "\u30E6\u30FC\u30B6\u30DA\u30FC\u30B8"), react_1["default"].createElement("div", null, react_1["default"].createElement("p", null, "ID:", userData === null || userData === void 0 ? void 0 : userData.id), react_1["default"].createElement("p", null, "name:", userData === null || userData === void 0 ? void 0 : userData.name), react_1["default"].createElement("p", null, "UserID", userData === null || userData === void 0 ? void 0 : userData.screenName), react_1["default"].createElement("p", null, "Profile:", userData === null || userData === void 0 ? void 0 : userData.profile), react_1["default"].createElement("p", null, userData === null || userData === void 0 ? void 0 : userData.profileImage), react_1["default"].createElement("p", null, "\u30D5\u30A9\u30ED\u30FC\u4E2D:", userData === null || userData === void 0 ? void 0 : userData.followingCount), react_1["default"].createElement("p", null, "\u30D5\u30A9\u30ED\u30EF\u30FC:", userData === null || userData === void 0 ? void 0 : userData.followedCount)));
+};
+
+exports["default"] = User;
 
 /***/ }),
 

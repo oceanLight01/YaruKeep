@@ -15,6 +15,7 @@ import Register from './Auth/Register';
 import EmailVerified from './Auth/EmailVerified';
 import Home from './Home';
 import Footer from '../Components/Footer';
+import User from './User';
 
 const App = () => {
     return (
@@ -60,6 +61,14 @@ const App = () => {
                             element={
                                 <PrivateRoute>
                                     <Home />
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
+                            path="/user/:screenName"
+                            element={
+                                <PrivateRoute>
+                                    <User />
                                 </PrivateRoute>
                             }
                         />
