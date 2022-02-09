@@ -2520,6 +2520,46 @@ exports["default"] = Loading;
 
 /***/ }),
 
+/***/ "./resources/ts/Components/Navigation.tsx":
+/*!************************************************!*\
+  !*** ./resources/ts/Components/Navigation.tsx ***!
+  \************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
+
+var Authenticate_1 = __webpack_require__(/*! ./Authenticate */ "./resources/ts/Components/Authenticate.tsx");
+
+var Navigation = function Navigation() {
+  var auth = (0, Authenticate_1.useAuth)();
+  return (auth === null || auth === void 0 ? void 0 : auth.userData) === null ? react_1["default"].createElement("nav", null, react_1["default"].createElement("ul", null, react_1["default"].createElement("li", null, react_1["default"].createElement(react_router_dom_1.Link, {
+    to: "/register"
+  }, "\u65B0\u898F\u767B\u9332")), react_1["default"].createElement("li", null, react_1["default"].createElement(react_router_dom_1.Link, {
+    to: "/login"
+  }, "\u30ED\u30B0\u30A4\u30F3")))) : react_1["default"].createElement("nav", null, react_1["default"].createElement("ul", null, react_1["default"].createElement("li", null, react_1["default"].createElement(react_router_dom_1.Link, {
+    to: "/user/".concat(auth === null || auth === void 0 ? void 0 : auth.userData.screen_name)
+  }, "\u30DE\u30A4\u30DA\u30FC\u30B8"))));
+};
+
+exports["default"] = Navigation;
+
+/***/ }),
+
 /***/ "./resources/ts/Components/atoms/LogoutButton.tsx":
 /*!********************************************************!*\
   !*** ./resources/ts/Components/atoms/LogoutButton.tsx ***!
@@ -2633,6 +2673,8 @@ var Loading_1 = __importDefault(__webpack_require__(/*! ./../Components/Loading 
 
 var Header_1 = __importDefault(__webpack_require__(/*! ../Components/Header */ "./resources/ts/Components/Header.tsx"));
 
+var Navigation_1 = __importDefault(__webpack_require__(/*! ../Components/Navigation */ "./resources/ts/Components/Navigation.tsx"));
+
 var Top_1 = __importDefault(__webpack_require__(/*! ./Top */ "./resources/ts/Pages/Top.tsx"));
 
 var Login_1 = __importDefault(__webpack_require__(/*! ./Auth/Login */ "./resources/ts/Pages/Auth/Login.tsx"));
@@ -2648,7 +2690,7 @@ var Footer_1 = __importDefault(__webpack_require__(/*! ../Components/Footer */ "
 var User_1 = __importDefault(__webpack_require__(/*! ./User */ "./resources/ts/Pages/User.tsx"));
 
 var App = function App() {
-  return react_1["default"].createElement(Authenticate_1["default"], null, react_1["default"].createElement(Loading_1["default"], null, react_1["default"].createElement(react_router_dom_1.BrowserRouter, null, react_1["default"].createElement(Header_1["default"], null), react_1["default"].createElement(react_router_dom_1.Routes, null, react_1["default"].createElement(react_router_dom_1.Route, {
+  return react_1["default"].createElement(Authenticate_1["default"], null, react_1["default"].createElement(Loading_1["default"], null, react_1["default"].createElement(react_router_dom_1.BrowserRouter, null, react_1["default"].createElement(Header_1["default"], null), react_1["default"].createElement(Navigation_1["default"], null), react_1["default"].createElement(react_router_dom_1.Routes, null, react_1["default"].createElement(react_router_dom_1.Route, {
     path: "/",
     element: react_1["default"].createElement(Authenticate_1.PublicRoute, null, react_1["default"].createElement(Top_1["default"], null))
   }), react_1["default"].createElement(react_router_dom_1.Route, {
@@ -3185,6 +3227,8 @@ var User = function User() {
       userData = _a[0],
       setUserData = _a[1];
 
+  var locationPath = (0, react_router_dom_1.useLocation)().pathname;
+
   var getUserData = function getUserData(screenName) {
     axios_1["default"].get("/api/user/".concat(screenName)).then(function (res) {
       var data = res.data.data.user;
@@ -3206,7 +3250,7 @@ var User = function User() {
 
   (0, react_1.useEffect)(function () {
     getUserData(screenName);
-  }, []);
+  }, [locationPath]);
   return react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("h1", null, "\u30E6\u30FC\u30B6\u30DA\u30FC\u30B8"), react_1["default"].createElement("div", null, react_1["default"].createElement("p", null, "ID:", userData === null || userData === void 0 ? void 0 : userData.id), react_1["default"].createElement("p", null, "name:", userData === null || userData === void 0 ? void 0 : userData.name), react_1["default"].createElement("p", null, "UserID", userData === null || userData === void 0 ? void 0 : userData.screenName), react_1["default"].createElement("p", null, "Profile:", userData === null || userData === void 0 ? void 0 : userData.profile), react_1["default"].createElement("p", null, userData === null || userData === void 0 ? void 0 : userData.profileImage), react_1["default"].createElement("p", null, "\u30D5\u30A9\u30ED\u30FC\u4E2D:", userData === null || userData === void 0 ? void 0 : userData.followingCount), react_1["default"].createElement("p", null, "\u30D5\u30A9\u30ED\u30EF\u30FC:", userData === null || userData === void 0 ? void 0 : userData.followedCount)));
 };
 

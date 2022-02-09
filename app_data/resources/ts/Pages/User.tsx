@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 
 type UserData = {
     id: number;
@@ -17,6 +17,7 @@ type UserData = {
 const User = () => {
     const { screenName } = useParams<{ screenName: string }>();
     const [userData, setUserData] = useState<UserData | null>(null);
+    const locationPath = useLocation().pathname;
 
     const getUserData = (screenName?: string) => {
         axios
@@ -42,7 +43,7 @@ const User = () => {
 
     useEffect(() => {
         getUserData(screenName);
-    }, []);
+    }, [locationPath]);
 
     return (
         <>
