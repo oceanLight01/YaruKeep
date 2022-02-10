@@ -1,14 +1,17 @@
+import axios from 'axios';
 import React, { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { useAuth } from '../Components/Authenticate';
 
 type HabitForm = {
     title: string;
     description: string;
     categoryId: number;
-    isPrivate: boolean;
+    isPrivate: string;
 };
 
 const HabitPost = () => {
+    const auth = useAuth();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const {
         register,
@@ -18,6 +21,20 @@ const HabitPost = () => {
 
     const onSubmit: SubmitHandler<HabitForm> = (data) => {
         setIsLoading(true);
+
+        const habitData = {
+            userId: auth?.userData?.id,
+            title: data.title,
+            description: data.description,
+            categoryId: data.categoryId,
+            isPrivate: data.isPrivate === 'true',
+        };
+
+        axios
+            .post('/api/habits', habitData)
+            .then((res) => console.log(res))
+            .catch((error) => console.log(error))
+            .finally(() => setIsLoading(false));
     };
 
     return (

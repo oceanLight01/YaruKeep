@@ -3156,16 +3156,28 @@ var __importStar = this && this.__importStar || function (mod) {
   return result;
 };
 
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
+
+var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
 
 var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 
 var react_hook_form_1 = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.cjs.js");
 
+var Authenticate_1 = __webpack_require__(/*! ../Components/Authenticate */ "./resources/ts/Components/Authenticate.tsx");
+
 var HabitPost = function HabitPost() {
   var _a, _b, _c, _d;
+
+  var auth = (0, Authenticate_1.useAuth)();
 
   var _e = (0, react_1.useState)(false),
       isLoading = _e[0],
@@ -3179,7 +3191,23 @@ var HabitPost = function HabitPost() {
       errors = _f.formState.errors;
 
   var onSubmit = function onSubmit(data) {
+    var _a;
+
     setIsLoading(true);
+    var habitData = {
+      userId: (_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.id,
+      title: data.title,
+      description: data.description,
+      categoryId: data.categoryId,
+      isPrivate: data.isPrivate === 'true'
+    };
+    axios_1["default"].post('/api/habits', habitData).then(function (res) {
+      return console.log(res);
+    })["catch"](function (error) {
+      return console.log(error);
+    })["finally"](function () {
+      return setIsLoading(false);
+    });
   };
 
   return react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("h1", null, "\u30CF\u30D3\u30C3\u30C8\u30C8\u30E9\u30C3\u30AB\u30FC\u4F5C\u6210\u30DA\u30FC\u30B8"), react_1["default"].createElement("form", {

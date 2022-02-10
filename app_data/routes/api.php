@@ -13,9 +13,11 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
 Route::group(['middleware' => ['auth:sanctum']], function () {
     //ユーザに関するルーティング
     Route::get('/user', 'UserController@getLoginUserInfo');
     Route::get('/user/{id}', 'UserController@getUserInfo');
+
+    //Habitに関するルーティング
+    Route::resource('habits', HabitController::class);
 });
