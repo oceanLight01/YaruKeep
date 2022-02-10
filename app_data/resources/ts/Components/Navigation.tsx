@@ -21,6 +21,9 @@ const Navigation = () => {
                 <li>
                     <Link to={`/user/${auth?.userData.screen_name}`}>マイページ</Link>
                 </li>
+                <li>
+                    <Link to="/post/habit">ハビットトラッカー作成</Link>
+                </li>
             </ul>
         </nav>
     );

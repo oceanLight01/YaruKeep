@@ -17,6 +17,7 @@ import EmailVerified from './Auth/EmailVerified';
 import Home from './Home';
 import Footer from '../Components/Footer';
 import User from './User';
+import HabitPost from './HabitPost';
 
 const App = () => {
     return (
@@ -71,6 +72,14 @@ const App = () => {
                             element={
                                 <PrivateRoute>
                                     <User />
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
+                            path="/post/Habit"
+                            element={
+                                <PrivateRoute>
+                                    <HabitPost />
                                 </PrivateRoute>
                             }
                         />

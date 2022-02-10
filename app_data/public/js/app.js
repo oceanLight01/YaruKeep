@@ -2553,7 +2553,9 @@ var Navigation = function Navigation() {
     to: "/login"
   }, "\u30ED\u30B0\u30A4\u30F3")))) : react_1["default"].createElement("nav", null, react_1["default"].createElement("ul", null, react_1["default"].createElement("li", null, react_1["default"].createElement(react_router_dom_1.Link, {
     to: "/user/".concat(auth === null || auth === void 0 ? void 0 : auth.userData.screen_name)
-  }, "\u30DE\u30A4\u30DA\u30FC\u30B8"))));
+  }, "\u30DE\u30A4\u30DA\u30FC\u30B8")), react_1["default"].createElement("li", null, react_1["default"].createElement(react_router_dom_1.Link, {
+    to: "/post/habit"
+  }, "\u30CF\u30D3\u30C3\u30C8\u30C8\u30E9\u30C3\u30AB\u30FC\u4F5C\u6210"))));
 };
 
 exports["default"] = Navigation;
@@ -2689,6 +2691,8 @@ var Footer_1 = __importDefault(__webpack_require__(/*! ../Components/Footer */ "
 
 var User_1 = __importDefault(__webpack_require__(/*! ./User */ "./resources/ts/Pages/User.tsx"));
 
+var HabitPost_1 = __importDefault(__webpack_require__(/*! ./HabitPost */ "./resources/ts/Pages/HabitPost.tsx"));
+
 var App = function App() {
   return react_1["default"].createElement(Authenticate_1["default"], null, react_1["default"].createElement(Loading_1["default"], null, react_1["default"].createElement(react_router_dom_1.BrowserRouter, null, react_1["default"].createElement(Header_1["default"], null), react_1["default"].createElement(Navigation_1["default"], null), react_1["default"].createElement(react_router_dom_1.Routes, null, react_1["default"].createElement(react_router_dom_1.Route, {
     path: "/",
@@ -2708,6 +2712,9 @@ var App = function App() {
   }), react_1["default"].createElement(react_router_dom_1.Route, {
     path: "/user/:screenName",
     element: react_1["default"].createElement(Authenticate_1.PrivateRoute, null, react_1["default"].createElement(User_1["default"], null))
+  }), react_1["default"].createElement(react_router_dom_1.Route, {
+    path: "/post/Habit",
+    element: react_1["default"].createElement(Authenticate_1.PrivateRoute, null, react_1["default"].createElement(HabitPost_1["default"], null))
   })), react_1["default"].createElement(Footer_1["default"], null))));
 };
 
@@ -3087,6 +3094,165 @@ var Register = function Register() {
 };
 
 exports["default"] = Register;
+
+/***/ }),
+
+/***/ "./resources/ts/Pages/HabitPost.tsx":
+/*!******************************************!*\
+  !*** ./resources/ts/Pages/HabitPost.tsx ***!
+  \******************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __assign = this && this.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+
+      for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+    }
+
+    return t;
+  };
+
+  return __assign.apply(this, arguments);
+};
+
+var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  Object.defineProperty(o, k2, {
+    enumerable: true,
+    get: function get() {
+      return m[k];
+    }
+  });
+} : function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+});
+
+var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+  Object.defineProperty(o, "default", {
+    enumerable: true,
+    value: v
+  });
+} : function (o, v) {
+  o["default"] = v;
+});
+
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  }
+
+  __setModuleDefault(result, mod);
+
+  return result;
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var react_hook_form_1 = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.cjs.js");
+
+var HabitPost = function HabitPost() {
+  var _a, _b, _c, _d;
+
+  var _e = (0, react_1.useState)(false),
+      isLoading = _e[0],
+      setIsLoading = _e[1];
+
+  var _f = (0, react_hook_form_1.useForm)({
+    mode: 'onBlur'
+  }),
+      register = _f.register,
+      handleSubmit = _f.handleSubmit,
+      errors = _f.formState.errors;
+
+  var onSubmit = function onSubmit(data) {
+    setIsLoading(true);
+  };
+
+  return react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("h1", null, "\u30CF\u30D3\u30C3\u30C8\u30C8\u30E9\u30C3\u30AB\u30FC\u4F5C\u6210\u30DA\u30FC\u30B8"), react_1["default"].createElement("form", {
+    onSubmit: handleSubmit(onSubmit)
+  }, react_1["default"].createElement("div", null, react_1["default"].createElement("label", null, "\u76EE\u6A19"), ((_a = errors.title) === null || _a === void 0 ? void 0 : _a.type) === 'maxLength' && react_1["default"].createElement("p", null, "\u76EE\u6A19\u306F50\u6587\u5B57\u4EE5\u4E0B\u3067\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), ((_b = errors.title) === null || _b === void 0 ? void 0 : _b.type) === 'required' && react_1["default"].createElement("p", null, "\u76EE\u6A19\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), react_1["default"].createElement("input", __assign({
+    type: "text",
+    maxLength: 50,
+    autoComplete: "on"
+  }, register('title', {
+    required: true,
+    maxLength: 50
+  })))), react_1["default"].createElement("div", null, react_1["default"].createElement("label", null, "\u8AAC\u660E\u6587"), ((_c = errors.description) === null || _c === void 0 ? void 0 : _c.type) === 'maxLength' && react_1["default"].createElement("p", null, "\u8AAC\u660E\u6587\u306F300\u6587\u5B57\u4EE5\u4E0B\u3067\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), react_1["default"].createElement("input", __assign({
+    type: "text",
+    maxLength: 300,
+    autoComplete: "off"
+  }, register('description', {
+    maxLength: 300
+  })))), react_1["default"].createElement("div", null, react_1["default"].createElement("select", __assign({}, register('categoryId', {
+    required: true
+  })), react_1["default"].createElement("option", {
+    value: "1"
+  }, "\u30D3\u30B8\u30CD\u30B9\u30B9\u30AD\u30EB"), react_1["default"].createElement("option", {
+    value: "2"
+  }, "\u81EA\u5DF1\u5553\u767A"), react_1["default"].createElement("option", {
+    value: "3"
+  }, "\u30D7\u30ED\u30B0\u30E9\u30DF\u30F3\u30B0\u30FB\u958B\u767A"), react_1["default"].createElement("option", {
+    value: "4"
+  }, "\u30B9\u30AD\u30EB\u30A2\u30C3\u30D7"), react_1["default"].createElement("option", {
+    value: "5"
+  }, "\u8CC7\u683C\u53D6\u5F97"), react_1["default"].createElement("option", {
+    value: "6"
+  }, "\u5916\u56FD\u8A9E\u5B66\u7FD2"), react_1["default"].createElement("option", {
+    value: "7"
+  }, "\u8AAD\u66F8"), react_1["default"].createElement("option", {
+    value: "8"
+  }, "\u82B8\u8853"), react_1["default"].createElement("option", {
+    value: "9"
+  }, "\u30B2\u30FC\u30E0"), react_1["default"].createElement("option", {
+    value: "10"
+  }, "\u5275\u4F5C"), react_1["default"].createElement("option", {
+    value: "11"
+  }, "\u8DA3\u5473"), react_1["default"].createElement("option", {
+    value: "12"
+  }, "\u5B66\u7FD2"), react_1["default"].createElement("option", {
+    value: "13"
+  }, "\u904B\u52D5\u30FB\u30B9\u30DD\u30FC\u30C4"), react_1["default"].createElement("option", {
+    value: "14"
+  }, "\u6599\u7406"), react_1["default"].createElement("option", {
+    value: "15"
+  }, "\u5065\u5EB7\u30FB\u7F8E\u5BB9"))), react_1["default"].createElement("div", null, react_1["default"].createElement("label", null, "\u516C\u958B\u72B6\u614B"), ((_d = errors.isPrivate) === null || _d === void 0 ? void 0 : _d.type) === 'required' && react_1["default"].createElement("p", null, "\u516C\u958B\u72B6\u614B\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), react_1["default"].createElement("label", {
+    htmlFor: "public"
+  }, "\u516C\u958B"), react_1["default"].createElement("input", __assign({
+    id: "public",
+    type: "radio",
+    value: "false"
+  }, register('isPrivate', {
+    required: true
+  }))), react_1["default"].createElement("label", {
+    htmlFor: "private"
+  }, "\u975E\u516C\u958B"), react_1["default"].createElement("input", __assign({
+    id: "private",
+    type: "radio",
+    value: "true"
+  }, register('isPrivate', {
+    required: true
+  })))), react_1["default"].createElement("input", {
+    type: "submit",
+    value: "\u4F5C\u6210\u3059\u308B",
+    disabled: isLoading
+  })));
+};
+
+exports["default"] = HabitPost;
 
 /***/ }),
 
@@ -34820,7 +34986,7 @@ function _extends() {
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"_from":"axios@^0.21","_id":"axios@0.21.4","_inBundle":false,"_integrity":"sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==","_location":"/axios","_phantomChildren":{},"_requested":{"type":"range","registry":true,"raw":"axios@^0.21","name":"axios","escapedName":"axios","rawSpec":"^0.21","saveSpec":null,"fetchSpec":"^0.21"},"_requiredBy":["#DEV:/"],"_resolved":"https://registry.npmjs.org/axios/-/axios-0.21.4.tgz","_shasum":"c67b90dc0568e5c1cf2b0b858c43ba28e2eda575","_spec":"axios@^0.21","_where":"/Users/yoyo/Desktop/portfolio/App/app_data","author":{"name":"Matt Zabriskie"},"browser":{"./lib/adapters/http.js":"./lib/adapters/xhr.js"},"bugs":{"url":"https://github.com/axios/axios/issues"},"bundleDependencies":false,"bundlesize":[{"path":"./dist/axios.min.js","threshold":"5kB"}],"dependencies":{"follow-redirects":"^1.14.0"},"deprecated":false,"description":"Promise based HTTP client for the browser and node.js","devDependencies":{"coveralls":"^3.0.0","es6-promise":"^4.2.4","grunt":"^1.3.0","grunt-banner":"^0.6.0","grunt-cli":"^1.2.0","grunt-contrib-clean":"^1.1.0","grunt-contrib-watch":"^1.0.0","grunt-eslint":"^23.0.0","grunt-karma":"^4.0.0","grunt-mocha-test":"^0.13.3","grunt-ts":"^6.0.0-beta.19","grunt-webpack":"^4.0.2","istanbul-instrumenter-loader":"^1.0.0","jasmine-core":"^2.4.1","karma":"^6.3.2","karma-chrome-launcher":"^3.1.0","karma-firefox-launcher":"^2.1.0","karma-jasmine":"^1.1.1","karma-jasmine-ajax":"^0.1.13","karma-safari-launcher":"^1.0.0","karma-sauce-launcher":"^4.3.6","karma-sinon":"^1.0.5","karma-sourcemap-loader":"^0.3.8","karma-webpack":"^4.0.2","load-grunt-tasks":"^3.5.2","minimist":"^1.2.0","mocha":"^8.2.1","sinon":"^4.5.0","terser-webpack-plugin":"^4.2.3","typescript":"^4.0.5","url-search-params":"^0.10.0","webpack":"^4.44.2","webpack-dev-server":"^3.11.0"},"homepage":"https://axios-http.com","jsdelivr":"dist/axios.min.js","keywords":["xhr","http","ajax","promise","node"],"license":"MIT","main":"index.js","name":"axios","repository":{"type":"git","url":"git+https://github.com/axios/axios.git"},"scripts":{"build":"NODE_ENV=production grunt build","coveralls":"cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js","examples":"node ./examples/server.js","fix":"eslint --fix lib/**/*.js","postversion":"git push && git push --tags","preversion":"npm test","start":"node ./sandbox/server.js","test":"grunt test","version":"npm run build && grunt version && git add -A dist && git add CHANGELOG.md bower.json package.json"},"typings":"./index.d.ts","unpkg":"dist/axios.min.js","version":"0.21.4"}');
+module.exports = JSON.parse('{"_args":[["axios@0.21.4","/Users/yoyo/Desktop/portfolio/App/app_data"]],"_development":true,"_from":"axios@0.21.4","_id":"axios@0.21.4","_inBundle":false,"_integrity":"sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==","_location":"/axios","_phantomChildren":{},"_requested":{"type":"version","registry":true,"raw":"axios@0.21.4","name":"axios","escapedName":"axios","rawSpec":"0.21.4","saveSpec":null,"fetchSpec":"0.21.4"},"_requiredBy":["#DEV:/"],"_resolved":"https://registry.npmjs.org/axios/-/axios-0.21.4.tgz","_spec":"0.21.4","_where":"/Users/yoyo/Desktop/portfolio/App/app_data","author":{"name":"Matt Zabriskie"},"browser":{"./lib/adapters/http.js":"./lib/adapters/xhr.js"},"bugs":{"url":"https://github.com/axios/axios/issues"},"bundlesize":[{"path":"./dist/axios.min.js","threshold":"5kB"}],"dependencies":{"follow-redirects":"^1.14.0"},"description":"Promise based HTTP client for the browser and node.js","devDependencies":{"coveralls":"^3.0.0","es6-promise":"^4.2.4","grunt":"^1.3.0","grunt-banner":"^0.6.0","grunt-cli":"^1.2.0","grunt-contrib-clean":"^1.1.0","grunt-contrib-watch":"^1.0.0","grunt-eslint":"^23.0.0","grunt-karma":"^4.0.0","grunt-mocha-test":"^0.13.3","grunt-ts":"^6.0.0-beta.19","grunt-webpack":"^4.0.2","istanbul-instrumenter-loader":"^1.0.0","jasmine-core":"^2.4.1","karma":"^6.3.2","karma-chrome-launcher":"^3.1.0","karma-firefox-launcher":"^2.1.0","karma-jasmine":"^1.1.1","karma-jasmine-ajax":"^0.1.13","karma-safari-launcher":"^1.0.0","karma-sauce-launcher":"^4.3.6","karma-sinon":"^1.0.5","karma-sourcemap-loader":"^0.3.8","karma-webpack":"^4.0.2","load-grunt-tasks":"^3.5.2","minimist":"^1.2.0","mocha":"^8.2.1","sinon":"^4.5.0","terser-webpack-plugin":"^4.2.3","typescript":"^4.0.5","url-search-params":"^0.10.0","webpack":"^4.44.2","webpack-dev-server":"^3.11.0"},"homepage":"https://axios-http.com","jsdelivr":"dist/axios.min.js","keywords":["xhr","http","ajax","promise","node"],"license":"MIT","main":"index.js","name":"axios","repository":{"type":"git","url":"git+https://github.com/axios/axios.git"},"scripts":{"build":"NODE_ENV=production grunt build","coveralls":"cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js","examples":"node ./examples/server.js","fix":"eslint --fix lib/**/*.js","postversion":"git push && git push --tags","preversion":"npm test","start":"node ./sandbox/server.js","test":"grunt test","version":"npm run build && grunt version && git add -A dist && git add CHANGELOG.md bower.json package.json"},"typings":"./index.d.ts","unpkg":"dist/axios.min.js","version":"0.21.4"}');
 
 /***/ })
 
