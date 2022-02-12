@@ -59,8 +59,7 @@ const HabitPost = () => {
                     {errors.description?.type === 'maxLength' && (
                         <p>説明文は300文字以下で入力してください。</p>
                     )}
-                    <input
-                        type="text"
+                    <textarea
                         maxLength={300}
                         autoComplete="off"
                         {...register('description', { maxLength: 300 })}

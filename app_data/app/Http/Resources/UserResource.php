@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\HabitResource;
 use App\Models\Follow;
 use App\Models\Habit;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -35,7 +36,7 @@ class UserResource extends JsonResource
                 'screen_name' => $this->screen_name,
                 'profile' => $this->profile,
                 'profile_image' => $this->profile_image,
-                'habits' => $habits,
+                'habits' => HabitResource::collection($habits),
                 'following_count' => $following_count,
                 'followed_count' => $followed_count,
                 'created_at' => $this->created_at,
