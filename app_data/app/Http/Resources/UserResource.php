@@ -2,8 +2,10 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
 use App\Models\Follow;
+use App\Models\Habit;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 
 class UserResource extends JsonResource
 {
@@ -15,6 +17,14 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
+        $habit_data = Habit::where('user_id', $this->id);
+        if (Auth::id() === $this->id)
+        {
+            $habits = $habit_data->get();
+        } else {
+            $habits = $habit_data->where('is_private', 0)->get();
+        }
+
         $following_count = Follow::where('following_user_id', $this->id)->count();
         $followed_count = Follow::where('user_id', $this->id)->count();
 
@@ -25,6 +35,7 @@ class UserResource extends JsonResource
                 'screen_name' => $this->screen_name,
                 'profile' => $this->profile,
                 'profile_image' => $this->profile_image,
+                'habits' => $habits,
                 'following_count' => $following_count,
                 'followed_count' => $followed_count,
                 'created_at' => $this->created_at,
