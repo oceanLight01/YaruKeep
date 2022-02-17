@@ -22,6 +22,8 @@ type HabitItem = {
     categoryName: string;
     maxDoneDay: number;
     doneDaysCount: number;
+    doneDaysList: { [date: string]: number };
+    isPrivate: boolean;
     created_at: string;
     updated_at: string;
 };
@@ -57,6 +59,8 @@ const User = () => {
                             categoryName: item.category_name,
                             maxDoneDay: item.max_done_day,
                             doneDaysCount: item.done_days_count,
+                            doneDaysList: item.done_days_list,
+                            isPrivate: item.is_private,
                             created_at: item.created_at,
                             updated_at: item.updated_at,
                         };
