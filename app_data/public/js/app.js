@@ -2525,7 +2525,6 @@ var ContributionCalendar_1 = __importDefault(__webpack_require__(/*! ./Contribut
 
 var HabitTracker = function HabitTracker(_a) {
   var item = _a.item;
-  console.log(item);
   return react_1["default"].createElement("li", null, react_1["default"].createElement("p", null, item.title), react_1["default"].createElement("p", null, item.description ? item.description.split('\n').map(function (str, index) {
     return react_1["default"].createElement(react_1["default"].Fragment, {
       key: index
