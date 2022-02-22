@@ -2533,6 +2533,7 @@ var HabitTracker = function HabitTracker(_a) {
   var _b;
 
   var item = _a.item,
+      index = _a.index,
       doneHabit = _a.doneHabit;
   var auth = (0, Authenticate_1.useAuth)();
   var navigation = (0, react_router_dom_1.useNavigate)();
@@ -2541,7 +2542,7 @@ var HabitTracker = function HabitTracker(_a) {
     navigation("/user/".concat(item.user.screenName, "/habit/").concat(item.id));
   };
 
-  return react_1["default"].createElement("li", {
+  return react_1["default"].createElement("li", null, react_1["default"].createElement("div", {
     onClick: handleClick
   }, react_1["default"].createElement("p", null, item.title), react_1["default"].createElement("p", null, item.description ? item.description.split('\n').map(function (str, index) {
     return react_1["default"].createElement(react_1["default"].Fragment, {
@@ -2549,10 +2550,11 @@ var HabitTracker = function HabitTracker(_a) {
     }, str, react_1["default"].createElement("br", null));
   }) : ''), react_1["default"].createElement("p", null, "\u30AB\u30C6\u30B4\u30EA:", item.categoryName), react_1["default"].createElement("p", null, "\u7DCF\u9054\u6210\u65E5\u6570:", item.doneDaysCount, "\u65E5"), react_1["default"].createElement("p", null, "\u6700\u5927\u9023\u7D9A\u9054\u6210\u65E5\u6570:", item.maxDoneDay, "\u65E5"), react_1["default"].createElement("p", null, "\u4F5C\u6210\u65E5:", item.created_at), react_1["default"].createElement("div", null, react_1["default"].createElement(ContributionCalendar_1["default"], {
     values: item.doneDaysList
-  })), ((_b = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _b === void 0 ? void 0 : _b.id) === item.user.id ? react_1["default"].createElement(HabitDoneButton_1["default"], {
+  }))), ((_b = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _b === void 0 ? void 0 : _b.id) === item.user.id ? react_1["default"].createElement(HabitDoneButton_1["default"], {
     doneHabit: doneHabit,
     id: item.id,
-    isDone: item.isDone
+    isDone: item.isDone,
+    index: index
   }) : null);
 };
 
@@ -2697,7 +2699,7 @@ var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/r
 var HabitDoneButton = function HabitDoneButton(props) {
   return react_1["default"].createElement("button", {
     onClick: function onClick() {
-      return props.doneHabit(props.id);
+      return props.doneHabit(props.id, props.index);
     },
     disabled: props.isDone
   }, "\u5B8C\u4E86");
@@ -3536,29 +3538,32 @@ var HabitStatus = function HabitStatus() {
       setStatusCode = _d[1];
 
   var habitId = (0, react_router_dom_1.useParams)();
+
+  var mapHabitItem = function mapHabitItem(props) {
+    return {
+      id: props.id,
+      title: props.title,
+      description: props.description,
+      categoryId: props.category_id,
+      categoryName: props.category_name,
+      maxDoneDay: props.max_done_day,
+      doneDaysCount: props.done_days_count,
+      doneDaysList: props.done_days_list,
+      isPrivate: props.is_private,
+      isDone: props.is_done,
+      user: {
+        id: props.user.id,
+        name: props.user.name,
+        screenName: props.user.screen_name
+      },
+      created_at: props.created_at,
+      updated_at: props.updated_at
+    };
+  };
+
   (0, react_1.useEffect)(function () {
     axios_1["default"].get("/api/habits/status/".concat(habitId.id)).then(function (res) {
-      console.log(res);
-      var item = res.data.data;
-      setHabitItem({
-        id: item.id,
-        title: item.title,
-        description: item.description,
-        categoryId: item.category_id,
-        categoryName: item.category_name,
-        maxDoneDay: item.max_done_day,
-        doneDaysCount: item.done_days_count,
-        doneDaysList: item.done_days_list,
-        isPrivate: item.is_private,
-        isDone: item.is_done,
-        user: {
-          id: item.user.id,
-          name: item.user.name,
-          screenName: item.user.screen_name
-        },
-        created_at: item.created_at,
-        updated_at: item.updated_at
-      });
+      setHabitItem(mapHabitItem(res.data.data));
     })["catch"](function (error) {
       setStatusCode(error.response.status);
     })["finally"](function () {
@@ -3573,7 +3578,7 @@ var HabitStatus = function HabitStatus() {
       userId: (_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.id,
       id: habitId
     }).then(function (res) {
-      console.log(res);
+      setHabitItem(mapHabitItem(res.data.data));
     })["catch"](function (error) {
       console.error(error);
     });
@@ -3787,6 +3792,28 @@ var User = function User() {
   var locationPath = (0, react_router_dom_1.useLocation)().pathname;
   var auth = (0, Authenticate_1.useAuth)();
 
+  var mapHabitItem = function mapHabitItem(props) {
+    return {
+      id: props.id,
+      title: props.title,
+      description: props.description,
+      categoryId: props.category_id,
+      categoryName: props.category_name,
+      maxDoneDay: props.max_done_day,
+      doneDaysCount: props.done_days_count,
+      doneDaysList: props.done_days_list,
+      isPrivate: props.is_private,
+      isDone: props.is_done,
+      user: {
+        id: props.user.id,
+        name: props.user.name,
+        screenName: props.user.screen_name
+      },
+      created_at: props.created_at,
+      updated_at: props.updated_at
+    };
+  };
+
   var getUserData = function getUserData(screenName) {
     axios_1["default"].get("/api/user/".concat(screenName)).then(function (res) {
       var data = res.data.data.user;
@@ -3802,39 +3829,27 @@ var User = function User() {
         updated_at: data.updated_at
       });
       setHabits(data.habits.map(function (item) {
-        return {
-          id: item.id,
-          title: item.title,
-          description: item.description,
-          categoryId: item.category_id,
-          categoryName: item.category_name,
-          maxDoneDay: item.max_done_day,
-          doneDaysCount: item.done_days_count,
-          doneDaysList: item.done_days_list,
-          isPrivate: item.is_private,
-          isDone: item.is_done,
-          user: {
-            id: item.user.id,
-            name: item.user.name,
-            screenName: item.user.screen_name
-          },
-          created_at: item.created_at,
-          updated_at: item.updated_at
-        };
+        return mapHabitItem(item);
       }));
     })["catch"](function (error) {
       console.error(error);
     });
   };
 
-  var doneHabit = function doneHabit(habitId) {
+  var doneHabit = function doneHabit(habitId, index) {
     var _a;
 
     axios_1["default"].post('/api/habits/done', {
       userId: (_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.id,
       id: habitId
     }).then(function (res) {
-      console.log(res);
+      var data = mapHabitItem(res.data.data);
+
+      if (index !== undefined) {
+        setHabits(habits.map(function (habit, key) {
+          return key === index ? data : habit;
+        }));
+      }
     })["catch"](function (error) {
       console.error(error);
     });
@@ -3847,6 +3862,7 @@ var User = function User() {
     return react_1["default"].createElement(HabitTracker_1["default"], {
       item: item,
       key: index,
+      index: index,
       doneHabit: doneHabit
     });
   }))));

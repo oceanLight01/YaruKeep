@@ -23,6 +23,28 @@ const User = () => {
     const locationPath = useLocation().pathname;
     const auth = useAuth();
 
+    const mapHabitItem = (props: any): HabitItem => {
+        return {
+            id: props.id,
+            title: props.title,
+            description: props.description,
+            categoryId: props.category_id,
+            categoryName: props.category_name,
+            maxDoneDay: props.max_done_day,
+            doneDaysCount: props.done_days_count,
+            doneDaysList: props.done_days_list,
+            isPrivate: props.is_private,
+            isDone: props.is_done,
+            user: {
+                id: props.user.id,
+                name: props.user.name,
+                screenName: props.user.screen_name,
+            },
+            created_at: props.created_at,
+            updated_at: props.updated_at,
+        };
+    };
+
     const getUserData = (screenName?: string) => {
         axios
             .get(`/api/user/${screenName}`)
@@ -41,25 +63,7 @@ const User = () => {
                 });
                 setHabits(
                     data.habits.map((item: any) => {
-                        return {
-                            id: item.id,
-                            title: item.title,
-                            description: item.description,
-                            categoryId: item.category_id,
-                            categoryName: item.category_name,
-                            maxDoneDay: item.max_done_day,
-                            doneDaysCount: item.done_days_count,
-                            doneDaysList: item.done_days_list,
-                            isPrivate: item.is_private,
-                            isDone: item.is_done,
-                            user: {
-                                id: item.user.id,
-                                name: item.user.name,
-                                screenName: item.user.screen_name,
-                            },
-                            created_at: item.created_at,
-                            updated_at: item.updated_at,
-                        };
+                        return mapHabitItem(item);
                     })
                 );
             })
@@ -68,11 +72,18 @@ const User = () => {
             });
     };
 
-    const doneHabit = (habitId: number) => {
+    const doneHabit = (habitId: number, index?: number) => {
         axios
             .post('/api/habits/done', { userId: auth?.userData?.id, id: habitId })
             .then((res) => {
-                console.log(res);
+                const data = mapHabitItem(res.data.data);
+                if (index !== undefined) {
+                    setHabits(
+                        habits.map((habit, key) => {
+                            return key === index ? data : habit;
+                        })
+                    );
+                }
             })
             .catch((error) => {
                 console.error(error);
@@ -100,7 +111,14 @@ const User = () => {
                 <h2>ハビットトラッカー</h2>
                 <ul>
                     {habits.map((item, index: number) => {
-                        return <HabitTracker item={item} key={index} doneHabit={doneHabit} />;
+                        return (
+                            <HabitTracker
+                                item={item}
+                                key={index}
+                                index={index}
+                                doneHabit={doneHabit}
+                            />
+                        );
                     })}
                 </ul>
             </div>

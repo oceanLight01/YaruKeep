@@ -31,31 +31,33 @@ const HabitStatus = () => {
     const [statusCode, setStatusCode] = useState<number>(0);
     const habitId = useParams<{ screenName: string; id: string }>();
 
+    const mapHabitItem = (props: any) => {
+        return {
+            id: props.id,
+            title: props.title,
+            description: props.description,
+            categoryId: props.category_id,
+            categoryName: props.category_name,
+            maxDoneDay: props.max_done_day,
+            doneDaysCount: props.done_days_count,
+            doneDaysList: props.done_days_list,
+            isPrivate: props.is_private,
+            isDone: props.is_done,
+            user: {
+                id: props.user.id,
+                name: props.user.name,
+                screenName: props.user.screen_name,
+            },
+            created_at: props.created_at,
+            updated_at: props.updated_at,
+        };
+    };
+
     useEffect(() => {
         axios
             .get(`/api/habits/status/${habitId.id}`)
             .then((res) => {
-                console.log(res);
-                const item = res.data.data;
-                setHabitItem({
-                    id: item.id,
-                    title: item.title,
-                    description: item.description,
-                    categoryId: item.category_id,
-                    categoryName: item.category_name,
-                    maxDoneDay: item.max_done_day,
-                    doneDaysCount: item.done_days_count,
-                    doneDaysList: item.done_days_list,
-                    isPrivate: item.is_private,
-                    isDone: item.is_done,
-                    user: {
-                        id: item.user.id,
-                        name: item.user.name,
-                        screenName: item.user.screen_name,
-                    },
-                    created_at: item.created_at,
-                    updated_at: item.updated_at,
-                });
+                setHabitItem(mapHabitItem(res.data.data));
             })
             .catch((error) => {
                 setStatusCode(error.response.status);
@@ -69,7 +71,7 @@ const HabitStatus = () => {
         axios
             .post('/api/habits/done', { userId: auth?.userData?.id, id: habitId })
             .then((res) => {
-                console.log(res);
+                setHabitItem(mapHabitItem(res.data.data));
             })
             .catch((error) => {
                 console.error(error);

@@ -106,7 +106,7 @@ class HabitController extends Controller
                 $habit->save();
             }
 
-            return response(['message' => 'success'], 200);
+            return new HabitResource(Habit::find($habit_id));
         } else {
             return response(['message' => 'Faild to update Habit'], 403);
         }
