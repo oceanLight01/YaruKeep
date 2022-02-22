@@ -32,7 +32,7 @@ const HabitTracker = ({ item, doneHabit }: Props) => {
                 <DistributionCalendar values={item.doneDaysList} />
             </div>
             {auth?.userData?.id === item.user.id ? (
-                <HabitDoneButton doneHabit={doneHabit} id={item.id} />
+                <HabitDoneButton doneHabit={doneHabit} id={item.id} isDone={item.isDone} />
             ) : null}
         </li>
     );

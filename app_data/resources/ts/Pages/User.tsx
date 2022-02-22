@@ -51,6 +51,7 @@ const User = () => {
                             doneDaysCount: item.done_days_count,
                             doneDaysList: item.done_days_list,
                             isPrivate: item.is_private,
+                            isDone: item.is_done,
                             user: {
                                 id: item.user.id,
                                 name: item.user.name,

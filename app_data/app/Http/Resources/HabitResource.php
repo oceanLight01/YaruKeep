@@ -24,9 +24,12 @@ class HabitResource extends JsonResource
                                 ->get();
 
         $done_days_list = [];
-        foreach ($done_days as $date) {
-            $done_days_list[$date->created_at->format("Y-m-d")] = 1;
+        foreach ($done_days as $date)
+        {
+            $done_days_list[$date->created_at->format('Y-m-d')] = 1;
         }
+
+        $already_done = isset($done_days[0]) && $done_days[0]->created_at->format('Y-m-d') === date('Y-m-d');
 
         return [
             'id' => $this->id,
@@ -38,6 +41,7 @@ class HabitResource extends JsonResource
             'done_days_list' => $done_days_list,
             'max_done_day' => $this->max_done_day,
             'is_private' => $is_private,
+            'is_done' => $already_done,
             'user' => [
                 'id' => $this->user->id,
                 'name' => $this->user->name,

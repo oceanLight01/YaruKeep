@@ -8,6 +8,7 @@ type HabitItem = {
     doneDaysCount: number;
     doneDaysList: { [date: string]: number };
     isPrivate: boolean;
+    isDone: boolean;
     user: {
         id: number;
         name: string;

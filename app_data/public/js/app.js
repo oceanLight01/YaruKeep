@@ -2541,7 +2541,8 @@ var HabitTracker = function HabitTracker(_a) {
     values: item.doneDaysList
   })), ((_b = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _b === void 0 ? void 0 : _b.id) === item.user.id ? react_1["default"].createElement(HabitDoneButton_1["default"], {
     doneHabit: doneHabit,
-    id: item.id
+    id: item.id,
+    isDone: item.isDone
   }) : null);
 };
 
@@ -2687,7 +2688,8 @@ var HabitDoneButton = function HabitDoneButton(props) {
   return react_1["default"].createElement("button", {
     onClick: function onClick() {
       return props.doneHabit(props.id);
-    }
+    },
+    disabled: props.isDone
   }, "\u5B8C\u4E86");
 };
 
@@ -3589,6 +3591,7 @@ var User = function User() {
           doneDaysCount: item.done_days_count,
           doneDaysList: item.done_days_list,
           isPrivate: item.is_private,
+          isDone: item.is_done,
           user: {
             id: item.user.id,
             name: item.user.name,
