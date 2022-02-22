@@ -21,4 +21,5 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     //Habitに関するルーティング
     Route::post('/habits', 'HabitController@store');
     Route::post('/habits/done', 'HabitController@isDone');
+    Route::get('/habits/status/{id}', 'HabitController@show');
 });

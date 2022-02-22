@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\HabitResource;
 use App\Models\Habit;
 use App\Models\HabitDoneDay;
 use Illuminate\Http\Request;
@@ -9,6 +10,25 @@ use Illuminate\Support\Facades\Auth;
 
 class HabitController extends Controller
 {
+    /**
+     * Habitのデータを一件取得
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return HabitResource
+     */
+    public function show(Request $request)
+    {
+        $id = $request->id;
+        $habit_exists = Habit::where('id', $id)->exists();
+
+        if ($habit_exists)
+        {
+            return new HabitResource(Habit::find($id));
+        } else {
+            return response(['message' => 'not found habit data'], 404);
+        }
+    }
+
     /**
      * Habitの新規作成
      *

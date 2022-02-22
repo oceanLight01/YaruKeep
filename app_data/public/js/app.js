@@ -2521,6 +2521,8 @@ Object.defineProperty(exports, "__esModule", ({
 
 var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 
+var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
+
 var HabitDoneButton_1 = __importDefault(__webpack_require__(/*! ./atoms/HabitDoneButton */ "./resources/ts/Components/atoms/HabitDoneButton.tsx"));
 
 var Authenticate_1 = __webpack_require__(/*! ./Authenticate */ "./resources/ts/Components/Authenticate.tsx");
@@ -2533,7 +2535,15 @@ var HabitTracker = function HabitTracker(_a) {
   var item = _a.item,
       doneHabit = _a.doneHabit;
   var auth = (0, Authenticate_1.useAuth)();
-  return react_1["default"].createElement("li", null, react_1["default"].createElement("p", null, item.title), react_1["default"].createElement("p", null, item.description ? item.description.split('\n').map(function (str, index) {
+  var navigation = (0, react_router_dom_1.useNavigate)();
+
+  var handleClick = function handleClick() {
+    navigation("/user/".concat(item.user.screenName, "/habit/").concat(item.id));
+  };
+
+  return react_1["default"].createElement("li", {
+    onClick: handleClick
+  }, react_1["default"].createElement("p", null, item.title), react_1["default"].createElement("p", null, item.description ? item.description.split('\n').map(function (str, index) {
     return react_1["default"].createElement(react_1["default"].Fragment, {
       key: index
     }, str, react_1["default"].createElement("br", null));
@@ -2828,6 +2838,8 @@ var User_1 = __importDefault(__webpack_require__(/*! ./User */ "./resources/ts/P
 
 var HabitPost_1 = __importDefault(__webpack_require__(/*! ./HabitPost */ "./resources/ts/Pages/HabitPost.tsx"));
 
+var HabitStatus_1 = __importDefault(__webpack_require__(/*! ./HabitStatus */ "./resources/ts/Pages/HabitStatus.tsx"));
+
 var App = function App() {
   return react_1["default"].createElement(Authenticate_1["default"], null, react_1["default"].createElement(Loading_1["default"], null, react_1["default"].createElement(react_router_dom_1.BrowserRouter, null, react_1["default"].createElement(Header_1["default"], null), react_1["default"].createElement(Navigation_1["default"], null), react_1["default"].createElement(react_router_dom_1.Routes, null, react_1["default"].createElement(react_router_dom_1.Route, {
     path: "/",
@@ -2848,8 +2860,11 @@ var App = function App() {
     path: "/user/:screenName",
     element: react_1["default"].createElement(Authenticate_1.PrivateRoute, null, react_1["default"].createElement(User_1["default"], null))
   }), react_1["default"].createElement(react_router_dom_1.Route, {
-    path: "/post/Habit",
+    path: "/post/habit",
     element: react_1["default"].createElement(Authenticate_1.PrivateRoute, null, react_1["default"].createElement(HabitPost_1["default"], null))
+  }), react_1["default"].createElement(react_router_dom_1.Route, {
+    path: "/user/:screenName/habit/:id",
+    element: react_1["default"].createElement(Authenticate_1.PrivateRoute, null, react_1["default"].createElement(HabitStatus_1["default"], null))
   })), react_1["default"].createElement(Footer_1["default"], null))));
 };
 
@@ -3415,6 +3430,167 @@ var HabitPost = function HabitPost() {
 };
 
 exports["default"] = HabitPost;
+
+/***/ }),
+
+/***/ "./resources/ts/Pages/HabitStatus.tsx":
+/*!********************************************!*\
+  !*** ./resources/ts/Pages/HabitStatus.tsx ***!
+  \********************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  Object.defineProperty(o, k2, {
+    enumerable: true,
+    get: function get() {
+      return m[k];
+    }
+  });
+} : function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+});
+
+var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+  Object.defineProperty(o, "default", {
+    enumerable: true,
+    value: v
+  });
+} : function (o, v) {
+  o["default"] = v;
+});
+
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  }
+
+  __setModuleDefault(result, mod);
+
+  return result;
+};
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
+
+var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
+
+var HabitDoneButton_1 = __importDefault(__webpack_require__(/*! ../Components/atoms/HabitDoneButton */ "./resources/ts/Components/atoms/HabitDoneButton.tsx"));
+
+var Authenticate_1 = __webpack_require__(/*! ../Components/Authenticate */ "./resources/ts/Components/Authenticate.tsx");
+
+var ContributionCalendar_1 = __importDefault(__webpack_require__(/*! ../Components/ContributionCalendar */ "./resources/ts/Components/ContributionCalendar.tsx"));
+
+var HabitStatus = function HabitStatus() {
+  var _a;
+
+  var auth = (0, Authenticate_1.useAuth)();
+
+  var _b = (0, react_1.useState)({
+    id: 0,
+    title: '',
+    description: '',
+    categoryId: 0,
+    categoryName: '',
+    maxDoneDay: -1,
+    doneDaysCount: -1,
+    doneDaysList: {},
+    isPrivate: false,
+    isDone: false,
+    user: {
+      id: 0,
+      name: '',
+      screenName: ''
+    },
+    created_at: '',
+    updated_at: ''
+  }),
+      HabitItem = _b[0],
+      setHabitItem = _b[1];
+
+  var _c = (0, react_1.useState)(false),
+      isLoading = _c[0],
+      setIsLoading = _c[1];
+
+  var _d = (0, react_1.useState)(0),
+      errorStatus = _d[0],
+      setErrorStatus = _d[1];
+
+  var habitId = (0, react_router_dom_1.useParams)();
+  (0, react_1.useEffect)(function () {
+    axios_1["default"].get("/api/habits/status/".concat(habitId.id)).then(function (res) {
+      console.log(res);
+      var item = res.data.data;
+      setHabitItem({
+        id: item.id,
+        title: item.title,
+        description: item.description,
+        categoryId: item.category_id,
+        categoryName: item.category_name,
+        maxDoneDay: item.max_done_day,
+        doneDaysCount: item.done_days_count,
+        doneDaysList: item.done_days_list,
+        isPrivate: item.is_private,
+        isDone: item.is_done,
+        user: {
+          id: item.user.id,
+          name: item.user.name,
+          screenName: item.user.screen_name
+        },
+        created_at: item.created_at,
+        updated_at: item.updated_at
+      });
+    })["catch"](function (error) {
+      setErrorStatus(error.response.status);
+    })["finally"](function () {
+      setIsLoading(true);
+    });
+  }, []);
+
+  var doneHabit = function doneHabit(habitId) {
+    var _a;
+
+    axios_1["default"].post('/api/habits/done', {
+      userId: (_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.id,
+      id: habitId
+    }).then(function (res) {
+      console.log(res);
+    })["catch"](function (error) {
+      console.error(error);
+    });
+  };
+
+  return isLoading ? errorStatus === 404 ? react_1["default"].createElement("p", null, "\u30CF\u30D3\u30C3\u30C8\u30C8\u30E9\u30C3\u30AB\u30FC\u304C\u898B\u3064\u304B\u308A\u307E\u305B\u3093\u3067\u3057\u305F\u3002\u3059\u3067\u306B\u524A\u9664\u3055\u308C\u3066\u3044\u308B\u53EF\u80FD\u6027\u304C\u3042\u308A\u307E\u3059\u3002") : react_1["default"].createElement("div", null, react_1["default"].createElement("h2", null, HabitItem.title), react_1["default"].createElement("p", null, HabitItem.description ? HabitItem.description.split('\n').map(function (str, index) {
+    return react_1["default"].createElement(react_1["default"].Fragment, {
+      key: index
+    }, str, react_1["default"].createElement("br", null));
+  }) : ''), react_1["default"].createElement("p", null, "\u30AB\u30C6\u30B4\u30EA:", HabitItem.categoryName), react_1["default"].createElement("p", null, "\u7DCF\u9054\u6210\u65E5\u6570:", HabitItem.doneDaysCount, "\u65E5"), react_1["default"].createElement("p", null, "\u6700\u5927\u9023\u7D9A\u9054\u6210\u65E5\u6570:", HabitItem.maxDoneDay, "\u65E5"), react_1["default"].createElement("p", null, "\u4F5C\u6210\u65E5:", HabitItem.created_at), react_1["default"].createElement("div", null, react_1["default"].createElement(ContributionCalendar_1["default"], {
+    values: HabitItem.doneDaysList
+  })), ((_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.id) === HabitItem.user.id ? react_1["default"].createElement(HabitDoneButton_1["default"], {
+    doneHabit: doneHabit,
+    id: HabitItem.id,
+    isDone: HabitItem.isDone
+  }) : null) : react_1["default"].createElement("div", null, react_1["default"].createElement("p", null, "\u8AAD\u307F\u8FBC\u307F\u4E2D..."));
+};
+
+exports["default"] = HabitStatus;
 
 /***/ }),
 

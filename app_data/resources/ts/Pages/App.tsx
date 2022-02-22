@@ -18,6 +18,7 @@ import Home from './Home';
 import Footer from '../Components/Footer';
 import User from './User';
 import HabitPost from './HabitPost';
+import HabitStatus from './HabitStatus';
 
 const App = () => {
     return (
@@ -76,10 +77,18 @@ const App = () => {
                             }
                         />
                         <Route
-                            path="/post/Habit"
+                            path="/post/habit"
                             element={
                                 <PrivateRoute>
                                     <HabitPost />
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
+                            path="/user/:screenName/habit/:id"
+                            element={
+                                <PrivateRoute>
+                                    <HabitStatus />
                                 </PrivateRoute>
                             }
                         />

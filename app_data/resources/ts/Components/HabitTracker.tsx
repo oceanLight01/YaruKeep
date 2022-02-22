@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import HabitDoneButton from './atoms/HabitDoneButton';
 import { useAuth } from './Authenticate';
 import DistributionCalendar from './ContributionCalendar';
@@ -10,9 +11,14 @@ type Props = {
 
 const HabitTracker = ({ item, doneHabit }: Props) => {
     const auth = useAuth();
+    const navigation = useNavigate();
+
+    const handleClick = () => {
+        navigation(`/user/${item.user.screenName}/habit/${item.id}`);
+    };
 
     return (
-        <li>
+        <li onClick={handleClick}>
             <p>{item.title}</p>
             <p>
                 {item.description
