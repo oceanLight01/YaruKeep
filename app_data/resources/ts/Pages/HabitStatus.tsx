@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import HabitDoneButton from '../Components/atoms/HabitDoneButton';
 import { useAuth } from '../Components/Authenticate';
 import DistributionCalendar from '../Components/ContributionCalendar';
+import PageRender from './PageRender';
 
 const HabitStatus = () => {
     const auth = useAuth();
@@ -27,7 +28,7 @@ const HabitStatus = () => {
         updated_at: '',
     });
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [errorStatus, setErrorStatus] = useState<number>(0);
+    const [statusCode, setStatusCode] = useState<number>(0);
     const habitId = useParams<{ screenName: string; id: string }>();
 
     useEffect(() => {
@@ -57,7 +58,7 @@ const HabitStatus = () => {
                 });
             })
             .catch((error) => {
-                setErrorStatus(error.response.status);
+                setStatusCode(error.response.status);
             })
             .finally(() => {
                 setIsLoading(true);
@@ -76,9 +77,7 @@ const HabitStatus = () => {
     };
 
     return isLoading ? (
-        errorStatus === 404 ? (
-            <p>ハビットトラッカーが見つかりませんでした。すでに削除されている可能性があります。</p>
-        ) : (
+        <PageRender status={statusCode}>
             <div>
                 <h2>{HabitItem.title}</h2>
                 <p>
@@ -106,7 +105,7 @@ const HabitStatus = () => {
                     />
                 ) : null}
             </div>
-        )
+        </PageRender>
     ) : (
         <div>
             <p>読み込み中...</p>
