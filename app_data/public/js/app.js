@@ -2521,17 +2521,28 @@ Object.defineProperty(exports, "__esModule", ({
 
 var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 
+var HabitDoneButton_1 = __importDefault(__webpack_require__(/*! ./atoms/HabitDoneButton */ "./resources/ts/Components/atoms/HabitDoneButton.tsx"));
+
+var Authenticate_1 = __webpack_require__(/*! ./Authenticate */ "./resources/ts/Components/Authenticate.tsx");
+
 var ContributionCalendar_1 = __importDefault(__webpack_require__(/*! ./ContributionCalendar */ "./resources/ts/Components/ContributionCalendar.tsx"));
 
 var HabitTracker = function HabitTracker(_a) {
-  var item = _a.item;
+  var _b;
+
+  var item = _a.item,
+      doneHabit = _a.doneHabit;
+  var auth = (0, Authenticate_1.useAuth)();
   return react_1["default"].createElement("li", null, react_1["default"].createElement("p", null, item.title), react_1["default"].createElement("p", null, item.description ? item.description.split('\n').map(function (str, index) {
     return react_1["default"].createElement(react_1["default"].Fragment, {
       key: index
     }, str, react_1["default"].createElement("br", null));
   }) : ''), react_1["default"].createElement("p", null, "\u30AB\u30C6\u30B4\u30EA:", item.categoryName), react_1["default"].createElement("p", null, "\u7DCF\u9054\u6210\u65E5\u6570:", item.doneDaysCount, "\u65E5"), react_1["default"].createElement("p", null, "\u6700\u5927\u9023\u7D9A\u9054\u6210\u65E5\u6570:", item.maxDoneDay, "\u65E5"), react_1["default"].createElement("p", null, "\u4F5C\u6210\u65E5:", item.created_at), react_1["default"].createElement("div", null, react_1["default"].createElement(ContributionCalendar_1["default"], {
     values: item.doneDaysList
-  })));
+  })), ((_b = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _b === void 0 ? void 0 : _b.id) === item.user.id ? react_1["default"].createElement(HabitDoneButton_1["default"], {
+    doneHabit: doneHabit,
+    id: item.id
+  }) : null);
 };
 
 exports["default"] = HabitTracker;
@@ -2648,6 +2659,39 @@ var Navigation = function Navigation() {
 };
 
 exports["default"] = Navigation;
+
+/***/ }),
+
+/***/ "./resources/ts/Components/atoms/HabitDoneButton.tsx":
+/*!***********************************************************!*\
+  !*** ./resources/ts/Components/atoms/HabitDoneButton.tsx ***!
+  \***********************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var HabitDoneButton = function HabitDoneButton(props) {
+  return react_1["default"].createElement("button", {
+    onClick: function onClick() {
+      return props.doneHabit(props.id);
+    }
+  }, "\u5B8C\u4E86");
+};
+
+exports["default"] = HabitDoneButton;
 
 /***/ }),
 
@@ -3502,6 +3546,8 @@ var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/reac
 
 var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
 
+var Authenticate_1 = __webpack_require__(/*! ../Components/Authenticate */ "./resources/ts/Components/Authenticate.tsx");
+
 var HabitTracker_1 = __importDefault(__webpack_require__(/*! ../Components/HabitTracker */ "./resources/ts/Components/HabitTracker.tsx"));
 
 var User = function User() {
@@ -3516,6 +3562,7 @@ var User = function User() {
       setHabits = _b[1];
 
   var locationPath = (0, react_router_dom_1.useLocation)().pathname;
+  var auth = (0, Authenticate_1.useAuth)();
 
   var getUserData = function getUserData(screenName) {
     axios_1["default"].get("/api/user/".concat(screenName)).then(function (res) {
@@ -3533,6 +3580,7 @@ var User = function User() {
       });
       setHabits(data.habits.map(function (item) {
         return {
+          id: item.id,
           title: item.title,
           description: item.description,
           categoryId: item.category_id,
@@ -3541,10 +3589,28 @@ var User = function User() {
           doneDaysCount: item.done_days_count,
           doneDaysList: item.done_days_list,
           isPrivate: item.is_private,
+          user: {
+            id: item.user.id,
+            name: item.user.name,
+            screenName: item.user.screen_name
+          },
           created_at: item.created_at,
           updated_at: item.updated_at
         };
       }));
+    })["catch"](function (error) {
+      console.error(error);
+    });
+  };
+
+  var doneHabit = function doneHabit(habitId) {
+    var _a;
+
+    axios_1["default"].post('/api/habits/done', {
+      userId: (_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.id,
+      id: habitId
+    }).then(function (res) {
+      console.log(res);
     })["catch"](function (error) {
       console.error(error);
     });
@@ -3556,7 +3622,8 @@ var User = function User() {
   return react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("h1", null, "\u30E6\u30FC\u30B6\u30DA\u30FC\u30B8"), react_1["default"].createElement("div", null, react_1["default"].createElement("p", null, "ID:", userData === null || userData === void 0 ? void 0 : userData.id), react_1["default"].createElement("p", null, "name:", userData === null || userData === void 0 ? void 0 : userData.name), react_1["default"].createElement("p", null, "UserID", userData === null || userData === void 0 ? void 0 : userData.screenName), react_1["default"].createElement("p", null, "Profile:", userData === null || userData === void 0 ? void 0 : userData.profile), react_1["default"].createElement("p", null, userData === null || userData === void 0 ? void 0 : userData.profileImage), react_1["default"].createElement("p", null, "\u30D5\u30A9\u30ED\u30FC\u4E2D:", userData === null || userData === void 0 ? void 0 : userData.followingCount), react_1["default"].createElement("p", null, "\u30D5\u30A9\u30ED\u30EF\u30FC:", userData === null || userData === void 0 ? void 0 : userData.followedCount)), react_1["default"].createElement("hr", null), react_1["default"].createElement("div", null, react_1["default"].createElement("h2", null, "\u30CF\u30D3\u30C3\u30C8\u30C8\u30E9\u30C3\u30AB\u30FC"), react_1["default"].createElement("ul", null, habits.map(function (item, index) {
     return react_1["default"].createElement(HabitTracker_1["default"], {
       item: item,
-      key: index
+      key: index,
+      doneHabit: doneHabit
     });
   }))));
 };

@@ -3,31 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Habit;
+use App\Models\HabitDoneDay;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class HabitController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
     /**
      * Habitの新規作成
      *
@@ -60,47 +41,54 @@ class HabitController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
+     * Habitの目標達成時の処理
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function isDone(Request $request)
     {
-        //
-    }
+        if ($request->userId === Auth::id())
+        {
+            $now_time = date('Y-m-d');
+            $habit_id = $request->id;
+            $is_already_done = HabitDoneDay::where('habit_id', $habit_id)
+                                        ->whereDate('created_at', $now_time)
+                                        ->exists();
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+            $is_done_yesterday = HabitDoneDay::where('habit_id', $habit_id)
+                                        ->latest()
+                                        ->whereDate('created_at', date('Y-m-d', strtotime('-1 day')))
+                                        ->exists();
+            $habit = Habit::find($habit_id);
+
+            if (!$is_already_done)
+            {
+                $habit_day = new HabitDoneDay;
+                $habit_day->habit_id = $habit_id;
+                $habit_day->save();
+
+                // Habitの連続達成日数の処理
+                $count = $habit->done_days_count;
+                if ($is_done_yesterday)
+                {
+                    $count++;
+                } else {
+                    $count = 1;
+                }
+                $habit->done_days_count = $count;
+
+                // Habitの最大連続達成日数の処理
+                if ($count > $habit->max_done_day)
+                {
+                    $habit->max_done_day = $count;
+                }
+                $habit->save();
+            }
+
+            return response(['message' => 'success'], 200);
+        } else {
+            return response(['message' => 'Faild to update Habit'], 403);
+        }
     }
 }

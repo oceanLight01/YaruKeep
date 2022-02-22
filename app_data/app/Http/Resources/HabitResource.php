@@ -38,6 +38,11 @@ class HabitResource extends JsonResource
             'done_days_list' => $done_days_list,
             'max_done_day' => $this->max_done_day,
             'is_private' => $is_private,
+            'user' => [
+                'id' => $this->user->id,
+                'name' => $this->user->name,
+                'screen_name' => $this->user->screen_name,
+            ],
             'created_at' => $this->created_at->format('Y年n月j日 H:i'),
             'updated_at' => $this->updated_at
         ];

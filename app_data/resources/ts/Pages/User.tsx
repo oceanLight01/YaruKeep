@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
+import { useAuth } from '../Components/Authenticate';
 import HabitTracker from '../Components/HabitTracker';
 
 type UserData = {
@@ -20,6 +21,7 @@ const User = () => {
     const [userData, setUserData] = useState<UserData | null>(null);
     const [habits, setHabits] = useState<HabitItem[] | []>([]);
     const locationPath = useLocation().pathname;
+    const auth = useAuth();
 
     const getUserData = (screenName?: string) => {
         axios
@@ -40,6 +42,7 @@ const User = () => {
                 setHabits(
                     data.habits.map((item: any) => {
                         return {
+                            id: item.id,
                             title: item.title,
                             description: item.description,
                             categoryId: item.category_id,
@@ -48,11 +51,27 @@ const User = () => {
                             doneDaysCount: item.done_days_count,
                             doneDaysList: item.done_days_list,
                             isPrivate: item.is_private,
+                            user: {
+                                id: item.user.id,
+                                name: item.user.name,
+                                screenName: item.user.screen_name,
+                            },
                             created_at: item.created_at,
                             updated_at: item.updated_at,
                         };
                     })
                 );
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    };
+
+    const doneHabit = (habitId: number) => {
+        axios
+            .post('/api/habits/done', { userId: auth?.userData?.id, id: habitId })
+            .then((res) => {
+                console.log(res);
             })
             .catch((error) => {
                 console.error(error);
@@ -80,7 +99,7 @@ const User = () => {
                 <h2>ハビットトラッカー</h2>
                 <ul>
                     {habits.map((item, index: number) => {
-                        return <HabitTracker item={item} key={index} />;
+                        return <HabitTracker item={item} key={index} doneHabit={doneHabit} />;
                     })}
                 </ul>
             </div>

@@ -1,4 +1,5 @@
 type HabitItem = {
+    id: number;
     title: string;
     description: string;
     categoryId: number;
@@ -7,6 +8,11 @@ type HabitItem = {
     doneDaysCount: number;
     doneDaysList: { [date: string]: number };
     isPrivate: boolean;
+    user: {
+        id: number;
+        name: string;
+        screenName: string;
+    };
     created_at: string;
     updated_at: string;
 };

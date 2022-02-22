@@ -1,11 +1,16 @@
 import React from 'react';
+import HabitDoneButton from './atoms/HabitDoneButton';
+import { useAuth } from './Authenticate';
 import DistributionCalendar from './ContributionCalendar';
 
 type Props = {
     item: HabitItem;
+    doneHabit: (habitId: number) => void;
 };
 
-const HabitTracker = ({ item }: Props) => {
+const HabitTracker = ({ item, doneHabit }: Props) => {
+    const auth = useAuth();
+
     return (
         <li>
             <p>{item.title}</p>
@@ -26,6 +31,9 @@ const HabitTracker = ({ item }: Props) => {
             <div>
                 <DistributionCalendar values={item.doneDaysList} />
             </div>
+            {auth?.userData?.id === item.user.id ? (
+                <HabitDoneButton doneHabit={doneHabit} id={item.id} />
+            ) : null}
         </li>
     );
 };
