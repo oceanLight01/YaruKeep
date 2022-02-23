@@ -5,6 +5,7 @@ import HabitDeleteButton from '../Components/atoms/HabitDeleteButton';
 import HabitDoneButton from '../Components/atoms/HabitDoneButton';
 import { useAuth } from '../Components/Authenticate';
 import DistributionCalendar from '../Components/ContributionCalendar';
+import EditHabitForm from '../Components/EditHabitForm';
 import PageRender from './PageRender';
 
 const HabitStatus = () => {
@@ -30,6 +31,7 @@ const HabitStatus = () => {
     });
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [statusCode, setStatusCode] = useState<number>(0);
+    const [editing, setEditing] = useState<boolean>(false);
     const habitId = useParams<{ screenName: string; id: string }>();
     const navigate = useNavigate();
 
@@ -80,6 +82,11 @@ const HabitStatus = () => {
             });
     };
 
+    const updateHabit = (habitItem: HabitItem) => {
+        setHabitItem(mapHabitItem(habitItem));
+        setEditing(false);
+    };
+
     const deleteHabit = (habitId: number) => {
         if (window.confirm('ハビットトラッカーを削除します。もとに戻せませんがよろしいですか？')) {
             axios
@@ -94,38 +101,54 @@ const HabitStatus = () => {
     };
 
     return isLoading ? (
-        <PageRender status={statusCode}>
-            <div>
-                <h2>{HabitItem.title}</h2>
-                <p>
-                    {HabitItem.description
-                        ? HabitItem.description.split('\n').map((str, index) => (
-                              <React.Fragment key={index}>
-                                  {str}
-                                  <br />
-                              </React.Fragment>
-                          ))
-                        : ''}
-                </p>
-                <p>カテゴリ:{HabitItem.categoryName}</p>
-                <p>総達成日数:{HabitItem.doneDaysCount}日</p>
-                <p>最大連続達成日数:{HabitItem.maxDoneDay}日</p>
-                <p>作成日:{HabitItem.created_at}</p>
-                <div>
-                    <DistributionCalendar values={HabitItem.doneDaysList} />
-                </div>
-                {auth?.userData?.id === HabitItem.user.id ? (
-                    <>
-                        <HabitDoneButton
-                            doneHabit={doneHabit}
-                            id={HabitItem.id}
-                            isDone={HabitItem.isDone}
-                        />
-                        <HabitDeleteButton id={HabitItem.id} deleteHabit={deleteHabit} />
-                    </>
-                ) : null}
-            </div>
-        </PageRender>
+        <>
+            {!editing ? (
+                <PageRender status={statusCode}>
+                    <div>
+                        <h2>{HabitItem.title}</h2>
+                        <p>
+                            {HabitItem.description
+                                ? HabitItem.description.split('\n').map((str, index) => (
+                                      <React.Fragment key={index}>
+                                          {str}
+                                          <br />
+                                      </React.Fragment>
+                                  ))
+                                : ''}
+                        </p>
+                        <p>カテゴリ:{HabitItem.categoryName}</p>
+                        <p>総達成日数:{HabitItem.doneDaysCount}日</p>
+                        <p>最大連続達成日数:{HabitItem.maxDoneDay}日</p>
+                        <p>作成日:{HabitItem.created_at}</p>
+                        <div>
+                            <DistributionCalendar values={HabitItem.doneDaysList} />
+                        </div>
+                        {auth?.userData?.id === HabitItem.user.id ? (
+                            <>
+                                <HabitDoneButton
+                                    doneHabit={doneHabit}
+                                    id={HabitItem.id}
+                                    isDone={HabitItem.isDone}
+                                />
+                                <HabitDeleteButton id={HabitItem.id} deleteHabit={deleteHabit} />
+                            </>
+                        ) : null}
+                    </div>
+                </PageRender>
+            ) : (
+                <EditHabitForm
+                    {...{
+                        title: HabitItem.title,
+                        description: HabitItem.description ? HabitItem.description : '',
+                        categoryId: HabitItem.categoryId,
+                        isPrivate: HabitItem.isPrivate ? 'true' : 'false',
+                        habitId: HabitItem.id,
+                        updateHabit: updateHabit,
+                    }}
+                />
+            )}
+            <button onClick={() => setEditing(!editing)}>{editing ? '戻る' : '編集する'}</button>
+        </>
     ) : (
         <div>
             <p>読み込み中...</p>

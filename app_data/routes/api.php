@@ -22,5 +22,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/habits', 'HabitController@store');
     Route::post('/habits/done', 'HabitController@isDone');
     Route::get('/habits/status/{id}', 'HabitController@show');
+    Route::put('/habits/{id}', 'HabitController@update');
     Route::delete('/habits/{id}', 'HabitController@destroy');
 });

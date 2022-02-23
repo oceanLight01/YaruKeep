@@ -2471,6 +2471,201 @@ exports["default"] = DistributionCalendar;
 
 /***/ }),
 
+/***/ "./resources/ts/Components/EditHabitForm.tsx":
+/*!***************************************************!*\
+  !*** ./resources/ts/Components/EditHabitForm.tsx ***!
+  \***************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __assign = this && this.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+
+      for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+    }
+
+    return t;
+  };
+
+  return __assign.apply(this, arguments);
+};
+
+var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  Object.defineProperty(o, k2, {
+    enumerable: true,
+    get: function get() {
+      return m[k];
+    }
+  });
+} : function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+});
+
+var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+  Object.defineProperty(o, "default", {
+    enumerable: true,
+    value: v
+  });
+} : function (o, v) {
+  o["default"] = v;
+});
+
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  }
+
+  __setModuleDefault(result, mod);
+
+  return result;
+};
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
+
+var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var react_hook_form_1 = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.cjs.js");
+
+var Authenticate_1 = __webpack_require__(/*! ./Authenticate */ "./resources/ts/Components/Authenticate.tsx");
+
+var EditHabitForm = function EditHabitForm(props) {
+  var _a, _b, _c, _d;
+
+  var _e = (0, react_1.useState)(false),
+      isLoading = _e[0],
+      setIsLoading = _e[1];
+
+  var auth = (0, Authenticate_1.useAuth)();
+
+  var _f = (0, react_hook_form_1.useForm)({
+    mode: 'onBlur'
+  }),
+      register = _f.register,
+      handleSubmit = _f.handleSubmit,
+      errors = _f.formState.errors,
+      setValue = _f.setValue;
+
+  (0, react_1.useEffect)(function () {
+    setValue('title', props.title);
+    setValue('description', props.description);
+    setValue('categoryId', props.categoryId);
+    setValue('isPrivate', props.isPrivate);
+  }, []);
+
+  var onSubmit = function onSubmit(data) {
+    var _a;
+
+    setIsLoading(true);
+    var habitData = {
+      userId: (_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.id,
+      habitId: props.habitId,
+      title: data.title,
+      description: data.description,
+      categoryId: data.categoryId,
+      isPrivate: data.isPrivate === 'true'
+    };
+    axios_1["default"].put("/api/habits/".concat(props.habitId), habitData).then(function (res) {
+      return props.updateHabit(res.data.data);
+    })["catch"](function (error) {
+      return console.log(error);
+    })["finally"](function () {
+      return setIsLoading(false);
+    });
+  };
+
+  return react_1["default"].createElement("form", {
+    onSubmit: handleSubmit(onSubmit)
+  }, react_1["default"].createElement("div", null, react_1["default"].createElement("label", null, "\u76EE\u6A19"), ((_a = errors.title) === null || _a === void 0 ? void 0 : _a.type) === 'maxLength' && react_1["default"].createElement("p", null, "\u76EE\u6A19\u306F50\u6587\u5B57\u4EE5\u4E0B\u3067\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), ((_b = errors.title) === null || _b === void 0 ? void 0 : _b.type) === 'required' && react_1["default"].createElement("p", null, "\u76EE\u6A19\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), react_1["default"].createElement("input", __assign({
+    type: "text",
+    maxLength: 50,
+    autoComplete: "on"
+  }, register('title', {
+    required: true,
+    maxLength: 50
+  })))), react_1["default"].createElement("div", null, react_1["default"].createElement("label", null, "\u8AAC\u660E\u6587"), ((_c = errors.description) === null || _c === void 0 ? void 0 : _c.type) === 'maxLength' && react_1["default"].createElement("p", null, "\u8AAC\u660E\u6587\u306F300\u6587\u5B57\u4EE5\u4E0B\u3067\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), react_1["default"].createElement("textarea", __assign({
+    maxLength: 300,
+    autoComplete: "off"
+  }, register('description', {
+    maxLength: 300
+  })))), react_1["default"].createElement("div", null, react_1["default"].createElement("select", __assign({}, register('categoryId', {
+    required: true
+  })), react_1["default"].createElement("option", {
+    value: "1"
+  }, "\u30D3\u30B8\u30CD\u30B9\u30B9\u30AD\u30EB"), react_1["default"].createElement("option", {
+    value: "2"
+  }, "\u81EA\u5DF1\u5553\u767A"), react_1["default"].createElement("option", {
+    value: "3"
+  }, "\u30D7\u30ED\u30B0\u30E9\u30DF\u30F3\u30B0\u30FB\u958B\u767A"), react_1["default"].createElement("option", {
+    value: "4"
+  }, "\u30B9\u30AD\u30EB\u30A2\u30C3\u30D7"), react_1["default"].createElement("option", {
+    value: "5"
+  }, "\u8CC7\u683C\u53D6\u5F97"), react_1["default"].createElement("option", {
+    value: "6"
+  }, "\u5916\u56FD\u8A9E\u5B66\u7FD2"), react_1["default"].createElement("option", {
+    value: "7"
+  }, "\u8AAD\u66F8"), react_1["default"].createElement("option", {
+    value: "8"
+  }, "\u82B8\u8853"), react_1["default"].createElement("option", {
+    value: "9"
+  }, "\u30B2\u30FC\u30E0"), react_1["default"].createElement("option", {
+    value: "10"
+  }, "\u5275\u4F5C"), react_1["default"].createElement("option", {
+    value: "11"
+  }, "\u8DA3\u5473"), react_1["default"].createElement("option", {
+    value: "12"
+  }, "\u5B66\u7FD2"), react_1["default"].createElement("option", {
+    value: "13"
+  }, "\u904B\u52D5\u30FB\u30B9\u30DD\u30FC\u30C4"), react_1["default"].createElement("option", {
+    value: "14"
+  }, "\u6599\u7406"), react_1["default"].createElement("option", {
+    value: "15"
+  }, "\u5065\u5EB7\u30FB\u7F8E\u5BB9"))), react_1["default"].createElement("div", null, react_1["default"].createElement("label", null, "\u516C\u958B\u72B6\u614B"), ((_d = errors.isPrivate) === null || _d === void 0 ? void 0 : _d.type) === 'required' && react_1["default"].createElement("p", null, "\u516C\u958B\u72B6\u614B\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), react_1["default"].createElement("label", {
+    htmlFor: "public"
+  }, "\u516C\u958B"), react_1["default"].createElement("input", __assign({
+    id: "public",
+    type: "radio",
+    value: "false"
+  }, register('isPrivate', {
+    required: true
+  }))), react_1["default"].createElement("label", {
+    htmlFor: "private"
+  }, "\u975E\u516C\u958B"), react_1["default"].createElement("input", __assign({
+    id: "private",
+    type: "radio",
+    value: "true"
+  }, register('isPrivate', {
+    required: true
+  })))), react_1["default"].createElement("input", {
+    type: "submit",
+    value: "\u66F4\u65B0\u3059\u308B",
+    disabled: isLoading
+  }));
+};
+
+exports["default"] = EditHabitForm;
+
+/***/ }),
+
 /***/ "./resources/ts/Components/Footer.tsx":
 /*!********************************************!*\
   !*** ./resources/ts/Components/Footer.tsx ***!
@@ -3477,6 +3672,22 @@ exports["default"] = HabitPost;
 "use strict";
 
 
+var __assign = this && this.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+
+      for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+    }
+
+    return t;
+  };
+
+  return __assign.apply(this, arguments);
+};
+
 var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
   if (k2 === undefined) k2 = k;
   Object.defineProperty(o, k2, {
@@ -3535,6 +3746,8 @@ var Authenticate_1 = __webpack_require__(/*! ../Components/Authenticate */ "./re
 
 var ContributionCalendar_1 = __importDefault(__webpack_require__(/*! ../Components/ContributionCalendar */ "./resources/ts/Components/ContributionCalendar.tsx"));
 
+var EditHabitForm_1 = __importDefault(__webpack_require__(/*! ../Components/EditHabitForm */ "./resources/ts/Components/EditHabitForm.tsx"));
+
 var PageRender_1 = __importDefault(__webpack_require__(/*! ./PageRender */ "./resources/ts/Pages/PageRender.tsx"));
 
 var HabitStatus = function HabitStatus() {
@@ -3571,6 +3784,10 @@ var HabitStatus = function HabitStatus() {
   var _d = (0, react_1.useState)(0),
       statusCode = _d[0],
       setStatusCode = _d[1];
+
+  var _e = (0, react_1.useState)(false),
+      editing = _e[0],
+      setEditing = _e[1];
 
   var habitId = (0, react_router_dom_1.useParams)();
   var navigate = (0, react_router_dom_1.useNavigate)();
@@ -3620,6 +3837,11 @@ var HabitStatus = function HabitStatus() {
     });
   };
 
+  var updateHabit = function updateHabit(habitItem) {
+    setHabitItem(mapHabitItem(habitItem));
+    setEditing(false);
+  };
+
   var deleteHabit = function deleteHabit(habitId) {
     if (window.confirm('ハビットトラッカーを削除します。もとに戻せませんがよろしいですか？')) {
       axios_1["default"]["delete"]("/api/habits/".concat(habitId)).then(function () {
@@ -3632,7 +3854,7 @@ var HabitStatus = function HabitStatus() {
     }
   };
 
-  return isLoading ? react_1["default"].createElement(PageRender_1["default"], {
+  return isLoading ? react_1["default"].createElement(react_1["default"].Fragment, null, !editing ? react_1["default"].createElement(PageRender_1["default"], {
     status: statusCode
   }, react_1["default"].createElement("div", null, react_1["default"].createElement("h2", null, HabitItem.title), react_1["default"].createElement("p", null, HabitItem.description ? HabitItem.description.split('\n').map(function (str, index) {
     return react_1["default"].createElement(react_1["default"].Fragment, {
@@ -3647,7 +3869,18 @@ var HabitStatus = function HabitStatus() {
   }), react_1["default"].createElement(HabitDeleteButton_1["default"], {
     id: HabitItem.id,
     deleteHabit: deleteHabit
-  })) : null)) : react_1["default"].createElement("div", null, react_1["default"].createElement("p", null, "\u8AAD\u307F\u8FBC\u307F\u4E2D..."));
+  })) : null)) : react_1["default"].createElement(EditHabitForm_1["default"], __assign({}, {
+    title: HabitItem.title,
+    description: HabitItem.description ? HabitItem.description : '',
+    categoryId: HabitItem.categoryId,
+    isPrivate: HabitItem.isPrivate ? 'true' : 'false',
+    habitId: HabitItem.id,
+    updateHabit: updateHabit
+  })), react_1["default"].createElement("button", {
+    onClick: function onClick() {
+      return setEditing(!editing);
+    }
+  }, editing ? '戻る' : '編集する')) : react_1["default"].createElement("div", null, react_1["default"].createElement("p", null, "\u8AAD\u307F\u8FBC\u307F\u4E2D..."));
 };
 
 exports["default"] = HabitStatus;

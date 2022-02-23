@@ -112,6 +112,42 @@ class HabitController extends Controller
         }
     }
 
+    /**
+     * Habitの更新
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'title' => 'required|max:50',
+            'description' => 'max:300',
+            'categoryId' => 'required|digits_between:1,15',
+            'isPrivate' => 'required|boolean'
+        ]);
+
+        if ($request->userId === Auth::id() && $id === (string)$request->habitId)
+        {
+            $habit = Habit::find($id);
+            $habit->title = $request->title;
+            $habit->description = $request->description;
+            $habit->category_id = $request->categoryId;
+            $habit->is_private = $request->isPrivate;
+            $habit->save();
+
+            return new HabitResource(Habit::find($id));
+        } else {
+            return response(['message' => 'failed'], 400);
+        }
+    }
+
+    /**
+     * Habitの削除
+     *
+     * @param  number  $id Habitのid
+     * @return \Illuminate\Http\Response
+     */
     public function destroy($id)
     {
         $habit = Habit::where('id', $id);
