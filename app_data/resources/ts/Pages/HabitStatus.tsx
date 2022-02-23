@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import HabitDeleteButton from '../Components/atoms/HabitDeleteButton';
 import HabitDoneButton from '../Components/atoms/HabitDoneButton';
 import { useAuth } from '../Components/Authenticate';
 import DistributionCalendar from '../Components/ContributionCalendar';
@@ -30,6 +31,7 @@ const HabitStatus = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [statusCode, setStatusCode] = useState<number>(0);
     const habitId = useParams<{ screenName: string; id: string }>();
+    const navigate = useNavigate();
 
     const mapHabitItem = (props: any) => {
         return {
@@ -78,6 +80,19 @@ const HabitStatus = () => {
             });
     };
 
+    const deleteHabit = (habitId: number) => {
+        if (window.confirm('ハビットトラッカーを削除します。もとに戻せませんがよろしいですか？')) {
+            axios
+                .delete(`/api/habits/${habitId}`)
+                .then(() => {
+                    navigate(`/user/${auth?.userData?.screen_name}`);
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        }
+    };
+
     return isLoading ? (
         <PageRender status={statusCode}>
             <div>
@@ -100,11 +115,14 @@ const HabitStatus = () => {
                     <DistributionCalendar values={HabitItem.doneDaysList} />
                 </div>
                 {auth?.userData?.id === HabitItem.user.id ? (
-                    <HabitDoneButton
-                        doneHabit={doneHabit}
-                        id={HabitItem.id}
-                        isDone={HabitItem.isDone}
-                    />
+                    <>
+                        <HabitDoneButton
+                            doneHabit={doneHabit}
+                            id={HabitItem.id}
+                            isDone={HabitItem.isDone}
+                        />
+                        <HabitDeleteButton id={HabitItem.id} deleteHabit={deleteHabit} />
+                    </>
                 ) : null}
             </div>
         </PageRender>

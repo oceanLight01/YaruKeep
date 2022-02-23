@@ -111,4 +111,16 @@ class HabitController extends Controller
             return response(['message' => 'Faild to update Habit'], 403);
         }
     }
+
+    public function destroy($id)
+    {
+        $habit = Habit::where('id', $id);
+        if ($habit->exists() && $habit->first()->user_id === Auth::id())
+        {
+            $habit->delete();
+            return response(['message' => 'success'], 204);
+        } else {
+            return response(['message' => 'faild to delete'], 400);
+        }
+    }
 }

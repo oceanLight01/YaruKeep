@@ -2675,6 +2675,39 @@ exports["default"] = Navigation;
 
 /***/ }),
 
+/***/ "./resources/ts/Components/atoms/HabitDeleteButton.tsx":
+/*!*************************************************************!*\
+  !*** ./resources/ts/Components/atoms/HabitDeleteButton.tsx ***!
+  \*************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var HabitDeleteButton = function HabitDeleteButton(props) {
+  return react_1["default"].createElement("button", {
+    onClick: function onClick() {
+      return props.deleteHabit(props.id);
+    }
+  }, "\u524A\u9664");
+};
+
+exports["default"] = HabitDeleteButton;
+
+/***/ }),
+
 /***/ "./resources/ts/Components/atoms/HabitDoneButton.tsx":
 /*!***********************************************************!*\
   !*** ./resources/ts/Components/atoms/HabitDoneButton.tsx ***!
@@ -3494,6 +3527,8 @@ var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/reac
 
 var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
 
+var HabitDeleteButton_1 = __importDefault(__webpack_require__(/*! ../Components/atoms/HabitDeleteButton */ "./resources/ts/Components/atoms/HabitDeleteButton.tsx"));
+
 var HabitDoneButton_1 = __importDefault(__webpack_require__(/*! ../Components/atoms/HabitDoneButton */ "./resources/ts/Components/atoms/HabitDoneButton.tsx"));
 
 var Authenticate_1 = __webpack_require__(/*! ../Components/Authenticate */ "./resources/ts/Components/Authenticate.tsx");
@@ -3538,6 +3573,7 @@ var HabitStatus = function HabitStatus() {
       setStatusCode = _d[1];
 
   var habitId = (0, react_router_dom_1.useParams)();
+  var navigate = (0, react_router_dom_1.useNavigate)();
 
   var mapHabitItem = function mapHabitItem(props) {
     return {
@@ -3584,6 +3620,18 @@ var HabitStatus = function HabitStatus() {
     });
   };
 
+  var deleteHabit = function deleteHabit(habitId) {
+    if (window.confirm('ハビットトラッカーを削除します。もとに戻せませんがよろしいですか？')) {
+      axios_1["default"]["delete"]("/api/habits/".concat(habitId)).then(function () {
+        var _a;
+
+        navigate("/user/".concat((_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.screen_name));
+      })["catch"](function (error) {
+        console.error(error);
+      });
+    }
+  };
+
   return isLoading ? react_1["default"].createElement(PageRender_1["default"], {
     status: statusCode
   }, react_1["default"].createElement("div", null, react_1["default"].createElement("h2", null, HabitItem.title), react_1["default"].createElement("p", null, HabitItem.description ? HabitItem.description.split('\n').map(function (str, index) {
@@ -3592,11 +3640,14 @@ var HabitStatus = function HabitStatus() {
     }, str, react_1["default"].createElement("br", null));
   }) : ''), react_1["default"].createElement("p", null, "\u30AB\u30C6\u30B4\u30EA:", HabitItem.categoryName), react_1["default"].createElement("p", null, "\u7DCF\u9054\u6210\u65E5\u6570:", HabitItem.doneDaysCount, "\u65E5"), react_1["default"].createElement("p", null, "\u6700\u5927\u9023\u7D9A\u9054\u6210\u65E5\u6570:", HabitItem.maxDoneDay, "\u65E5"), react_1["default"].createElement("p", null, "\u4F5C\u6210\u65E5:", HabitItem.created_at), react_1["default"].createElement("div", null, react_1["default"].createElement(ContributionCalendar_1["default"], {
     values: HabitItem.doneDaysList
-  })), ((_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.id) === HabitItem.user.id ? react_1["default"].createElement(HabitDoneButton_1["default"], {
+  })), ((_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.id) === HabitItem.user.id ? react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement(HabitDoneButton_1["default"], {
     doneHabit: doneHabit,
     id: HabitItem.id,
     isDone: HabitItem.isDone
-  }) : null)) : react_1["default"].createElement("div", null, react_1["default"].createElement("p", null, "\u8AAD\u307F\u8FBC\u307F\u4E2D..."));
+  }), react_1["default"].createElement(HabitDeleteButton_1["default"], {
+    id: HabitItem.id,
+    deleteHabit: deleteHabit
+  })) : null)) : react_1["default"].createElement("div", null, react_1["default"].createElement("p", null, "\u8AAD\u307F\u8FBC\u307F\u4E2D..."));
 };
 
 exports["default"] = HabitStatus;
