@@ -2566,7 +2566,7 @@ var DiaryForm = function DiaryForm(props) {
     });
 
     axios_1["default"].post('/api/diaries', postData).then(function (res) {
-      console.log(res);
+      props.updateHabit(res.data.data);
     })["catch"](function (error) {
       console.error(error);
       setClicked(false);
@@ -3894,6 +3894,7 @@ var HabitStatus = function HabitStatus() {
       name: '',
       screenName: ''
     },
+    canPostDiary: false,
     created_at: '',
     updated_at: ''
   }),
@@ -3932,6 +3933,7 @@ var HabitStatus = function HabitStatus() {
         name: props.user.name,
         screenName: props.user.screen_name
       },
+      canPostDiary: props.can_post_diary,
       created_at: props.created_at,
       updated_at: props.updated_at
     };
@@ -3992,9 +3994,10 @@ var HabitStatus = function HabitStatus() {
   }), react_1["default"].createElement(HabitDeleteButton_1["default"], {
     id: HabitItem.id,
     deleteHabit: deleteHabit
-  })) : null, react_1["default"].createElement(DiaryForm_1["default"], {
-    habitId: HabitItem.id
-  }))) : react_1["default"].createElement(EditHabitForm_1["default"], __assign({}, {
+  })) : null, HabitItem.canPostDiary ? react_1["default"].createElement(DiaryForm_1["default"], {
+    habitId: HabitItem.id,
+    updateHabit: updateHabit
+  }) : null)) : react_1["default"].createElement(EditHabitForm_1["default"], __assign({}, {
     title: HabitItem.title,
     description: HabitItem.description ? HabitItem.description : '',
     categoryId: HabitItem.categoryId,

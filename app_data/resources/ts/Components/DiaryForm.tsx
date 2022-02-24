@@ -8,6 +8,7 @@ type Diary = {
 
 type Props = {
     habitId: number;
+    updateHabit: (habitItem: HabitItem) => void;
 };
 
 const DiaryForm = (props: Props) => {
@@ -29,7 +30,7 @@ const DiaryForm = (props: Props) => {
         axios
             .post('/api/diaries', postData)
             .then((res) => {
-                console.log(res);
+                props.updateHabit(res.data.data);
             })
             .catch((error) => {
                 console.error(error);

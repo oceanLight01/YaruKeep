@@ -27,6 +27,7 @@ const HabitStatus = () => {
             name: '',
             screenName: '',
         },
+        canPostDiary: false,
         created_at: '',
         updated_at: '',
     });
@@ -53,6 +54,7 @@ const HabitStatus = () => {
                 name: props.user.name,
                 screenName: props.user.screen_name,
             },
+            canPostDiary: props.can_post_diary,
             created_at: props.created_at,
             updated_at: props.updated_at,
         };
@@ -134,7 +136,9 @@ const HabitStatus = () => {
                                 <HabitDeleteButton id={HabitItem.id} deleteHabit={deleteHabit} />
                             </>
                         ) : null}
-                        <DiaryForm habitId={HabitItem.id} />
+                        {HabitItem.canPostDiary ? (
+                            <DiaryForm habitId={HabitItem.id} updateHabit={updateHabit} />
+                        ) : null}
                     </div>
                 </PageRender>
             ) : (

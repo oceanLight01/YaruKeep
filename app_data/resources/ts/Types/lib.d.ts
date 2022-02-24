@@ -14,6 +14,7 @@ type HabitItem = {
         name: string;
         screenName: string;
     };
+    canPostDiary: boolean;
     created_at: string;
     updated_at: string;
 };

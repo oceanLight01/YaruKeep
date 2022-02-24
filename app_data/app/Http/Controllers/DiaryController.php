@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\HabitResource;
 use App\Models\Diary;
+use App\Models\Habit;
 use Illuminate\Http\Request;
 
 class DiaryController extends Controller
@@ -24,8 +26,6 @@ class DiaryController extends Controller
                              ->whereDate('created_at', $now_time)
                              ->exists();
 
-        dd($diary_latest);
-
         if (!$diary_latest)
         {
             $diary = new Diary;
@@ -33,7 +33,7 @@ class DiaryController extends Controller
             $diary->habit_id = $request->habitId;
             $diary->save();
 
-            return response(['message' => 'success'], 204);
+            return new HabitResource(Habit::find($request->habitId));
         } else {
             return response(['message' => 'faild to post diary'], 400);
         }
