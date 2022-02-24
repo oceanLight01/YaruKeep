@@ -14,14 +14,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::group(['middleware' => ['auth:sanctum']], function () {
-    //ユーザに関するルーティング
+    // ユーザに関するルーティング
     Route::get('/user', 'UserController@getLoginUserInfo');
     Route::get('/user/{id}', 'UserController@getUserInfo');
 
-    //Habitに関するルーティング
+    // Habitに関するルーティング
     Route::post('/habits', 'HabitController@store');
     Route::post('/habits/done', 'HabitController@isDone');
     Route::get('/habits/status/{id}', 'HabitController@show');
     Route::put('/habits/{id}', 'HabitController@update');
     Route::delete('/habits/{id}', 'HabitController@destroy');
+
+    // Diaryに関するルーティング
+    Route::post('/diaries', 'DiaryController@store');
 });

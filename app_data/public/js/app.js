@@ -2471,6 +2471,127 @@ exports["default"] = DistributionCalendar;
 
 /***/ }),
 
+/***/ "./resources/ts/Components/DiaryForm.tsx":
+/*!***********************************************!*\
+  !*** ./resources/ts/Components/DiaryForm.tsx ***!
+  \***********************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __assign = this && this.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+
+      for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+    }
+
+    return t;
+  };
+
+  return __assign.apply(this, arguments);
+};
+
+var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  Object.defineProperty(o, k2, {
+    enumerable: true,
+    get: function get() {
+      return m[k];
+    }
+  });
+} : function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+});
+
+var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+  Object.defineProperty(o, "default", {
+    enumerable: true,
+    value: v
+  });
+} : function (o, v) {
+  o["default"] = v;
+});
+
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  }
+
+  __setModuleDefault(result, mod);
+
+  return result;
+};
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
+
+var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var react_hook_form_1 = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.cjs.js");
+
+var DiaryForm = function DiaryForm(props) {
+  var _a, _b;
+
+  var _c = (0, react_1.useState)(false),
+      clicked = _c[0],
+      setClicked = _c[1];
+
+  var _d = (0, react_hook_form_1.useForm)(),
+      register = _d.register,
+      handleSubmit = _d.handleSubmit,
+      errors = _d.formState.errors;
+
+  var onSubmit = function onSubmit(data) {
+    setClicked(true);
+
+    var postData = __assign(__assign({}, data), {
+      habitId: props.habitId
+    });
+
+    axios_1["default"].post('/api/diaries', postData).then(function (res) {
+      console.log(res);
+    })["catch"](function (error) {
+      console.error(error);
+      setClicked(false);
+    });
+  };
+
+  return react_1["default"].createElement("form", {
+    onSubmit: handleSubmit(onSubmit)
+  }, react_1["default"].createElement("div", null, ((_a = errors.text) === null || _a === void 0 ? void 0 : _a.type) === 'maxLength' && react_1["default"].createElement("p", null, "\u65E5\u8A18\u306F1000\u6587\u5B57\u4EE5\u4E0B\u3067\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), ((_b = errors.text) === null || _b === void 0 ? void 0 : _b.type) === 'required' && react_1["default"].createElement("p", null, "\u5185\u5BB9\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), react_1["default"].createElement("label", null, "\u65E5\u8A18"), react_1["default"].createElement("textarea", __assign({
+    maxLength: 1000,
+    autoComplete: "off"
+  }, register('text', {
+    required: true,
+    maxLength: 300
+  })))), react_1["default"].createElement("input", {
+    type: "submit",
+    value: "\u6295\u7A3F",
+    disabled: clicked
+  }));
+};
+
+exports["default"] = DiaryForm;
+
+/***/ }),
+
 /***/ "./resources/ts/Components/EditHabitForm.tsx":
 /*!***************************************************!*\
   !*** ./resources/ts/Components/EditHabitForm.tsx ***!
@@ -3746,6 +3867,8 @@ var Authenticate_1 = __webpack_require__(/*! ../Components/Authenticate */ "./re
 
 var ContributionCalendar_1 = __importDefault(__webpack_require__(/*! ../Components/ContributionCalendar */ "./resources/ts/Components/ContributionCalendar.tsx"));
 
+var DiaryForm_1 = __importDefault(__webpack_require__(/*! ../Components/DiaryForm */ "./resources/ts/Components/DiaryForm.tsx"));
+
 var EditHabitForm_1 = __importDefault(__webpack_require__(/*! ../Components/EditHabitForm */ "./resources/ts/Components/EditHabitForm.tsx"));
 
 var PageRender_1 = __importDefault(__webpack_require__(/*! ./PageRender */ "./resources/ts/Pages/PageRender.tsx"));
@@ -3869,7 +3992,9 @@ var HabitStatus = function HabitStatus() {
   }), react_1["default"].createElement(HabitDeleteButton_1["default"], {
     id: HabitItem.id,
     deleteHabit: deleteHabit
-  })) : null)) : react_1["default"].createElement(EditHabitForm_1["default"], __assign({}, {
+  })) : null, react_1["default"].createElement(DiaryForm_1["default"], {
+    habitId: HabitItem.id
+  }))) : react_1["default"].createElement(EditHabitForm_1["default"], __assign({}, {
     title: HabitItem.title,
     description: HabitItem.description ? HabitItem.description : '',
     categoryId: HabitItem.categoryId,

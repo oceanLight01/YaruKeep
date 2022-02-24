@@ -5,6 +5,7 @@ import HabitDeleteButton from '../Components/atoms/HabitDeleteButton';
 import HabitDoneButton from '../Components/atoms/HabitDoneButton';
 import { useAuth } from '../Components/Authenticate';
 import DistributionCalendar from '../Components/ContributionCalendar';
+import DiaryForm from '../Components/DiaryForm';
 import EditHabitForm from '../Components/EditHabitForm';
 import PageRender from './PageRender';
 
@@ -133,6 +134,7 @@ const HabitStatus = () => {
                                 <HabitDeleteButton id={HabitItem.id} deleteHabit={deleteHabit} />
                             </>
                         ) : null}
+                        <DiaryForm habitId={HabitItem.id} />
                     </div>
                 </PageRender>
             ) : (
