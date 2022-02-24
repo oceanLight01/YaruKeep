@@ -3914,6 +3914,7 @@ var HabitStatus = function HabitStatus() {
       setEditing = _e[1];
 
   var habitId = (0, react_router_dom_1.useParams)();
+  var isLoginUser = ((_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.id) === HabitItem.user.id;
   var navigate = (0, react_router_dom_1.useNavigate)();
 
   var mapHabitItem = function mapHabitItem(props) {
@@ -3987,28 +3988,28 @@ var HabitStatus = function HabitStatus() {
     }, str, react_1["default"].createElement("br", null));
   }) : ''), react_1["default"].createElement("p", null, "\u30AB\u30C6\u30B4\u30EA:", HabitItem.categoryName), react_1["default"].createElement("p", null, "\u7DCF\u9054\u6210\u65E5\u6570:", HabitItem.doneDaysCount, "\u65E5"), react_1["default"].createElement("p", null, "\u6700\u5927\u9023\u7D9A\u9054\u6210\u65E5\u6570:", HabitItem.maxDoneDay, "\u65E5"), react_1["default"].createElement("p", null, "\u4F5C\u6210\u65E5:", HabitItem.created_at), react_1["default"].createElement("div", null, react_1["default"].createElement(ContributionCalendar_1["default"], {
     values: HabitItem.doneDaysList
-  })), ((_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.id) === HabitItem.user.id ? react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement(HabitDoneButton_1["default"], {
+  })), isLoginUser ? react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement(HabitDoneButton_1["default"], {
     doneHabit: doneHabit,
     id: HabitItem.id,
     isDone: HabitItem.isDone
   }), react_1["default"].createElement(HabitDeleteButton_1["default"], {
     id: HabitItem.id,
     deleteHabit: deleteHabit
-  })) : null, HabitItem.canPostDiary ? react_1["default"].createElement(DiaryForm_1["default"], {
+  }), HabitItem.canPostDiary ? react_1["default"].createElement(DiaryForm_1["default"], {
     habitId: HabitItem.id,
     updateHabit: updateHabit
-  }) : null)) : react_1["default"].createElement(EditHabitForm_1["default"], __assign({}, {
+  }) : null) : null)) : isLoginUser ? react_1["default"].createElement(EditHabitForm_1["default"], __assign({}, {
     title: HabitItem.title,
     description: HabitItem.description ? HabitItem.description : '',
     categoryId: HabitItem.categoryId,
     isPrivate: HabitItem.isPrivate ? 'true' : 'false',
     habitId: HabitItem.id,
     updateHabit: updateHabit
-  })), react_1["default"].createElement("button", {
+  })) : null, isLoginUser ? react_1["default"].createElement("button", {
     onClick: function onClick() {
       return setEditing(!editing);
     }
-  }, editing ? '戻る' : '編集する')) : react_1["default"].createElement("div", null, react_1["default"].createElement("p", null, "\u8AAD\u307F\u8FBC\u307F\u4E2D..."));
+  }, editing ? '戻る' : '編集する') : null) : react_1["default"].createElement("div", null, react_1["default"].createElement("p", null, "\u8AAD\u307F\u8FBC\u307F\u4E2D..."));
 };
 
 exports["default"] = HabitStatus;

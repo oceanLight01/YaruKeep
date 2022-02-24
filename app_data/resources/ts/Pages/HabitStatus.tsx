@@ -35,6 +35,7 @@ const HabitStatus = () => {
     const [statusCode, setStatusCode] = useState<number>(0);
     const [editing, setEditing] = useState<boolean>(false);
     const habitId = useParams<{ screenName: string; id: string }>();
+    const isLoginUser = auth?.userData?.id === HabitItem.user.id;
     const navigate = useNavigate();
 
     const mapHabitItem = (props: any) => {
@@ -126,7 +127,7 @@ const HabitStatus = () => {
                         <div>
                             <DistributionCalendar values={HabitItem.doneDaysList} />
                         </div>
-                        {auth?.userData?.id === HabitItem.user.id ? (
+                        {isLoginUser ? (
                             <>
                                 <HabitDoneButton
                                     doneHabit={doneHabit}
@@ -134,14 +135,14 @@ const HabitStatus = () => {
                                     isDone={HabitItem.isDone}
                                 />
                                 <HabitDeleteButton id={HabitItem.id} deleteHabit={deleteHabit} />
+                                {HabitItem.canPostDiary ? (
+                                    <DiaryForm habitId={HabitItem.id} updateHabit={updateHabit} />
+                                ) : null}
                             </>
-                        ) : null}
-                        {HabitItem.canPostDiary ? (
-                            <DiaryForm habitId={HabitItem.id} updateHabit={updateHabit} />
                         ) : null}
                     </div>
                 </PageRender>
-            ) : (
+            ) : isLoginUser ? (
                 <EditHabitForm
                     {...{
                         title: HabitItem.title,
@@ -152,8 +153,12 @@ const HabitStatus = () => {
                         updateHabit: updateHabit,
                     }}
                 />
-            )}
-            <button onClick={() => setEditing(!editing)}>{editing ? '戻る' : '編集する'}</button>
+            ) : null}
+            {isLoginUser ? (
+                <button onClick={() => setEditing(!editing)}>
+                    {editing ? '戻る' : '編集する'}
+                </button>
+            ) : null}
         </>
     ) : (
         <div>
