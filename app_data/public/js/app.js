@@ -2613,6 +2613,8 @@ Object.defineProperty(exports, "__esModule", ({
 
 var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 
+var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
+
 var DiaryItem = function DiaryItem(props) {
   var text = props.text;
 
@@ -2620,7 +2622,12 @@ var DiaryItem = function DiaryItem(props) {
     text = "".concat(text.substring(0, 100), "...");
   }
 
-  return react_1["default"].createElement("li", null, react_1["default"].createElement("p", null, text), react_1["default"].createElement("p", null, props.created_at));
+  var navigate = (0, react_router_dom_1.useNavigate)();
+  return react_1["default"].createElement("li", {
+    onClick: function onClick() {
+      return navigate("/user/".concat(props.user.screenName, "/habit/").concat(props.habitId, "/diary/").concat(props.id));
+    }
+  }, react_1["default"].createElement("p", null, text), react_1["default"].createElement("p", null, props.created_at));
 };
 
 exports["default"] = DiaryItem;
@@ -2667,9 +2674,12 @@ var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/r
 var DiaryItem_1 = __importDefault(__webpack_require__(/*! ./DiaryItem */ "./resources/ts/Components/DiaryItem.tsx"));
 
 var DiaryList = function DiaryList(_a) {
-  var diaries = _a.diaries;
+  var diaries = _a.diaries,
+      user = _a.user;
   return react_1["default"].createElement("ul", null, diaries.map(function (item, index) {
-    return react_1["default"].createElement(DiaryItem_1["default"], __assign({}, item, {
+    return react_1["default"].createElement(DiaryItem_1["default"], __assign({}, __assign(__assign({}, item), {
+      user: user
+    }), {
       key: index
     }));
   }));
@@ -3278,6 +3288,8 @@ var HabitPost_1 = __importDefault(__webpack_require__(/*! ./HabitPost */ "./reso
 
 var HabitStatus_1 = __importDefault(__webpack_require__(/*! ./HabitStatus */ "./resources/ts/Pages/HabitStatus.tsx"));
 
+var Diary_1 = __importDefault(__webpack_require__(/*! ./Diary */ "./resources/ts/Pages/Diary.tsx"));
+
 var App = function App() {
   return react_1["default"].createElement(Authenticate_1["default"], null, react_1["default"].createElement(Loading_1["default"], null, react_1["default"].createElement(react_router_dom_1.BrowserRouter, null, react_1["default"].createElement(Header_1["default"], null), react_1["default"].createElement(Navigation_1["default"], null), react_1["default"].createElement(react_router_dom_1.Routes, null, react_1["default"].createElement(react_router_dom_1.Route, {
     path: "/",
@@ -3303,6 +3315,9 @@ var App = function App() {
   }), react_1["default"].createElement(react_router_dom_1.Route, {
     path: "/user/:screenName/habit/:id",
     element: react_1["default"].createElement(Authenticate_1.PrivateRoute, null, react_1["default"].createElement(HabitStatus_1["default"], null))
+  }), react_1["default"].createElement(react_router_dom_1.Route, {
+    path: "/user/:screenName/habit/:id/diary/:did",
+    element: react_1["default"].createElement(Authenticate_1.PrivateRoute, null, react_1["default"].createElement(Diary_1["default"], null))
   })), react_1["default"].createElement(Footer_1["default"], null))));
 };
 
@@ -3685,6 +3700,95 @@ exports["default"] = Register;
 
 /***/ }),
 
+/***/ "./resources/ts/Pages/Diary.tsx":
+/*!**************************************!*\
+  !*** ./resources/ts/Pages/Diary.tsx ***!
+  \**************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  Object.defineProperty(o, k2, {
+    enumerable: true,
+    get: function get() {
+      return m[k];
+    }
+  });
+} : function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+});
+
+var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+  Object.defineProperty(o, "default", {
+    enumerable: true,
+    value: v
+  });
+} : function (o, v) {
+  o["default"] = v;
+});
+
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  }
+
+  __setModuleDefault(result, mod);
+
+  return result;
+};
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
+
+var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
+
+var PageRender_1 = __importDefault(__webpack_require__(/*! ./PageRender */ "./resources/ts/Pages/PageRender.tsx"));
+
+var Diary = function Diary() {
+  var params = (0, react_router_dom_1.useParams)();
+
+  var _a = (0, react_1.useState)(),
+      diary = _a[0],
+      setDiary = _a[1];
+
+  var _b = (0, react_1.useState)(0),
+      statusCode = _b[0],
+      setStatusCode = _b[1];
+
+  (0, react_1.useEffect)(function () {
+    axios_1["default"].get("/api/habits/".concat(params.id, "/diaries/").concat(params.did)).then(function (res) {
+      setDiary(res.data);
+      setStatusCode(res.data.status);
+    })["catch"](function (error) {
+      setStatusCode(error.response.status);
+    });
+  }, []);
+  return react_1["default"].createElement(PageRender_1["default"], {
+    status: statusCode
+  }, react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("p", null, diary === null || diary === void 0 ? void 0 : diary.text), react_1["default"].createElement("p", null, diary === null || diary === void 0 ? void 0 : diary.created_at)));
+};
+
+exports["default"] = Diary;
+
+/***/ }),
+
 /***/ "./resources/ts/Pages/HabitPost.tsx":
 /*!******************************************!*\
   !*** ./resources/ts/Pages/HabitPost.tsx ***!
@@ -3991,17 +4095,13 @@ var HabitStatus = function HabitStatus() {
       HabitItem = _b[0],
       setHabitItem = _b[1];
 
-  var _c = (0, react_1.useState)(false),
-      isLoading = _c[0],
-      setIsLoading = _c[1];
+  var _c = (0, react_1.useState)(0),
+      statusCode = _c[0],
+      setStatusCode = _c[1];
 
-  var _d = (0, react_1.useState)(0),
-      statusCode = _d[0],
-      setStatusCode = _d[1];
-
-  var _e = (0, react_1.useState)(false),
-      editing = _e[0],
-      setEditing = _e[1];
+  var _d = (0, react_1.useState)(false),
+      editing = _d[0],
+      setEditing = _d[1];
 
   var habitId = (0, react_router_dom_1.useParams)();
   var isLoginUser = ((_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.id) === HabitItem.user.id;
@@ -4041,10 +4141,9 @@ var HabitStatus = function HabitStatus() {
   (0, react_1.useEffect)(function () {
     axios_1["default"].get("/api/habits/status/".concat(habitId.id)).then(function (res) {
       setHabitItem(mapHabitItem(res.data.data));
+      setStatusCode(res.data.status);
     })["catch"](function (error) {
       setStatusCode(error.response.status);
-    })["finally"](function () {
-      setIsLoading(true);
     });
   }, []);
 
@@ -4078,9 +4177,9 @@ var HabitStatus = function HabitStatus() {
     }
   };
 
-  return isLoading ? react_1["default"].createElement(react_1["default"].Fragment, null, !editing ? react_1["default"].createElement(PageRender_1["default"], {
+  return react_1["default"].createElement(PageRender_1["default"], {
     status: statusCode
-  }, react_1["default"].createElement("div", null, react_1["default"].createElement("h2", null, HabitItem.title), react_1["default"].createElement("p", null, HabitItem.description ? HabitItem.description.split('\n').map(function (str, index) {
+  }, react_1["default"].createElement(react_1["default"].Fragment, null, !editing ? react_1["default"].createElement("div", null, react_1["default"].createElement("h2", null, HabitItem.title), react_1["default"].createElement("p", null, HabitItem.description ? HabitItem.description.split('\n').map(function (str, index) {
     return react_1["default"].createElement(react_1["default"].Fragment, {
       key: index
     }, str, react_1["default"].createElement("br", null));
@@ -4096,7 +4195,7 @@ var HabitStatus = function HabitStatus() {
   }), HabitItem.canPostDiary ? react_1["default"].createElement(DiaryForm_1["default"], {
     habitId: HabitItem.id,
     updateHabit: updateHabit
-  }) : null) : null)) : isLoginUser ? react_1["default"].createElement(EditHabitForm_1["default"], __assign({}, {
+  }) : null) : null) : isLoginUser ? react_1["default"].createElement(EditHabitForm_1["default"], __assign({}, {
     title: HabitItem.title,
     description: HabitItem.description ? HabitItem.description : '',
     categoryId: HabitItem.categoryId,
@@ -4108,8 +4207,9 @@ var HabitStatus = function HabitStatus() {
       return setEditing(!editing);
     }
   }, editing ? '戻る' : '編集する') : null, react_1["default"].createElement(DiaryList_1["default"], {
-    diaries: HabitItem.diaries
-  })) : react_1["default"].createElement("div", null, react_1["default"].createElement("p", null, "\u8AAD\u307F\u8FBC\u307F\u4E2D..."));
+    diaries: HabitItem.diaries,
+    user: HabitItem.user
+  })));
 };
 
 exports["default"] = HabitStatus;
@@ -4178,6 +4278,9 @@ var PageRender = function PageRender(_a) {
       status = _a.status;
 
   switch (status) {
+    case 0:
+      return react_1["default"].createElement("p", null, "\u8AAD\u307F\u8FBC\u307F\u4E2D...");
+
     case 404:
       return react_1["default"].createElement("p", null, "\u304A\u63A2\u3057\u306E\u30DA\u30FC\u30B8\u306F\u5B58\u5728\u3057\u307E\u305B\u3093\u3002\u3059\u3067\u306B\u524A\u9664\u3055\u308C\u305F\u53EF\u80FD\u6027\u304C\u3042\u308A\u307E\u3059\u3002");
 

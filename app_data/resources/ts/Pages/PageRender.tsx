@@ -7,6 +7,8 @@ type Props = {
 
 const PageRender = ({ children, status }: Props) => {
     switch (status) {
+        case 0:
+            return <p>読み込み中...</p>;
         case 404:
             return <p>お探しのページは存在しません。すでに削除された可能性があります。</p>;
         case 500:

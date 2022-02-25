@@ -9,6 +9,17 @@ use Illuminate\Http\Request;
 
 class DiaryController extends Controller
 {
+    public function show($id, $diary_id)
+    {
+        $diary = Diary::where('id', $diary_id)->where('habit_id', $id)->exists();
+        if ($diary)
+        {
+            return Diary::find($diary_id);
+        } else {
+            return response(['message' => 'not found diary data'], 404);
+        }
+    }
+
     /**
      * Diaryの新規作成
      *

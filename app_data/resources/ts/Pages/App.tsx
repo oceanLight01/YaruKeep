@@ -19,6 +19,7 @@ import Footer from '../Components/Footer';
 import User from './User';
 import HabitPost from './HabitPost';
 import HabitStatus from './HabitStatus';
+import Diary from './Diary';
 
 const App = () => {
     return (
@@ -89,6 +90,14 @@ const App = () => {
                             element={
                                 <PrivateRoute>
                                     <HabitStatus />
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
+                            path="/user/:screenName/habit/:id/diary/:did"
+                            element={
+                                <PrivateRoute>
+                                    <Diary />
                                 </PrivateRoute>
                             }
                         />

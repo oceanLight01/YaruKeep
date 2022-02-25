@@ -33,7 +33,6 @@ const HabitStatus = () => {
         created_at: '',
         updated_at: '',
     });
-    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [statusCode, setStatusCode] = useState<number>(0);
     const [editing, setEditing] = useState<boolean>(false);
     const habitId = useParams<{ screenName: string; id: string }>();
@@ -76,12 +75,10 @@ const HabitStatus = () => {
             .get(`/api/habits/status/${habitId.id}`)
             .then((res) => {
                 setHabitItem(mapHabitItem(res.data.data));
+                setStatusCode(res.data.status);
             })
             .catch((error) => {
                 setStatusCode(error.response.status);
-            })
-            .finally(() => {
-                setIsLoading(true);
             });
     }, []);
 
@@ -114,10 +111,10 @@ const HabitStatus = () => {
         }
     };
 
-    return isLoading ? (
-        <>
-            {!editing ? (
-                <PageRender status={statusCode}>
+    return (
+        <PageRender status={statusCode}>
+            <>
+                {!editing ? (
                     <div>
                         <h2>{HabitItem.title}</h2>
                         <p>
@@ -151,30 +148,26 @@ const HabitStatus = () => {
                             </>
                         ) : null}
                     </div>
-                </PageRender>
-            ) : isLoginUser ? (
-                <EditHabitForm
-                    {...{
-                        title: HabitItem.title,
-                        description: HabitItem.description ? HabitItem.description : '',
-                        categoryId: HabitItem.categoryId,
-                        isPrivate: HabitItem.isPrivate ? 'true' : 'false',
-                        habitId: HabitItem.id,
-                        updateHabit: updateHabit,
-                    }}
-                />
-            ) : null}
-            {isLoginUser ? (
-                <button onClick={() => setEditing(!editing)}>
-                    {editing ? '戻る' : '編集する'}
-                </button>
-            ) : null}
-            <DiaryList diaries={HabitItem.diaries} />
-        </>
-    ) : (
-        <div>
-            <p>読み込み中...</p>
-        </div>
+                ) : isLoginUser ? (
+                    <EditHabitForm
+                        {...{
+                            title: HabitItem.title,
+                            description: HabitItem.description ? HabitItem.description : '',
+                            categoryId: HabitItem.categoryId,
+                            isPrivate: HabitItem.isPrivate ? 'true' : 'false',
+                            habitId: HabitItem.id,
+                            updateHabit: updateHabit,
+                        }}
+                    />
+                ) : null}
+                {isLoginUser ? (
+                    <button onClick={() => setEditing(!editing)}>
+                        {editing ? '戻る' : '編集する'}
+                    </button>
+                ) : null}
+                <DiaryList diaries={HabitItem.diaries} user={HabitItem.user} />
+            </>
+        </PageRender>
     );
 };
 
