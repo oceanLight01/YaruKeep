@@ -6,6 +6,7 @@ import HabitDoneButton from '../Components/atoms/HabitDoneButton';
 import { useAuth } from '../Components/Authenticate';
 import DistributionCalendar from '../Components/ContributionCalendar';
 import DiaryForm from '../Components/DiaryForm';
+import DiaryList from '../Components/DiaryList';
 import EditHabitForm from '../Components/EditHabitForm';
 import PageRender from './PageRender';
 
@@ -27,6 +28,7 @@ const HabitStatus = () => {
             name: '',
             screenName: '',
         },
+        diaries: [],
         canPostDiary: false,
         created_at: '',
         updated_at: '',
@@ -55,6 +57,14 @@ const HabitStatus = () => {
                 name: props.user.name,
                 screenName: props.user.screen_name,
             },
+            diaries: props.diaries.map((item: any) => {
+                return {
+                    id: item.id,
+                    habitId: item.habit_id,
+                    text: item.text,
+                    created_at: item.created_at,
+                };
+            }),
             canPostDiary: props.can_post_diary,
             created_at: props.created_at,
             updated_at: props.updated_at,
@@ -159,6 +169,7 @@ const HabitStatus = () => {
                     {editing ? '戻る' : '編集する'}
                 </button>
             ) : null}
+            <DiaryList diaries={HabitItem.diaries} />
         </>
     ) : (
         <div>

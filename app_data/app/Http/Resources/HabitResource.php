@@ -36,6 +36,7 @@ class HabitResource extends JsonResource
                                ->whereDate('created_at', date('Y-m-d'))
                                ->exists();
 
+
         return [
             'id' => $this->id,
             'title' => $this->title,
@@ -52,6 +53,7 @@ class HabitResource extends JsonResource
                 'name' => $this->user->name,
                 'screen_name' => $this->user->screen_name,
             ],
+            'diaries' => $this->diariesLatest($this->id),
             'can_post_diary' => !$can_post_diary,
             'created_at' => $this->created_at->format('Y年n月j日 H:i'),
             'updated_at' => $this->updated_at

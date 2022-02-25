@@ -2592,6 +2592,93 @@ exports["default"] = DiaryForm;
 
 /***/ }),
 
+/***/ "./resources/ts/Components/DiaryItem.tsx":
+/*!***********************************************!*\
+  !*** ./resources/ts/Components/DiaryItem.tsx ***!
+  \***********************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var DiaryItem = function DiaryItem(props) {
+  var text = props.text;
+
+  if (text.length > 100) {
+    text = "".concat(text.substring(0, 100), "...");
+  }
+
+  return react_1["default"].createElement("li", null, react_1["default"].createElement("p", null, text), react_1["default"].createElement("p", null, props.created_at));
+};
+
+exports["default"] = DiaryItem;
+
+/***/ }),
+
+/***/ "./resources/ts/Components/DiaryList.tsx":
+/*!***********************************************!*\
+  !*** ./resources/ts/Components/DiaryList.tsx ***!
+  \***********************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __assign = this && this.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+
+      for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+    }
+
+    return t;
+  };
+
+  return __assign.apply(this, arguments);
+};
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var DiaryItem_1 = __importDefault(__webpack_require__(/*! ./DiaryItem */ "./resources/ts/Components/DiaryItem.tsx"));
+
+var DiaryList = function DiaryList(_a) {
+  var diaries = _a.diaries;
+  return react_1["default"].createElement("ul", null, diaries.map(function (item, index) {
+    return react_1["default"].createElement(DiaryItem_1["default"], __assign({}, item, {
+      key: index
+    }));
+  }));
+};
+
+exports["default"] = DiaryList;
+
+/***/ }),
+
 /***/ "./resources/ts/Components/EditHabitForm.tsx":
 /*!***************************************************!*\
   !*** ./resources/ts/Components/EditHabitForm.tsx ***!
@@ -3869,6 +3956,8 @@ var ContributionCalendar_1 = __importDefault(__webpack_require__(/*! ../Componen
 
 var DiaryForm_1 = __importDefault(__webpack_require__(/*! ../Components/DiaryForm */ "./resources/ts/Components/DiaryForm.tsx"));
 
+var DiaryList_1 = __importDefault(__webpack_require__(/*! ../Components/DiaryList */ "./resources/ts/Components/DiaryList.tsx"));
+
 var EditHabitForm_1 = __importDefault(__webpack_require__(/*! ../Components/EditHabitForm */ "./resources/ts/Components/EditHabitForm.tsx"));
 
 var PageRender_1 = __importDefault(__webpack_require__(/*! ./PageRender */ "./resources/ts/Pages/PageRender.tsx"));
@@ -3894,6 +3983,7 @@ var HabitStatus = function HabitStatus() {
       name: '',
       screenName: ''
     },
+    diaries: [],
     canPostDiary: false,
     created_at: '',
     updated_at: ''
@@ -3934,6 +4024,14 @@ var HabitStatus = function HabitStatus() {
         name: props.user.name,
         screenName: props.user.screen_name
       },
+      diaries: props.diaries.map(function (item) {
+        return {
+          id: item.id,
+          habitId: item.habit_id,
+          text: item.text,
+          created_at: item.created_at
+        };
+      }),
       canPostDiary: props.can_post_diary,
       created_at: props.created_at,
       updated_at: props.updated_at
@@ -4009,7 +4107,9 @@ var HabitStatus = function HabitStatus() {
     onClick: function onClick() {
       return setEditing(!editing);
     }
-  }, editing ? '戻る' : '編集する') : null) : react_1["default"].createElement("div", null, react_1["default"].createElement("p", null, "\u8AAD\u307F\u8FBC\u307F\u4E2D..."));
+  }, editing ? '戻る' : '編集する') : null, react_1["default"].createElement(DiaryList_1["default"], {
+    diaries: HabitItem.diaries
+  })) : react_1["default"].createElement("div", null, react_1["default"].createElement("p", null, "\u8AAD\u307F\u8FBC\u307F\u4E2D..."));
 };
 
 exports["default"] = HabitStatus;
