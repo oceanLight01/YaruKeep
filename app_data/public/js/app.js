@@ -3088,6 +3088,39 @@ exports["default"] = Navigation;
 
 /***/ }),
 
+/***/ "./resources/ts/Components/atoms/DiaryDeleteButton.tsx":
+/*!*************************************************************!*\
+  !*** ./resources/ts/Components/atoms/DiaryDeleteButton.tsx ***!
+  \*************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var DiaryDeleteButton = function DiaryDeleteButton(props) {
+  return react_1["default"].createElement("button", {
+    onClick: function onClick() {
+      return props.deleteDiary(props.diaryId);
+    }
+  }, "\u524A\u9664");
+};
+
+exports["default"] = DiaryDeleteButton;
+
+/***/ }),
+
 /***/ "./resources/ts/Components/atoms/HabitDeleteButton.tsx":
 /*!*************************************************************!*\
   !*** ./resources/ts/Components/atoms/HabitDeleteButton.tsx ***!
@@ -3759,6 +3792,10 @@ var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/reac
 
 var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
 
+var DiaryDeleteButton_1 = __importDefault(__webpack_require__(/*! ../Components/atoms/DiaryDeleteButton */ "./resources/ts/Components/atoms/DiaryDeleteButton.tsx"));
+
+var Authenticate_1 = __webpack_require__(/*! ../Components/Authenticate */ "./resources/ts/Components/Authenticate.tsx");
+
 var PageRender_1 = __importDefault(__webpack_require__(/*! ./PageRender */ "./resources/ts/Pages/PageRender.tsx"));
 
 var Diary = function Diary() {
@@ -3772,6 +3809,8 @@ var Diary = function Diary() {
       statusCode = _b[0],
       setStatusCode = _b[1];
 
+  var navigate = (0, react_router_dom_1.useNavigate)();
+  var auth = (0, Authenticate_1.useAuth)();
   (0, react_1.useEffect)(function () {
     axios_1["default"].get("/api/habits/".concat(params.id, "/diaries/").concat(params.did)).then(function (res) {
       setDiary(res.data);
@@ -3780,9 +3819,25 @@ var Diary = function Diary() {
       setStatusCode(error.response.status);
     });
   }, []);
+
+  var deleteDiary = function deleteDiary(diaryId) {
+    if (window.confirm('日記を削除します。もとに戻せませんがよろしいですか？')) {
+      axios_1["default"]["delete"]("/api/diaries/".concat(diaryId)).then(function () {
+        var _a;
+
+        navigate("/user/".concat((_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.screen_name, "/habit/").concat(diary === null || diary === void 0 ? void 0 : diary.habit_id));
+      })["catch"](function (error) {
+        console.error(error);
+      });
+    }
+  };
+
   return react_1["default"].createElement(PageRender_1["default"], {
     status: statusCode
-  }, react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("p", null, diary === null || diary === void 0 ? void 0 : diary.text), react_1["default"].createElement("p", null, diary === null || diary === void 0 ? void 0 : diary.created_at)));
+  }, react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("p", null, diary === null || diary === void 0 ? void 0 : diary.text), react_1["default"].createElement("p", null, diary === null || diary === void 0 ? void 0 : diary.created_at), react_1["default"].createElement(DiaryDeleteButton_1["default"], {
+    diaryId: diary === null || diary === void 0 ? void 0 : diary.id,
+    deleteDiary: deleteDiary
+  })));
 };
 
 exports["default"] = Diary;

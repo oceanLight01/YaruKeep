@@ -28,4 +28,5 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     // Diaryに関するルーティング
     Route::get('/habits/{id}/diaries/{diary_id}', 'DiaryController@show');
     Route::post('/diaries', 'DiaryController@store');
+    Route::delete('/diaries/{id}', 'DiaryController@destroy');
 });
