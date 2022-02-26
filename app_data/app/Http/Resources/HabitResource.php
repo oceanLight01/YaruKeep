@@ -43,7 +43,7 @@ class HabitResource extends JsonResource
             'description' => $this->description,
             'category_id' => $this->category_id,
             'category_name' => $this->category->category,
-            'done_days_count' => $this->done_days_count,
+            'done_days_count' => $this->habit_done_days->count(),
             'done_days_list' => $done_days_list,
             'max_done_day' => $this->max_done_day,
             'is_private' => $is_private,
