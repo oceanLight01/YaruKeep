@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import DiaryDeleteButton from '../Components/atoms/DiaryDeleteButton';
 import { useAuth } from '../Components/Authenticate';
+import EditDiaryForm from '../Components/EditDiaryForm';
 import PageRender from './PageRender';
 
 type Diary = {
@@ -14,8 +15,9 @@ type Diary = {
 
 const Diary = () => {
     const params = useParams<{ id: string; did: string }>();
-    const [diary, setDiary] = useState<Diary>();
+    const [diary, setDiary] = useState<Diary>({ id: 0, habit_id: 0, text: '', created_at: '' });
     const [statusCode, setStatusCode] = useState<number>(0);
+    const [editing, setEditing] = useState<boolean>(false);
     const navigate = useNavigate();
     const auth = useAuth();
 
@@ -31,12 +33,17 @@ const Diary = () => {
             });
     }, []);
 
+    const updateDiary = (diaryItem: Diary) => {
+        setDiary(diaryItem);
+        setEditing(false);
+    };
+
     const deleteDiary = (diaryId: number) => {
         if (window.confirm('日記を削除します。もとに戻せませんがよろしいですか？')) {
             axios
                 .delete(`/api/diaries/${diaryId}`)
                 .then(() => {
-                    navigate(`/user/${auth?.userData?.screen_name}/habit/${diary?.habit_id}`);
+                    navigate(`/user/${auth?.userData?.screen_name}/habit/${diary.habit_id}`);
                 })
                 .catch((error) => {
                     console.error(error);
@@ -47,9 +54,27 @@ const Diary = () => {
     return (
         <PageRender status={statusCode}>
             <>
-                <p>{diary?.text}</p>
-                <p>{diary?.created_at}</p>
-                <DiaryDeleteButton diaryId={diary?.id!} deleteDiary={deleteDiary} />
+                {!editing ? (
+                    <div>
+                        <p>{diary.text}</p>
+                        <p>{diary.created_at}</p>
+                        <DiaryDeleteButton diaryId={diary?.id!} deleteDiary={deleteDiary} />
+                    </div>
+                ) : (
+                    <div>
+                        <EditDiaryForm
+                            {...{
+                                id: diary.id,
+                                text: diary.text,
+                                habitId: diary.habit_id,
+                                updateDiary: updateDiary,
+                            }}
+                        />
+                    </div>
+                )}
+                <button onClick={() => setEditing(!editing)}>
+                    {editing ? '戻る' : '編集する'}
+                </button>
             </>
         </PageRender>
     );

@@ -29,7 +29,7 @@ class DiaryController extends Controller
     }
 
     /**
-     * Diaryの新規作成
+     * 日記の新規作成
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -55,6 +55,32 @@ class DiaryController extends Controller
             return new HabitResource(Habit::find($request->habitId));
         } else {
             return response(['message' => 'faild to post diary'], 400);
+        }
+    }
+
+    /**
+     * 日記の更新
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'text' => 'required|max:1000',
+        ]);
+
+        $diary = Diary::where('id', $id)->first();
+        $user_id = $diary->habit->user->id;
+
+        if ($request->userId === $user_id)
+        {
+            $diary->text = $request->text;
+            $diary->save();
+
+            return Diary::find($id);
+        } else {
+            return response(['message' => 'failed to update'], 400);
         }
     }
 
