@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\DiaryResource;
 use App\Models\Diary;
 use App\Models\HabitDoneDay;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -53,7 +54,7 @@ class HabitResource extends JsonResource
                 'name' => $this->user->name,
                 'screen_name' => $this->user->screen_name,
             ],
-            'diaries' => $this->diariesLatest($this->id),
+            'diaries' => DiaryResource::collection($this->diariesLatest($this->id)),
             'can_post_diary' => !$can_post_diary,
             'created_at' => $this->created_at->format('Y年n月j日 H:i'),
             'updated_at' => $this->updated_at

@@ -19,7 +19,7 @@ class DiaryResource extends JsonResource
             'habit_id' => $this->habit_id,
             'text' => $this->text,
             'user_id' => $this->habit->user->id,
-            'created_at' => $this->created_at,
+            'created_at' => $this->created_at->format('Y年n月j日 H:i'),
             'updated_at' => $this->updated_at,
         ];
     }
