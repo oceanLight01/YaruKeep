@@ -4628,6 +4628,8 @@ var Authenticate_1 = __webpack_require__(/*! ../Components/Authenticate */ "./re
 
 var HabitTracker_1 = __importDefault(__webpack_require__(/*! ../Components/HabitTracker */ "./resources/ts/Components/HabitTracker.tsx"));
 
+var PageRender_1 = __importDefault(__webpack_require__(/*! ./PageRender */ "./resources/ts/Pages/PageRender.tsx"));
+
 var User = function User() {
   var screenName = (0, react_router_dom_1.useParams)().screenName;
 
@@ -4638,6 +4640,10 @@ var User = function User() {
   var _b = (0, react_1.useState)([]),
       habits = _b[0],
       setHabits = _b[1];
+
+  var _c = (0, react_1.useState)(0),
+      statusCode = _c[0],
+      setStatusCode = _c[1];
 
   var locationPath = (0, react_router_dom_1.useLocation)().pathname;
   var auth = (0, Authenticate_1.useAuth)();
@@ -4659,6 +4665,8 @@ var User = function User() {
         name: props.user.name,
         screenName: props.user.screen_name
       },
+      diaries: props.diaries,
+      canPostDiary: props.can_post_diary,
       created_at: props.created_at,
       updated_at: props.updated_at
     };
@@ -4681,7 +4689,9 @@ var User = function User() {
       setHabits(data.habits.map(function (item) {
         return mapHabitItem(item);
       }));
+      setStatusCode(res.data.status);
     })["catch"](function (error) {
+      setStatusCode(error.response.status);
       console.error(error);
     });
   };
@@ -4708,14 +4718,16 @@ var User = function User() {
   (0, react_1.useEffect)(function () {
     getUserData(screenName);
   }, [locationPath]);
-  return react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("h1", null, "\u30E6\u30FC\u30B6\u30DA\u30FC\u30B8"), react_1["default"].createElement("div", null, react_1["default"].createElement("p", null, "ID:", userData === null || userData === void 0 ? void 0 : userData.id), react_1["default"].createElement("p", null, "name:", userData === null || userData === void 0 ? void 0 : userData.name), react_1["default"].createElement("p", null, "UserID", userData === null || userData === void 0 ? void 0 : userData.screenName), react_1["default"].createElement("p", null, "Profile:", userData === null || userData === void 0 ? void 0 : userData.profile), react_1["default"].createElement("p", null, userData === null || userData === void 0 ? void 0 : userData.profileImage), react_1["default"].createElement("p", null, "\u30D5\u30A9\u30ED\u30FC\u4E2D:", userData === null || userData === void 0 ? void 0 : userData.followingCount), react_1["default"].createElement("p", null, "\u30D5\u30A9\u30ED\u30EF\u30FC:", userData === null || userData === void 0 ? void 0 : userData.followedCount)), react_1["default"].createElement("hr", null), react_1["default"].createElement("div", null, react_1["default"].createElement("h2", null, "\u30CF\u30D3\u30C3\u30C8\u30C8\u30E9\u30C3\u30AB\u30FC"), react_1["default"].createElement("ul", null, habits.map(function (item, index) {
+  return react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("h1", null, "\u30E6\u30FC\u30B6\u30DA\u30FC\u30B8"), react_1["default"].createElement(PageRender_1["default"], {
+    status: statusCode
+  }, react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("div", null, react_1["default"].createElement("p", null, "ID:", userData === null || userData === void 0 ? void 0 : userData.id), react_1["default"].createElement("p", null, "name:", userData === null || userData === void 0 ? void 0 : userData.name), react_1["default"].createElement("p", null, "UserID", userData === null || userData === void 0 ? void 0 : userData.screenName), react_1["default"].createElement("p", null, "Profile:", userData === null || userData === void 0 ? void 0 : userData.profile), react_1["default"].createElement("p", null, userData === null || userData === void 0 ? void 0 : userData.profileImage), react_1["default"].createElement("p", null, "\u30D5\u30A9\u30ED\u30FC\u4E2D:", userData === null || userData === void 0 ? void 0 : userData.followingCount), react_1["default"].createElement("p", null, "\u30D5\u30A9\u30ED\u30EF\u30FC:", userData === null || userData === void 0 ? void 0 : userData.followedCount)), react_1["default"].createElement("hr", null), react_1["default"].createElement("div", null, react_1["default"].createElement("h2", null, "\u30CF\u30D3\u30C3\u30C8\u30C8\u30E9\u30C3\u30AB\u30FC"), react_1["default"].createElement("ul", null, habits.map(function (item, index) {
     return react_1["default"].createElement(HabitTracker_1["default"], {
       item: item,
       key: index,
       index: index,
       doneHabit: doneHabit
     });
-  }))));
+  }))))));
 };
 
 exports["default"] = User;

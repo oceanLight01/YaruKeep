@@ -14,8 +14,10 @@ type HabitItem = {
         name: string;
         screenName: string;
     };
-    diaries: { id: number; habitId: number; text: string; created_at: string }[];
+    diaries: DiaryItem[];
     canPostDiary: boolean;
     created_at: string;
     updated_at: string;
 };
+
+type DiaryItem = { id: number; habitId: number; text: string; created_at: string };

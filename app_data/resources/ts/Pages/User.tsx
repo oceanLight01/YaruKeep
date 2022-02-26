@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { useAuth } from '../Components/Authenticate';
 import HabitTracker from '../Components/HabitTracker';
+import PageRender from './PageRender';
 
 type UserData = {
     id: number;
@@ -20,6 +21,7 @@ const User = () => {
     const { screenName } = useParams<{ screenName: string }>();
     const [userData, setUserData] = useState<UserData | null>(null);
     const [habits, setHabits] = useState<HabitItem[] | []>([]);
+    const [statusCode, setStatusCode] = useState<number>(0);
     const locationPath = useLocation().pathname;
     const auth = useAuth();
 
@@ -40,6 +42,8 @@ const User = () => {
                 name: props.user.name,
                 screenName: props.user.screen_name,
             },
+            diaries: props.diaries,
+            canPostDiary: props.can_post_diary,
             created_at: props.created_at,
             updated_at: props.updated_at,
         };
@@ -66,8 +70,10 @@ const User = () => {
                         return mapHabitItem(item);
                     })
                 );
+                setStatusCode(res.data.status);
             })
             .catch((error) => {
+                setStatusCode(error.response.status);
                 console.error(error);
             });
     };
@@ -97,31 +103,35 @@ const User = () => {
     return (
         <>
             <h1>ユーザページ</h1>
-            <div>
-                <p>ID:{userData?.id}</p>
-                <p>name:{userData?.name}</p>
-                <p>UserID{userData?.screenName}</p>
-                <p>Profile:{userData?.profile}</p>
-                <p>{userData?.profileImage}</p>
-                <p>フォロー中:{userData?.followingCount}</p>
-                <p>フォロワー:{userData?.followedCount}</p>
-            </div>
-            <hr />
-            <div>
-                <h2>ハビットトラッカー</h2>
-                <ul>
-                    {habits.map((item, index: number) => {
-                        return (
-                            <HabitTracker
-                                item={item}
-                                key={index}
-                                index={index}
-                                doneHabit={doneHabit}
-                            />
-                        );
-                    })}
-                </ul>
-            </div>
+            <PageRender status={statusCode}>
+                <>
+                    <div>
+                        <p>ID:{userData?.id}</p>
+                        <p>name:{userData?.name}</p>
+                        <p>UserID{userData?.screenName}</p>
+                        <p>Profile:{userData?.profile}</p>
+                        <p>{userData?.profileImage}</p>
+                        <p>フォロー中:{userData?.followingCount}</p>
+                        <p>フォロワー:{userData?.followedCount}</p>
+                    </div>
+                    <hr />
+                    <div>
+                        <h2>ハビットトラッカー</h2>
+                        <ul>
+                            {habits.map((item, index: number) => {
+                                return (
+                                    <HabitTracker
+                                        item={item}
+                                        key={index}
+                                        index={index}
+                                        doneHabit={doneHabit}
+                                    />
+                                );
+                            })}
+                        </ul>
+                    </div>
+                </>
+            </PageRender>
         </>
     );
 };
