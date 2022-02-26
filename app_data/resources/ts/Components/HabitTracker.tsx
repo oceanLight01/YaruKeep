@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import HabitDoneButton from './atoms/HabitDoneButton';
 import { useAuth } from './Authenticate';
 import DistributionCalendar from './ContributionCalendar';
+import formatText from './FormatText';
+import FormatText from './FormatText';
 
 type Props = {
     item: HabitItem;
@@ -22,16 +24,7 @@ const HabitTracker = ({ item, index, doneHabit }: Props) => {
         <li>
             <div onClick={handleClick}>
                 <p>{item.title}</p>
-                <p>
-                    {item.description
-                        ? item.description.split('\n').map((str, index) => (
-                              <React.Fragment key={index}>
-                                  {str}
-                                  <br />
-                              </React.Fragment>
-                          ))
-                        : ''}
-                </p>
+                <p>{formatText(item.description)}</p>
                 <p>カテゴリ:{item.categoryName}</p>
                 <p>総達成日数:{item.doneDaysCount}日</p>
                 <p>最大連続達成日数:{item.maxDoneDay}日</p>

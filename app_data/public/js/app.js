@@ -2615,6 +2615,8 @@ var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/r
 
 var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
 
+var FormatText_1 = __importDefault(__webpack_require__(/*! ./FormatText */ "./resources/ts/Components/FormatText.tsx"));
+
 var DiaryItem = function DiaryItem(props) {
   var text = props.text;
 
@@ -2627,7 +2629,7 @@ var DiaryItem = function DiaryItem(props) {
     onClick: function onClick() {
       return navigate("/user/".concat(props.user.screenName, "/habit/").concat(props.habitId, "/diary/").concat(props.id));
     }
-  }, react_1["default"].createElement("p", null, text), react_1["default"].createElement("p", null, props.created_at));
+  }, react_1["default"].createElement("p", null, (0, FormatText_1["default"])(text)), react_1["default"].createElement("p", null, props.created_at));
 };
 
 exports["default"] = DiaryItem;
@@ -3047,6 +3049,48 @@ exports["default"] = Footer;
 
 /***/ }),
 
+/***/ "./resources/ts/Components/FormatText.tsx":
+/*!************************************************!*\
+  !*** ./resources/ts/Components/FormatText.tsx ***!
+  \************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+/**
+ * 改行を含むテキストを受け取りJSXElementに置き換える
+ *
+ * nullを受け取った時はそのままnullを返す
+ *
+ * @param {JSX.Element | null} text 改行させたいテキスト
+ * @returns {JSX.Element[] | null}
+ */
+
+
+var formatText = function formatText(text) {
+  return text ? text.split('\n').map(function (str, index) {
+    return react_1["default"].createElement(react_1["default"].Fragment, {
+      key: index
+    }, str, react_1["default"].createElement("br", null));
+  }) : null;
+};
+
+exports["default"] = formatText;
+
+/***/ }),
+
 /***/ "./resources/ts/Components/HabitTracker.tsx":
 /*!**************************************************!*\
   !*** ./resources/ts/Components/HabitTracker.tsx ***!
@@ -3076,6 +3120,8 @@ var Authenticate_1 = __webpack_require__(/*! ./Authenticate */ "./resources/ts/C
 
 var ContributionCalendar_1 = __importDefault(__webpack_require__(/*! ./ContributionCalendar */ "./resources/ts/Components/ContributionCalendar.tsx"));
 
+var FormatText_1 = __importDefault(__webpack_require__(/*! ./FormatText */ "./resources/ts/Components/FormatText.tsx"));
+
 var HabitTracker = function HabitTracker(_a) {
   var _b;
 
@@ -3091,11 +3137,7 @@ var HabitTracker = function HabitTracker(_a) {
 
   return react_1["default"].createElement("li", null, react_1["default"].createElement("div", {
     onClick: handleClick
-  }, react_1["default"].createElement("p", null, item.title), react_1["default"].createElement("p", null, item.description ? item.description.split('\n').map(function (str, index) {
-    return react_1["default"].createElement(react_1["default"].Fragment, {
-      key: index
-    }, str, react_1["default"].createElement("br", null));
-  }) : ''), react_1["default"].createElement("p", null, "\u30AB\u30C6\u30B4\u30EA:", item.categoryName), react_1["default"].createElement("p", null, "\u7DCF\u9054\u6210\u65E5\u6570:", item.doneDaysCount, "\u65E5"), react_1["default"].createElement("p", null, "\u6700\u5927\u9023\u7D9A\u9054\u6210\u65E5\u6570:", item.maxDoneDay, "\u65E5"), react_1["default"].createElement("p", null, "\u4F5C\u6210\u65E5:", item.created_at), react_1["default"].createElement("div", null, react_1["default"].createElement(ContributionCalendar_1["default"], {
+  }, react_1["default"].createElement("p", null, item.title), react_1["default"].createElement("p", null, (0, FormatText_1["default"])(item.description)), react_1["default"].createElement("p", null, "\u30AB\u30C6\u30B4\u30EA:", item.categoryName), react_1["default"].createElement("p", null, "\u7DCF\u9054\u6210\u65E5\u6570:", item.doneDaysCount, "\u65E5"), react_1["default"].createElement("p", null, "\u6700\u5927\u9023\u7D9A\u9054\u6210\u65E5\u6570:", item.maxDoneDay, "\u65E5"), react_1["default"].createElement("p", null, "\u4F5C\u6210\u65E5:", item.created_at), react_1["default"].createElement("div", null, react_1["default"].createElement(ContributionCalendar_1["default"], {
     values: item.doneDaysList
   }))), ((_b = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _b === void 0 ? void 0 : _b.id) === item.user.id ? react_1["default"].createElement(HabitDoneButton_1["default"], {
     doneHabit: doneHabit,
@@ -3948,6 +3990,8 @@ var Authenticate_1 = __webpack_require__(/*! ../Components/Authenticate */ "./re
 
 var EditDiaryForm_1 = __importDefault(__webpack_require__(/*! ../Components/EditDiaryForm */ "./resources/ts/Components/EditDiaryForm.tsx"));
 
+var FormatText_1 = __importDefault(__webpack_require__(/*! ../Components/FormatText */ "./resources/ts/Components/FormatText.tsx"));
+
 var PageRender_1 = __importDefault(__webpack_require__(/*! ./PageRender */ "./resources/ts/Pages/PageRender.tsx"));
 
 var Diary = function Diary() {
@@ -4004,7 +4048,7 @@ var Diary = function Diary() {
 
   return react_1["default"].createElement(PageRender_1["default"], {
     status: statusCode
-  }, react_1["default"].createElement(react_1["default"].Fragment, null, !editing ? react_1["default"].createElement("div", null, react_1["default"].createElement("p", null, diary.text), react_1["default"].createElement("p", null, diary.created_at), isUser && react_1["default"].createElement(DiaryDeleteButton_1["default"], {
+  }, react_1["default"].createElement(react_1["default"].Fragment, null, !editing ? react_1["default"].createElement("div", null, react_1["default"].createElement("p", null, (0, FormatText_1["default"])(diary.text)), react_1["default"].createElement("p", null, diary.created_at), isUser && react_1["default"].createElement(DiaryDeleteButton_1["default"], {
     diaryId: diary.id,
     deleteDiary: deleteDiary
   })) : react_1["default"].createElement("div", null, react_1["default"].createElement(EditDiaryForm_1["default"], __assign({}, {
@@ -4298,6 +4342,8 @@ var DiaryList_1 = __importDefault(__webpack_require__(/*! ../Components/DiaryLis
 
 var EditHabitForm_1 = __importDefault(__webpack_require__(/*! ../Components/EditHabitForm */ "./resources/ts/Components/EditHabitForm.tsx"));
 
+var FormatText_1 = __importDefault(__webpack_require__(/*! ../Components/FormatText */ "./resources/ts/Components/FormatText.tsx"));
+
 var PageRender_1 = __importDefault(__webpack_require__(/*! ./PageRender */ "./resources/ts/Pages/PageRender.tsx"));
 
 var HabitStatus = function HabitStatus() {
@@ -4414,11 +4460,7 @@ var HabitStatus = function HabitStatus() {
 
   return react_1["default"].createElement(PageRender_1["default"], {
     status: statusCode
-  }, react_1["default"].createElement(react_1["default"].Fragment, null, !editing ? react_1["default"].createElement("div", null, react_1["default"].createElement("h2", null, HabitItem.title), react_1["default"].createElement("p", null, HabitItem.description ? HabitItem.description.split('\n').map(function (str, index) {
-    return react_1["default"].createElement(react_1["default"].Fragment, {
-      key: index
-    }, str, react_1["default"].createElement("br", null));
-  }) : ''), react_1["default"].createElement("p", null, "\u30AB\u30C6\u30B4\u30EA:", HabitItem.categoryName), react_1["default"].createElement("p", null, "\u7DCF\u9054\u6210\u65E5\u6570:", HabitItem.doneDaysCount, "\u65E5"), react_1["default"].createElement("p", null, "\u6700\u5927\u9023\u7D9A\u9054\u6210\u65E5\u6570:", HabitItem.maxDoneDay, "\u65E5"), react_1["default"].createElement("p", null, "\u4F5C\u6210\u65E5:", HabitItem.created_at), react_1["default"].createElement("div", null, react_1["default"].createElement(ContributionCalendar_1["default"], {
+  }, react_1["default"].createElement(react_1["default"].Fragment, null, !editing ? react_1["default"].createElement("div", null, react_1["default"].createElement("h2", null, HabitItem.title), react_1["default"].createElement("p", null, (0, FormatText_1["default"])(HabitItem.description)), react_1["default"].createElement("p", null, "\u30AB\u30C6\u30B4\u30EA:", HabitItem.categoryName), react_1["default"].createElement("p", null, "\u7DCF\u9054\u6210\u65E5\u6570:", HabitItem.doneDaysCount, "\u65E5"), react_1["default"].createElement("p", null, "\u6700\u5927\u9023\u7D9A\u9054\u6210\u65E5\u6570:", HabitItem.maxDoneDay, "\u65E5"), react_1["default"].createElement("p", null, "\u4F5C\u6210\u65E5:", HabitItem.created_at), react_1["default"].createElement("div", null, react_1["default"].createElement(ContributionCalendar_1["default"], {
     values: HabitItem.doneDaysList
   })), isLoginUser ? react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement(HabitDoneButton_1["default"], {
     doneHabit: doneHabit,
@@ -4627,6 +4669,8 @@ var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_mod
 
 var Authenticate_1 = __webpack_require__(/*! ../Components/Authenticate */ "./resources/ts/Components/Authenticate.tsx");
 
+var FormatText_1 = __importDefault(__webpack_require__(/*! ../Components/FormatText */ "./resources/ts/Components/FormatText.tsx"));
+
 var HabitTracker_1 = __importDefault(__webpack_require__(/*! ../Components/HabitTracker */ "./resources/ts/Components/HabitTracker.tsx"));
 
 var PageRender_1 = __importDefault(__webpack_require__(/*! ./PageRender */ "./resources/ts/Pages/PageRender.tsx"));
@@ -4721,7 +4765,7 @@ var User = function User() {
   }, [locationPath]);
   return react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("h1", null, "\u30E6\u30FC\u30B6\u30DA\u30FC\u30B8"), react_1["default"].createElement(PageRender_1["default"], {
     status: statusCode
-  }, react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("div", null, react_1["default"].createElement("p", null, "ID:", userData === null || userData === void 0 ? void 0 : userData.id), react_1["default"].createElement("p", null, "name:", userData === null || userData === void 0 ? void 0 : userData.name), react_1["default"].createElement("p", null, "UserID", userData === null || userData === void 0 ? void 0 : userData.screenName), react_1["default"].createElement("p", null, "Profile:", userData === null || userData === void 0 ? void 0 : userData.profile), react_1["default"].createElement("p", null, userData === null || userData === void 0 ? void 0 : userData.profileImage), react_1["default"].createElement("p", null, "\u30D5\u30A9\u30ED\u30FC\u4E2D:", userData === null || userData === void 0 ? void 0 : userData.followingCount), react_1["default"].createElement("p", null, "\u30D5\u30A9\u30ED\u30EF\u30FC:", userData === null || userData === void 0 ? void 0 : userData.followedCount)), react_1["default"].createElement("hr", null), react_1["default"].createElement("div", null, react_1["default"].createElement("h2", null, "\u30CF\u30D3\u30C3\u30C8\u30C8\u30E9\u30C3\u30AB\u30FC"), react_1["default"].createElement("ul", null, habits.map(function (item, index) {
+  }, react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("div", null, react_1["default"].createElement("p", null, "ID:", userData === null || userData === void 0 ? void 0 : userData.id), react_1["default"].createElement("p", null, "name:", userData === null || userData === void 0 ? void 0 : userData.name), react_1["default"].createElement("p", null, "UserID", userData === null || userData === void 0 ? void 0 : userData.screenName), react_1["default"].createElement("p", null, "Profile:", (0, FormatText_1["default"])(userData === null || userData === void 0 ? void 0 : userData.profile)), react_1["default"].createElement("p", null, userData === null || userData === void 0 ? void 0 : userData.profileImage), react_1["default"].createElement("p", null, "\u30D5\u30A9\u30ED\u30FC\u4E2D:", userData === null || userData === void 0 ? void 0 : userData.followingCount), react_1["default"].createElement("p", null, "\u30D5\u30A9\u30ED\u30EF\u30FC:", userData === null || userData === void 0 ? void 0 : userData.followedCount)), react_1["default"].createElement("hr", null), react_1["default"].createElement("div", null, react_1["default"].createElement("h2", null, "\u30CF\u30D3\u30C3\u30C8\u30C8\u30E9\u30C3\u30AB\u30FC"), react_1["default"].createElement("ul", null, habits.map(function (item, index) {
     return react_1["default"].createElement(HabitTracker_1["default"], {
       item: item,
       key: index,

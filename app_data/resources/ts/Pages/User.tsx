@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { useAuth } from '../Components/Authenticate';
+import formatText from '../Components/FormatText';
 import HabitTracker from '../Components/HabitTracker';
 import PageRender from './PageRender';
 
@@ -109,7 +110,7 @@ const User = () => {
                         <p>ID:{userData?.id}</p>
                         <p>name:{userData?.name}</p>
                         <p>UserID{userData?.screenName}</p>
-                        <p>Profile:{userData?.profile}</p>
+                        <p>Profile:{formatText(userData?.profile!)}</p>
                         <p>{userData?.profileImage}</p>
                         <p>フォロー中:{userData?.followingCount}</p>
                         <p>フォロワー:{userData?.followedCount}</p>

@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import DiaryDeleteButton from '../Components/atoms/DiaryDeleteButton';
 import { useAuth } from '../Components/Authenticate';
 import EditDiaryForm from '../Components/EditDiaryForm';
+import formatText from '../Components/FormatText';
 import PageRender from './PageRender';
 
 type Diary = {
@@ -64,7 +65,7 @@ const Diary = () => {
             <>
                 {!editing ? (
                     <div>
-                        <p>{diary.text}</p>
+                        <p>{formatText(diary.text)}</p>
                         <p>{diary.created_at}</p>
 
                         {isUser && (

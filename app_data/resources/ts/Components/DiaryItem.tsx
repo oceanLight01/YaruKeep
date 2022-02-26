@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import formatText from './FormatText';
 
 type Props = {
     id: number;
@@ -26,7 +27,7 @@ const DiaryItem = (props: Props) => {
                 navigate(`/user/${props.user.screenName}/habit/${props.habitId}/diary/${props.id}`)
             }
         >
-            <p>{text}</p>
+            <p>{formatText(text)}</p>
             <p>{props.created_at}</p>
         </li>
     );

@@ -8,6 +8,7 @@ import DistributionCalendar from '../Components/ContributionCalendar';
 import DiaryForm from '../Components/DiaryForm';
 import DiaryList from '../Components/DiaryList';
 import EditHabitForm from '../Components/EditHabitForm';
+import formatText from '../Components/FormatText';
 import PageRender from './PageRender';
 
 const HabitStatus = () => {
@@ -118,16 +119,7 @@ const HabitStatus = () => {
                 {!editing ? (
                     <div>
                         <h2>{HabitItem.title}</h2>
-                        <p>
-                            {HabitItem.description
-                                ? HabitItem.description.split('\n').map((str, index) => (
-                                      <React.Fragment key={index}>
-                                          {str}
-                                          <br />
-                                      </React.Fragment>
-                                  ))
-                                : ''}
-                        </p>
+                        <p>{formatText(HabitItem.description)}</p>
                         <p>カテゴリ:{HabitItem.categoryName}</p>
                         <p>総達成日数:{HabitItem.doneDaysCount}日</p>
                         <p>最大連続達成日数:{HabitItem.maxDoneDay}日</p>
