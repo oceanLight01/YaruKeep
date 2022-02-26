@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\HabitResource;
 use App\Models\Habit;
 use App\Models\HabitDoneDay;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,12 +19,23 @@ class HabitController extends Controller
      */
     public function show(Request $request)
     {
-        $id = $request->id;
-        $habit_exists = Habit::where('id', $id)->exists();
+        $screen_name = $request->screen_name;
+        $user_id = User::where('screen_name', $screen_name)->value('id');
 
-        if ($habit_exists)
+        $habit_id = $request->id;
+        $habit = Habit::where('id', $habit_id);
+
+        $habit_exists = $habit->where('user_id', $user_id)
+                              ->exists();
+        $is_private = $habit->value('is_private') === 1;
+        $is_login_user_habit = $habit->value('user_id') === Auth::id();
+
+        if ($habit_exists && $is_login_user_habit)
         {
-            return new HabitResource(Habit::find($id));
+            return new HabitResource(Habit::find($habit_id));
+        } else if ($habit_exists && !$is_private)
+        {
+            return new HabitResource(Habit::find($habit_id));
         } else {
             return response(['message' => 'not found habit data'], 404);
         }

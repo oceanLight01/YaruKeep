@@ -38,6 +38,7 @@ const HabitStatus = () => {
     const habitId = useParams<{ screenName: string; id: string }>();
     const isLoginUser = auth?.userData?.id === HabitItem.user.id;
     const navigate = useNavigate();
+    const params = useParams<{ screenName: string; id: string }>();
 
     const mapHabitItem = (props: any) => {
         return {
@@ -72,7 +73,7 @@ const HabitStatus = () => {
 
     useEffect(() => {
         axios
-            .get(`/api/habits/status/${habitId.id}`)
+            .get(`/api/user/${params.screenName}/habits/${params.id}`)
             .then((res) => {
                 setHabitItem(mapHabitItem(res.data.data));
                 setStatusCode(res.data.status);

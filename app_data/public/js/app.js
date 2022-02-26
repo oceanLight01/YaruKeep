@@ -4340,6 +4340,7 @@ var HabitStatus = function HabitStatus() {
   var habitId = (0, react_router_dom_1.useParams)();
   var isLoginUser = ((_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.id) === HabitItem.user.id;
   var navigate = (0, react_router_dom_1.useNavigate)();
+  var params = (0, react_router_dom_1.useParams)();
 
   var mapHabitItem = function mapHabitItem(props) {
     return {
@@ -4373,7 +4374,7 @@ var HabitStatus = function HabitStatus() {
   };
 
   (0, react_1.useEffect)(function () {
-    axios_1["default"].get("/api/habits/status/".concat(habitId.id)).then(function (res) {
+    axios_1["default"].get("/api/user/".concat(params.screenName, "/habits/").concat(params.id)).then(function (res) {
       setHabitItem(mapHabitItem(res.data.data));
       setStatusCode(res.data.status);
     })["catch"](function (error) {
