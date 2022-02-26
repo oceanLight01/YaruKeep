@@ -40,7 +40,7 @@ const EditDiaryForm = (props: Props) => {
         axios
             .put(`/api/diaries/${props.id}`, postData)
             .then((res) => {
-                props.updateDiary(res.data);
+                props.updateDiary(res.data.data);
             })
             .catch((error) => console.log(error))
             .finally(() => setClicked(false));

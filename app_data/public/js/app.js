@@ -2796,7 +2796,7 @@ var EditDiaryForm = function EditDiaryForm(props) {
     });
 
     axios_1["default"].put("/api/diaries/".concat(props.id), postData).then(function (res) {
-      props.updateDiary(res.data);
+      props.updateDiary(res.data.data);
     })["catch"](function (error) {
       return console.log(error);
     })["finally"](function () {
@@ -3951,30 +3951,34 @@ var EditDiaryForm_1 = __importDefault(__webpack_require__(/*! ../Components/Edit
 var PageRender_1 = __importDefault(__webpack_require__(/*! ./PageRender */ "./resources/ts/Pages/PageRender.tsx"));
 
 var Diary = function Diary() {
+  var _a;
+
   var params = (0, react_router_dom_1.useParams)();
 
-  var _a = (0, react_1.useState)({
+  var _b = (0, react_1.useState)({
     id: 0,
     habit_id: 0,
     text: '',
+    user_id: 0,
     created_at: ''
   }),
-      diary = _a[0],
-      setDiary = _a[1];
+      diary = _b[0],
+      setDiary = _b[1];
 
-  var _b = (0, react_1.useState)(0),
-      statusCode = _b[0],
-      setStatusCode = _b[1];
+  var _c = (0, react_1.useState)(0),
+      statusCode = _c[0],
+      setStatusCode = _c[1];
 
-  var _c = (0, react_1.useState)(false),
-      editing = _c[0],
-      setEditing = _c[1];
+  var _d = (0, react_1.useState)(false),
+      editing = _d[0],
+      setEditing = _d[1];
 
   var navigate = (0, react_router_dom_1.useNavigate)();
   var auth = (0, Authenticate_1.useAuth)();
+  var isUser = ((_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.id) === diary.user_id;
   (0, react_1.useEffect)(function () {
     axios_1["default"].get("/api/habits/".concat(params.id, "/diaries/").concat(params.did)).then(function (res) {
-      setDiary(res.data);
+      setDiary(res.data.data);
       setStatusCode(res.data.status);
     })["catch"](function (error) {
       setStatusCode(error.response.status);
@@ -4000,15 +4004,15 @@ var Diary = function Diary() {
 
   return react_1["default"].createElement(PageRender_1["default"], {
     status: statusCode
-  }, react_1["default"].createElement(react_1["default"].Fragment, null, !editing ? react_1["default"].createElement("div", null, react_1["default"].createElement("p", null, diary.text), react_1["default"].createElement("p", null, diary.created_at), react_1["default"].createElement(DiaryDeleteButton_1["default"], {
-    diaryId: diary === null || diary === void 0 ? void 0 : diary.id,
+  }, react_1["default"].createElement(react_1["default"].Fragment, null, !editing ? react_1["default"].createElement("div", null, react_1["default"].createElement("p", null, diary.text), react_1["default"].createElement("p", null, diary.created_at), isUser && react_1["default"].createElement(DiaryDeleteButton_1["default"], {
+    diaryId: diary.id,
     deleteDiary: deleteDiary
   })) : react_1["default"].createElement("div", null, react_1["default"].createElement(EditDiaryForm_1["default"], __assign({}, {
     id: diary.id,
     text: diary.text,
     habitId: diary.habit_id,
     updateDiary: updateDiary
-  }))), react_1["default"].createElement("button", {
+  }))), isUser && react_1["default"].createElement("button", {
     onClick: function onClick() {
       return setEditing(!editing);
     }

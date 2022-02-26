@@ -10,22 +10,30 @@ type Diary = {
     id: number;
     habit_id: number;
     text: string;
+    user_id: number;
     created_at: string;
 };
 
 const Diary = () => {
     const params = useParams<{ id: string; did: string }>();
-    const [diary, setDiary] = useState<Diary>({ id: 0, habit_id: 0, text: '', created_at: '' });
+    const [diary, setDiary] = useState<Diary>({
+        id: 0,
+        habit_id: 0,
+        text: '',
+        user_id: 0,
+        created_at: '',
+    });
     const [statusCode, setStatusCode] = useState<number>(0);
     const [editing, setEditing] = useState<boolean>(false);
     const navigate = useNavigate();
     const auth = useAuth();
+    const isUser = auth?.userData?.id === diary.user_id;
 
     useEffect(() => {
         axios
             .get(`/api/habits/${params.id}/diaries/${params.did}`)
             .then((res) => {
-                setDiary(res.data);
+                setDiary(res.data.data);
                 setStatusCode(res.data.status);
             })
             .catch((error) => {
@@ -58,7 +66,10 @@ const Diary = () => {
                     <div>
                         <p>{diary.text}</p>
                         <p>{diary.created_at}</p>
-                        <DiaryDeleteButton diaryId={diary?.id!} deleteDiary={deleteDiary} />
+
+                        {isUser && (
+                            <DiaryDeleteButton diaryId={diary.id!} deleteDiary={deleteDiary} />
+                        )}
                     </div>
                 ) : (
                     <div>
@@ -72,9 +83,11 @@ const Diary = () => {
                         />
                     </div>
                 )}
-                <button onClick={() => setEditing(!editing)}>
-                    {editing ? '戻る' : '編集する'}
-                </button>
+                {isUser && (
+                    <button onClick={() => setEditing(!editing)}>
+                        {editing ? '戻る' : '編集する'}
+                    </button>
+                )}
             </>
         </PageRender>
     );
