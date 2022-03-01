@@ -3043,6 +3043,105 @@ exports["default"] = DiaryForm;
 
 /***/ }),
 
+/***/ "./resources/ts/Components/DiaryItem.tsx":
+/*!***********************************************!*\
+  !*** ./resources/ts/Components/DiaryItem.tsx ***!
+  \***********************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
+
+var FormatText_1 = __importDefault(__webpack_require__(/*! ./FormatText */ "./resources/ts/Components/FormatText.tsx"));
+
+var DiaryItem = function DiaryItem(props) {
+  var text = props.text;
+
+  if (text.length > 100) {
+    text = "".concat(text.substring(0, 100), "...");
+  }
+
+  var navigate = (0, react_router_dom_1.useNavigate)();
+  return react_1["default"].createElement("li", {
+    onClick: function onClick() {
+      return navigate("/user/".concat(props.user.screenName, "/habit/").concat(props.habitId, "/diary/").concat(props.id));
+    }
+  }, react_1["default"].createElement("p", null, (0, FormatText_1["default"])(text)), react_1["default"].createElement("p", null, props.created_at));
+};
+
+exports["default"] = DiaryItem;
+
+/***/ }),
+
+/***/ "./resources/ts/Components/DiaryList.tsx":
+/*!***********************************************!*\
+  !*** ./resources/ts/Components/DiaryList.tsx ***!
+  \***********************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __assign = this && this.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+
+      for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+    }
+
+    return t;
+  };
+
+  return __assign.apply(this, arguments);
+};
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var DiaryItem_1 = __importDefault(__webpack_require__(/*! ./DiaryItem */ "./resources/ts/Components/DiaryItem.tsx"));
+
+var DiaryList = function DiaryList(_a) {
+  var diaries = _a.diaries,
+      user = _a.user;
+  return react_1["default"].createElement("ul", null, diaries.map(function (item, index) {
+    return react_1["default"].createElement(DiaryItem_1["default"], __assign({}, __assign(__assign({}, item), {
+      user: user
+    }), {
+      key: index
+    }));
+  }));
+};
+
+exports["default"] = DiaryList;
+
+/***/ }),
+
 /***/ "./resources/ts/Components/EditDiaryForm.tsx":
 /*!***************************************************!*\
   !*** ./resources/ts/Components/EditDiaryForm.tsx ***!
@@ -4727,6 +4826,8 @@ var ContributionCalendar_1 = __importDefault(__webpack_require__(/*! ../Componen
 
 var DiaryForm_1 = __importDefault(__webpack_require__(/*! ../Components/DiaryForm */ "./resources/ts/Components/DiaryForm.tsx"));
 
+var DiaryList_1 = __importDefault(__webpack_require__(/*! ../Components/DiaryList */ "./resources/ts/Components/DiaryList.tsx"));
+
 var EditHabitForm_1 = __importDefault(__webpack_require__(/*! ../Components/EditHabitForm */ "./resources/ts/Components/EditHabitForm.tsx"));
 
 var FormatText_1 = __importDefault(__webpack_require__(/*! ../Components/FormatText */ "./resources/ts/Components/FormatText.tsx"));
@@ -4770,6 +4871,10 @@ var HabitStatus = function HabitStatus() {
   var _e = (0, react_1.useState)(false),
       editing = _e[0],
       setEditing = _e[1];
+
+  var _f = (0, react_1.useState)('diary'),
+      tab = _f[0],
+      setTab = _f[1];
 
   var params = (0, react_router_dom_1.useParams)();
   var isLoginUser = ((_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.id) === HabitItem.user.id;
@@ -4886,7 +4991,14 @@ var HabitStatus = function HabitStatus() {
     itemId: HabitItem.id,
     parentId: null,
     updateHabit: updateHabit
-  })), react_1["default"].createElement("ul", null, HabitItem.comments.map(function (item, index) {
+  })), react_1["default"].createElement("button", {
+    onClick: function onClick() {
+      return setTab(tab === 'diary' ? 'comment' : 'diary');
+    }
+  }, tab === 'diary' ? 'コメント' : '日記'), tab === 'diary' ? react_1["default"].createElement(DiaryList_1["default"], {
+    diaries: HabitItem.diaries,
+    user: HabitItem.user
+  }) : react_1["default"].createElement("ul", null, HabitItem.comments.map(function (item, index) {
     return (0, CommentList_1["default"])({
       item: item,
       updateHabit: updateHabit,

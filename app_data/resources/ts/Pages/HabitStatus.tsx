@@ -39,6 +39,7 @@ const HabitStatus = () => {
     });
     const [statusCode, setStatusCode] = useState<number>(0);
     const [editing, setEditing] = useState<boolean>(false);
+    const [tab, setTab] = useState<'diary' | 'comment'>('diary');
     const params = useParams<{ screenName: string; id: string }>();
     const isLoginUser = auth?.userData?.id === HabitItem.user.id;
     const navigate = useNavigate();
@@ -182,12 +183,19 @@ const HabitStatus = () => {
                         updateHabit: updateHabit,
                     }}
                 />
-                <ul>
-                    {HabitItem.comments.map((item, index) => {
-                        return commentList({ item, updateHabit, deleteComment, index });
-                    })}
-                </ul>
-                {/* <DiaryList diaries={HabitItem.diaries} user={HabitItem.user} /> */}
+
+                <button onClick={() => setTab(tab === 'diary' ? 'comment' : 'diary')}>
+                    {tab === 'diary' ? 'コメント' : '日記'}
+                </button>
+                {tab === 'diary' ? (
+                    <DiaryList diaries={HabitItem.diaries} user={HabitItem.user} />
+                ) : (
+                    <ul>
+                        {HabitItem.comments.map((item, index) => {
+                            return commentList({ item, updateHabit, deleteComment, index });
+                        })}
+                    </ul>
+                )}
             </>
         </PageRender>
     );
