@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Http\Resources\DiaryResource;
 use App\Models\Diary;
+use App\Models\HabitComment;
 use App\Models\HabitDoneDay;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -37,6 +38,10 @@ class HabitResource extends JsonResource
                                ->whereDate('created_at', date('Y-m-d'))
                                ->exists();
 
+        $comment = HabitComment::where('habit_id', $this->id)->get();
+        $tree = $comment->toTree();
+
+        $comment_count = HabitComment::where('habit_id', $this->id)->count();
 
         return [
             'id' => $this->id,
@@ -56,6 +61,8 @@ class HabitResource extends JsonResource
             ],
             'diaries' => DiaryResource::collection($this->diariesLatest($this->id)),
             'can_post_diary' => !$can_post_diary,
+            'comments' => HabitCommentResource::collection($tree),
+            'comment_count' => $comment_count,
             'created_at' => $this->created_at->format('Y年n月j日 H:i'),
             'updated_at' => $this->updated_at
         ];

@@ -16,8 +16,22 @@ type HabitItem = {
     };
     diaries: DiaryItem[];
     canPostDiary: boolean;
+    comments: CommentItem[];
     created_at: string;
     updated_at: string;
 };
 
 type DiaryItem = { id: number; habitId: number; text: string; created_at: string };
+
+type CommentItem = {
+    id: number;
+    comment: string;
+    parent_id: number | null;
+    item_id: number;
+    user: {
+        id: number;
+        name: string;
+        screen_name: string;
+    };
+    children: CommentItem[];
+};

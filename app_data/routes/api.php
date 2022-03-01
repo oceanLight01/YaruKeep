@@ -30,4 +30,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/diaries', 'DiaryController@store');
     Route::put('/diaries/{diary_id}', 'DiaryController@update');
     Route::delete('/diaries/{diary_id}', 'DiaryController@destroy');
+
+    // Commentに関するルーティング
+    Route::post('/comment/habit', 'HabitCommentController@store');
 });

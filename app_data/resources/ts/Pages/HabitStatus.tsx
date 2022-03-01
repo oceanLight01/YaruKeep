@@ -4,6 +4,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import HabitDeleteButton from '../Components/atoms/HabitDeleteButton';
 import HabitDoneButton from '../Components/atoms/HabitDoneButton';
 import { useAuth } from '../Components/Authenticate';
+import CommentForm from '../Components/CommentForm';
+import commentList from '../Components/CommentList';
 import DistributionCalendar from '../Components/ContributionCalendar';
 import DiaryForm from '../Components/DiaryForm';
 import DiaryList from '../Components/DiaryList';
@@ -31,15 +33,15 @@ const HabitStatus = () => {
         },
         diaries: [],
         canPostDiary: false,
+        comments: [],
         created_at: '',
         updated_at: '',
     });
     const [statusCode, setStatusCode] = useState<number>(0);
     const [editing, setEditing] = useState<boolean>(false);
-    const habitId = useParams<{ screenName: string; id: string }>();
+    const params = useParams<{ screenName: string; id: string }>();
     const isLoginUser = auth?.userData?.id === HabitItem.user.id;
     const navigate = useNavigate();
-    const params = useParams<{ screenName: string; id: string }>();
 
     const mapHabitItem = (props: any) => {
         return {
@@ -67,6 +69,7 @@ const HabitStatus = () => {
                 };
             }),
             canPostDiary: props.can_post_diary,
+            comments: props.comments,
             created_at: props.created_at,
             updated_at: props.updated_at,
         };
@@ -158,7 +161,20 @@ const HabitStatus = () => {
                         {editing ? '戻る' : '編集する'}
                     </button>
                 ) : null}
-                <DiaryList diaries={HabitItem.diaries} user={HabitItem.user} />
+                <CommentForm
+                    {...{
+                        userId: auth?.userData?.id!,
+                        itemId: HabitItem.id,
+                        parentId: null,
+                        updateHabit: updateHabit,
+                    }}
+                />
+                <ul>
+                    {HabitItem.comments.map((item, index) => {
+                        return commentList({ item, updateHabit, index });
+                    })}
+                </ul>
+                {/* <DiaryList diaries={HabitItem.diaries} user={HabitItem.user} /> */}
             </>
         </PageRender>
     );
