@@ -2502,6 +2502,8 @@ var CommentForm = function CommentForm(props) {
       clicked = _c[0],
       setClicked = _c[1];
 
+  var commentType = props.habitComment ? 'habit' : 'diary';
+
   var _d = (0, react_hook_form_1.useForm)(),
       register = _d.register,
       handleSubmit = _d.handleSubmit,
@@ -2513,12 +2515,12 @@ var CommentForm = function CommentForm(props) {
 
     var postData = __assign(__assign({}, data), {
       userId: props.userId,
-      habitId: props.itemId,
+      itemId: props.itemId,
       parentId: props.id
     });
 
-    axios_1["default"].post('/api/comments/habit', postData).then(function (res) {
-      props.updateHabit(res.data.data);
+    axios_1["default"].post("/api/comments/".concat(commentType), postData).then(function (res) {
+      props.updateItem(res.data.data);
       setValue('comment', '');
     })["catch"](function (error) {
       console.error(error);
@@ -2632,8 +2634,8 @@ var CommentItem = function CommentItem(_a) {
   var _b, _c;
 
   var item = _a.item,
-      updateHabit = _a.updateHabit,
-      deleteComment = _a.deleteComment;
+      updateItem = _a.updateItem,
+      commentType = _a.commentType;
   var auth = (0, Authenticate_1.useAuth)();
 
   var _d = (0, react_1.useState)(false),
@@ -2647,14 +2649,15 @@ var CommentItem = function CommentItem(_a) {
     userId: (_b = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _b === void 0 ? void 0 : _b.id,
     itemId: item.item_id,
     parentId: item.parent_id,
-    updateHabit: updateHabit
+    updateItem: updateItem
   })) : null, react_1["default"].createElement("button", {
     onClick: function onClick() {
       return setShowCommentForm(!showCommentForm);
     }
   }, showCommentForm ? '戻る' : 'コメントする'), ((_c = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _c === void 0 ? void 0 : _c.id) === item.user.id && react_1["default"].createElement(CommentDeleteButton_1["default"], {
     id: item.id,
-    deleteComment: deleteComment
+    updateItem: updateItem,
+    commentType: commentType
   })));
 };
 
@@ -2705,15 +2708,15 @@ var CommentReplyList_1 = __importDefault(__webpack_require__(/*! ./CommentReplyL
 
 var commentList = function commentList(_a) {
   var item = _a.item,
-      updateHabit = _a.updateHabit,
-      deleteComment = _a.deleteComment,
+      commentType = _a.commentType,
+      updateItem = _a.updateItem,
       index = _a.index;
 
   if (item.children.length === 0) {
     return react_1["default"].createElement(CommentItem_1["default"], __assign({}, {
       item: item,
-      updateHabit: updateHabit,
-      deleteComment: deleteComment
+      commentType: commentType,
+      updateItem: updateItem
     }, {
       key: index
     }));
@@ -2723,12 +2726,12 @@ var commentList = function commentList(_a) {
     key: index
   }, react_1["default"].createElement(CommentItem_1["default"], __assign({}, {
     item: item,
-    updateHabit: updateHabit,
-    deleteComment: deleteComment
+    commentType: commentType,
+    updateItem: updateItem
   })), react_1["default"].createElement(CommentReplyList_1["default"], {
     item: item,
-    updateHabit: updateHabit,
-    deleteComment: deleteComment,
+    updateItem: updateItem,
+    commentType: commentType,
     index: index,
     key: "reply".concat(index)
   }));
@@ -2813,22 +2816,22 @@ var CommentItem_1 = __importDefault(__webpack_require__(/*! ./CommentItem */ "./
 
 var CommentReplyList = function CommentReplyList(_a) {
   var item = _a.item,
-      updateHabit = _a.updateHabit,
-      deleteComment = _a.deleteComment,
+      commentType = _a.commentType,
+      updateItem = _a.updateItem,
       index = _a.index;
 
   var _b = (0, react_1.useState)(true),
       isHidden = _b[0],
       setIsHidden = _b[1];
 
-  var renderReplyComment = function renderReplyComment(item, updateHabit) {
+  var renderReplyComment = function renderReplyComment(item, updateItem) {
     return item.children.map(function (itemChild) {
       if (itemChild.children.length === 0) {
         return react_1["default"].createElement(CommentItem_1["default"], __assign({
           item: itemChild
         }, {
-          updateHabit: updateHabit,
-          deleteComment: deleteComment
+          commentType: commentType,
+          updateItem: updateItem
         }, {
           key: itemChild.id
         }));
@@ -2838,21 +2841,21 @@ var CommentReplyList = function CommentReplyList(_a) {
         key: itemChild.id
       }, react_1["default"].createElement(CommentItem_1["default"], __assign({}, {
         item: itemChild,
-        updateHabit: updateHabit,
-        deleteComment: deleteComment
+        commentType: commentType,
+        updateItem: updateItem
       }, {
         key: itemChild.id
       })), itemChild.children.map(function (item) {
         if (item.children.length === 0) {
           return react_1["default"].createElement(CommentItem_1["default"], __assign({}, {
             item: item,
-            updateHabit: updateHabit,
-            deleteComment: deleteComment
+            commentType: commentType,
+            updateItem: updateItem
           }, {
             key: item.id
           }));
         } else {
-          return renderReplyComment(item, updateHabit);
+          return renderReplyComment(item, updateItem);
         }
       }));
     });
@@ -2860,7 +2863,7 @@ var CommentReplyList = function CommentReplyList(_a) {
 
   return react_1["default"].createElement(react_1["default"].Fragment, null, isHidden ? null : react_1["default"].createElement("li", {
     key: index
-  }, react_1["default"].createElement("ul", null, renderReplyComment(item, updateHabit))), react_1["default"].createElement("p", {
+  }, react_1["default"].createElement("ul", null, renderReplyComment(item, updateItem))), react_1["default"].createElement("p", {
     onClick: function onClick() {
       return setIsHidden(!isHidden);
     }
@@ -3736,10 +3739,22 @@ Object.defineProperty(exports, "__esModule", ({
 
 var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 
+var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
+
 var CommentDeleteButton = function CommentDeleteButton(props) {
+  var deleteComment = function deleteComment(commentId) {
+    if (window.confirm('コメントを削除します。もとに戻せませんがよろしいですか？')) {
+      axios_1["default"]["delete"]("/api/comments/".concat(commentId, "/").concat(props.commentType)).then(function (res) {
+        props.updateItem(res.data.data);
+      })["catch"](function (error) {
+        console.error(error);
+      });
+    }
+  };
+
   return react_1["default"].createElement("button", {
     onClick: function onClick() {
-      return props.deleteComment(props.id);
+      return deleteComment(props.id);
     }
   }, "\u524A\u9664");
 };
@@ -4472,6 +4487,10 @@ var DiaryDeleteButton_1 = __importDefault(__webpack_require__(/*! ../Components/
 
 var Authenticate_1 = __webpack_require__(/*! ../Components/Authenticate */ "./resources/ts/Components/Authenticate.tsx");
 
+var CommentForm_1 = __importDefault(__webpack_require__(/*! ../Components/CommentForm */ "./resources/ts/Components/CommentForm.tsx"));
+
+var CommentList_1 = __importDefault(__webpack_require__(/*! ../Components/CommentList */ "./resources/ts/Components/CommentList.tsx"));
+
 var EditDiaryForm_1 = __importDefault(__webpack_require__(/*! ../Components/EditDiaryForm */ "./resources/ts/Components/EditDiaryForm.tsx"));
 
 var FormatText_1 = __importDefault(__webpack_require__(/*! ../Components/FormatText */ "./resources/ts/Components/FormatText.tsx"));
@@ -4479,31 +4498,36 @@ var FormatText_1 = __importDefault(__webpack_require__(/*! ../Components/FormatT
 var PageRender_1 = __importDefault(__webpack_require__(/*! ./PageRender */ "./resources/ts/Pages/PageRender.tsx"));
 
 var Diary = function Diary() {
-  var _a;
+  var _a, _b;
 
   var params = (0, react_router_dom_1.useParams)();
 
-  var _b = (0, react_1.useState)({
+  var _c = (0, react_1.useState)({
     id: 0,
     habit_id: 0,
     text: '',
-    user_id: 0,
+    user: {
+      id: 0,
+      screen_name: '',
+      name: ''
+    },
+    comments: [],
     created_at: ''
   }),
-      diary = _b[0],
-      setDiary = _b[1];
+      diary = _c[0],
+      setDiary = _c[1];
 
-  var _c = (0, react_1.useState)(0),
-      statusCode = _c[0],
-      setStatusCode = _c[1];
+  var _d = (0, react_1.useState)(0),
+      statusCode = _d[0],
+      setStatusCode = _d[1];
 
-  var _d = (0, react_1.useState)(false),
-      editing = _d[0],
-      setEditing = _d[1];
+  var _e = (0, react_1.useState)(false),
+      editing = _e[0],
+      setEditing = _e[1];
 
   var navigate = (0, react_router_dom_1.useNavigate)();
   var auth = (0, Authenticate_1.useAuth)();
-  var isUser = ((_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.id) === diary.user_id;
+  var isUser = ((_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.id) === diary.user.id;
   (0, react_1.useEffect)(function () {
     axios_1["default"].get("/api/habits/".concat(params.id, "/diaries/").concat(params.did)).then(function (res) {
       setDiary(res.data.data);
@@ -4544,7 +4568,19 @@ var Diary = function Diary() {
     onClick: function onClick() {
       return setEditing(!editing);
     }
-  }, editing ? '戻る' : '編集する')));
+  }, editing ? '戻る' : '編集する'), react_1["default"].createElement(CommentForm_1["default"], __assign({}, {
+    userId: (_b = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _b === void 0 ? void 0 : _b.id,
+    itemId: diary.id,
+    parentId: null,
+    updateItem: updateDiary
+  })), react_1["default"].createElement("ul", null, diary.comments.map(function (item, index) {
+    return (0, CommentList_1["default"])({
+      item: item,
+      updateItem: updateDiary,
+      commentType: 'diary',
+      index: index
+    });
+  }))));
 };
 
 exports["default"] = Diary;

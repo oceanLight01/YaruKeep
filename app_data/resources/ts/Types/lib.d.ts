@@ -21,7 +21,18 @@ type HabitItem = {
     updated_at: string;
 };
 
-type DiaryItem = { id: number; habitId: number; text: string; created_at: string };
+type DiaryItem = {
+    id: number;
+    habit_id: number;
+    user: {
+        id: number;
+        screen_name: string;
+        name: string;
+    };
+    text: string;
+    comments: CommentItem[];
+    created_at: string;
+};
 
 type CommentItem = {
     id: number;

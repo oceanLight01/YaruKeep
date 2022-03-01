@@ -34,4 +34,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     // Commentに関するルーティング
     Route::post('/comments/habit', 'HabitCommentController@store');
     Route::delete('/comments/{id}/habit', 'HabitCommentController@destroy');
+
+    Route::post('/comments/diary', 'DiaryCommentController@store');
+    Route::delete('/comments/{id}/diary', 'DiaryCommentController@destroy');
 });

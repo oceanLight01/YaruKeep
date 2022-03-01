@@ -7,11 +7,11 @@ import formatText from './FormatText';
 
 type Props = {
     item: CommentItem;
-    updateHabit: (habitItem: HabitItem) => void;
-    deleteComment: (commentId: number) => void;
+    commentType: 'habit' | 'diary';
+    updateItem: ((habitItem: HabitItem) => void) | ((diaryItem: DiaryItem) => void);
 };
 
-const CommentItem = ({ item, updateHabit, deleteComment }: Props) => {
+const CommentItem = ({ item, updateItem, commentType }: Props) => {
     const auth = useAuth();
     const [showCommentForm, setShowCommentForm] = useState<boolean>(false);
 
@@ -29,7 +29,7 @@ const CommentItem = ({ item, updateHabit, deleteComment }: Props) => {
                             userId: auth?.userData?.id!,
                             itemId: item.item_id,
                             parentId: item.parent_id,
-                            updateHabit: updateHabit,
+                            updateItem: updateItem,
                         }}
                     />
                 ) : null}
@@ -37,7 +37,11 @@ const CommentItem = ({ item, updateHabit, deleteComment }: Props) => {
                     {showCommentForm ? '戻る' : 'コメントする'}
                 </button>
                 {auth?.userData?.id === item.user.id && (
-                    <CommentDeleteButton id={item.id} deleteComment={deleteComment} />
+                    <CommentDeleteButton
+                        id={item.id}
+                        updateItem={updateItem}
+                        commentType={commentType}
+                    />
                 )}
             </div>
         </li>

@@ -8,7 +8,8 @@ type Props = {
     itemId: number;
     parentId: number | null;
     comment?: string;
-    updateHabit: (habitItem: HabitItem) => void;
+    habitComment?: boolean;
+    updateItem: ((habitItem: HabitItem) => void) | ((diaryItem: DiaryItem) => void);
 };
 
 type CommentForm = {
@@ -17,6 +18,7 @@ type CommentForm = {
 
 const CommentForm = (props: Props) => {
     const [clicked, setClicked] = useState<boolean>(false);
+    const commentType = props.habitComment ? 'habit' : 'diary';
     const {
         register,
         handleSubmit,
@@ -30,14 +32,15 @@ const CommentForm = (props: Props) => {
         const postData = {
             ...data,
             userId: props.userId,
-            habitId: props.itemId,
+            itemId: props.itemId,
             parentId: props.id,
         };
 
         axios
-            .post('/api/comments/habit', postData)
+            .post(`/api/comments/${commentType}`, postData)
             .then((res) => {
-                props.updateHabit(res.data.data);
+                props.updateItem(res.data.data);
+
                 setValue('comment', '');
             })
             .catch((error) => {
