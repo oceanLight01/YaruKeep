@@ -3081,7 +3081,7 @@ var DiaryItem = function DiaryItem(props) {
   var navigate = (0, react_router_dom_1.useNavigate)();
   return react_1["default"].createElement("li", {
     onClick: function onClick() {
-      return navigate("/user/".concat(props.user.screenName, "/habit/").concat(props.habitId, "/diary/").concat(props.id));
+      return navigate("/user/".concat(props.user.screen_name, "/habit/").concat(props.habit_id, "/diary/").concat(props.id));
     }
   }, react_1["default"].createElement("p", null, (0, FormatText_1["default"])(text)), react_1["default"].createElement("p", null, props.created_at));
 };
@@ -3130,12 +3130,9 @@ var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/r
 var DiaryItem_1 = __importDefault(__webpack_require__(/*! ./DiaryItem */ "./resources/ts/Components/DiaryItem.tsx"));
 
 var DiaryList = function DiaryList(_a) {
-  var diaries = _a.diaries,
-      user = _a.user;
+  var diaries = _a.diaries;
   return react_1["default"].createElement("ul", null, diaries.map(function (item, index) {
-    return react_1["default"].createElement(DiaryItem_1["default"], __assign({}, __assign(__assign({}, item), {
-      user: user
-    }), {
+    return react_1["default"].createElement(DiaryItem_1["default"], __assign({}, item, {
       key: index
     }));
   }));
@@ -4936,8 +4933,13 @@ var HabitStatus = function HabitStatus() {
       diaries: props.diaries.map(function (item) {
         return {
           id: item.id,
-          habitId: item.habit_id,
+          habit_id: item.habit_id,
           text: item.text,
+          user: {
+            id: item.user.id,
+            screen_name: item.user.screen_name,
+            name: item.user.name
+          },
           created_at: item.created_at
         };
       }),
@@ -4987,16 +4989,6 @@ var HabitStatus = function HabitStatus() {
     }
   };
 
-  var deleteComment = function deleteComment(commentId) {
-    if (window.confirm('コメントを削除します。もとに戻せませんがよろしいですか？')) {
-      axios_1["default"]["delete"]("/api/comments/".concat(commentId, "/habit")).then(function (res) {
-        updateHabit(res.data.data);
-      })["catch"](function (error) {
-        console.error(error);
-      });
-    }
-  };
-
   return react_1["default"].createElement(PageRender_1["default"], {
     status: statusCode
   }, react_1["default"].createElement(react_1["default"].Fragment, null, !editing ? react_1["default"].createElement("div", null, react_1["default"].createElement("h2", null, HabitItem.title), react_1["default"].createElement("p", null, (0, FormatText_1["default"])(HabitItem.description)), react_1["default"].createElement("p", null, "\u30AB\u30C6\u30B4\u30EA:", HabitItem.categoryName), react_1["default"].createElement("p", null, "\u7DCF\u9054\u6210\u65E5\u6570:", HabitItem.doneDaysCount, "\u65E5"), react_1["default"].createElement("p", null, "\u6700\u5927\u9023\u7D9A\u9054\u6210\u65E5\u6570:", HabitItem.maxDoneDay, "\u65E5"), react_1["default"].createElement("p", null, "\u4F5C\u6210\u65E5:", HabitItem.created_at), react_1["default"].createElement("div", null, react_1["default"].createElement(ContributionCalendar_1["default"], {
@@ -5026,19 +5018,21 @@ var HabitStatus = function HabitStatus() {
     userId: (_b = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _b === void 0 ? void 0 : _b.id,
     itemId: HabitItem.id,
     parentId: null,
-    updateHabit: updateHabit
+    commentType: 'habit',
+    updateItem: updateHabit
+  }, {
+    habitComment: true
   })), react_1["default"].createElement("button", {
     onClick: function onClick() {
       return setTab(tab === 'diary' ? 'comment' : 'diary');
     }
   }, tab === 'diary' ? 'コメント' : '日記'), tab === 'diary' ? react_1["default"].createElement(DiaryList_1["default"], {
-    diaries: HabitItem.diaries,
-    user: HabitItem.user
+    diaries: HabitItem.diaries
   }) : react_1["default"].createElement("ul", null, HabitItem.comments.map(function (item, index) {
     return (0, CommentList_1["default"])({
       item: item,
-      updateHabit: updateHabit,
-      deleteComment: deleteComment,
+      updateItem: updateHabit,
+      commentType: 'habit',
       index: index
     });
   }))));

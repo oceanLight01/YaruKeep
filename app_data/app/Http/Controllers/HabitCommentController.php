@@ -26,12 +26,12 @@ class HabitCommentController extends Controller
         {
             $comment = new HabitComment;
             $comment->user_id = $request->userId;
-            $comment->habit_id = $request->habitId;
+            $comment->habit_id = $request->itemId;
             $comment->parent_id = $request->parentId === null ? null : $request->parentId;
             $comment->comment = $request->comment;
             $comment->save();
 
-            return new HabitResource(Habit::find($request->habitId));
+            return new HabitResource(Habit::find($request->itemId));
         } else {
             return response(['message' => 'faild to post comment'], 400);
         }

@@ -64,8 +64,13 @@ const HabitStatus = () => {
             diaries: props.diaries.map((item: any) => {
                 return {
                     id: item.id,
-                    habitId: item.habit_id,
+                    habit_id: item.habit_id,
                     text: item.text,
+                    user: {
+                        id: item.user.id,
+                        screen_name: item.user.screen_name,
+                        name: item.user.name,
+                    },
                     created_at: item.created_at,
                 };
             }),
@@ -110,19 +115,6 @@ const HabitStatus = () => {
                 .delete(`/api/habits/${habitId}`)
                 .then(() => {
                     navigate(`/user/${auth?.userData?.screen_name}`);
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
-        }
-    };
-
-    const deleteComment = (commentId: number) => {
-        if (window.confirm('コメントを削除します。もとに戻せませんがよろしいですか？')) {
-            axios
-                .delete(`/api/comments/${commentId}/habit`)
-                .then((res) => {
-                    updateHabit(res.data.data);
                 })
                 .catch((error) => {
                     console.error(error);
@@ -180,19 +172,26 @@ const HabitStatus = () => {
                         userId: auth?.userData?.id!,
                         itemId: HabitItem.id,
                         parentId: null,
-                        updateHabit: updateHabit,
+                        commentType: 'habit',
+                        updateItem: updateHabit,
                     }}
+                    habitComment
                 />
 
                 <button onClick={() => setTab(tab === 'diary' ? 'comment' : 'diary')}>
                     {tab === 'diary' ? 'コメント' : '日記'}
                 </button>
                 {tab === 'diary' ? (
-                    <DiaryList diaries={HabitItem.diaries} user={HabitItem.user} />
+                    <DiaryList diaries={HabitItem.diaries} />
                 ) : (
                     <ul>
                         {HabitItem.comments.map((item, index) => {
-                            return commentList({ item, updateHabit, deleteComment, index });
+                            return commentList({
+                                item,
+                                updateItem: updateHabit,
+                                commentType: 'habit',
+                                index,
+                            });
                         })}
                     </ul>
                 )}
