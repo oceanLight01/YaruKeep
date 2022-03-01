@@ -35,7 +35,7 @@ const CommentForm = (props: Props) => {
         };
 
         axios
-            .post('/api/comment/habit', postData)
+            .post('/api/comments/habit', postData)
             .then((res) => {
                 props.updateHabit(res.data.data);
                 setValue('comment', '');

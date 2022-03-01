@@ -2517,7 +2517,7 @@ var CommentForm = function CommentForm(props) {
       parentId: props.id
     });
 
-    axios_1["default"].post('/api/comment/habit', postData).then(function (res) {
+    axios_1["default"].post('/api/comments/habit', postData).then(function (res) {
       props.updateHabit(res.data.data);
       setValue('comment', '');
     })["catch"](function (error) {
