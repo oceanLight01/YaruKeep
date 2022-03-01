@@ -2620,6 +2620,8 @@ var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/reac
 
 var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
 
+var CommentDeleteButton_1 = __importDefault(__webpack_require__(/*! ./atoms/CommentDeleteButton */ "./resources/ts/Components/atoms/CommentDeleteButton.tsx"));
+
 var Authenticate_1 = __webpack_require__(/*! ./Authenticate */ "./resources/ts/Components/Authenticate.tsx");
 
 var CommentForm_1 = __importDefault(__webpack_require__(/*! ./CommentForm */ "./resources/ts/Components/CommentForm.tsx"));
@@ -2627,15 +2629,16 @@ var CommentForm_1 = __importDefault(__webpack_require__(/*! ./CommentForm */ "./
 var FormatText_1 = __importDefault(__webpack_require__(/*! ./FormatText */ "./resources/ts/Components/FormatText.tsx"));
 
 var CommentItem = function CommentItem(_a) {
-  var _b;
+  var _b, _c;
 
   var item = _a.item,
-      updateHabit = _a.updateHabit;
+      updateHabit = _a.updateHabit,
+      deleteComment = _a.deleteComment;
   var auth = (0, Authenticate_1.useAuth)();
 
-  var _c = (0, react_1.useState)(false),
-      showCommentForm = _c[0],
-      setShowCommentForm = _c[1];
+  var _d = (0, react_1.useState)(false),
+      showCommentForm = _d[0],
+      setShowCommentForm = _d[1];
 
   return react_1["default"].createElement("li", null, react_1["default"].createElement("p", null, (0, FormatText_1["default"])(item.comment)), react_1["default"].createElement("p", null, react_1["default"].createElement(react_router_dom_1.Link, {
     to: "/user/".concat(item.user.screen_name)
@@ -2649,7 +2652,10 @@ var CommentItem = function CommentItem(_a) {
     onClick: function onClick() {
       return setShowCommentForm(!showCommentForm);
     }
-  }, showCommentForm ? '戻る' : 'コメントする')));
+  }, showCommentForm ? '戻る' : 'コメントする'), ((_c = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _c === void 0 ? void 0 : _c.id) === item.user.id && react_1["default"].createElement(CommentDeleteButton_1["default"], {
+    id: item.id,
+    deleteComment: deleteComment
+  })));
 };
 
 exports["default"] = CommentItem;
@@ -2700,12 +2706,14 @@ var CommentReplyList_1 = __importDefault(__webpack_require__(/*! ./CommentReplyL
 var commentList = function commentList(_a) {
   var item = _a.item,
       updateHabit = _a.updateHabit,
+      deleteComment = _a.deleteComment,
       index = _a.index;
 
   if (item.children.length === 0) {
     return react_1["default"].createElement(CommentItem_1["default"], __assign({}, {
       item: item,
-      updateHabit: updateHabit
+      updateHabit: updateHabit,
+      deleteComment: deleteComment
     }, {
       key: index
     }));
@@ -2715,10 +2723,12 @@ var commentList = function commentList(_a) {
     key: index
   }, react_1["default"].createElement(CommentItem_1["default"], __assign({}, {
     item: item,
-    updateHabit: updateHabit
+    updateHabit: updateHabit,
+    deleteComment: deleteComment
   })), react_1["default"].createElement(CommentReplyList_1["default"], {
     item: item,
     updateHabit: updateHabit,
+    deleteComment: deleteComment,
     index: index,
     key: "reply".concat(index)
   }));
@@ -2804,6 +2814,7 @@ var CommentItem_1 = __importDefault(__webpack_require__(/*! ./CommentItem */ "./
 var CommentReplyList = function CommentReplyList(_a) {
   var item = _a.item,
       updateHabit = _a.updateHabit,
+      deleteComment = _a.deleteComment,
       index = _a.index;
 
   var _b = (0, react_1.useState)(true),
@@ -2816,7 +2827,8 @@ var CommentReplyList = function CommentReplyList(_a) {
         return react_1["default"].createElement(CommentItem_1["default"], __assign({
           item: itemChild
         }, {
-          updateHabit: updateHabit
+          updateHabit: updateHabit,
+          deleteComment: deleteComment
         }, {
           key: itemChild.id
         }));
@@ -2826,14 +2838,16 @@ var CommentReplyList = function CommentReplyList(_a) {
         key: itemChild.id
       }, react_1["default"].createElement(CommentItem_1["default"], __assign({}, {
         item: itemChild,
-        updateHabit: updateHabit
+        updateHabit: updateHabit,
+        deleteComment: deleteComment
       }, {
         key: itemChild.id
       })), itemChild.children.map(function (item) {
         if (item.children.length === 0) {
           return react_1["default"].createElement(CommentItem_1["default"], __assign({}, {
             item: item,
-            updateHabit: updateHabit
+            updateHabit: updateHabit,
+            deleteComment: deleteComment
           }, {
             key: item.id
           }));
@@ -3599,6 +3613,39 @@ var Navigation = function Navigation() {
 };
 
 exports["default"] = Navigation;
+
+/***/ }),
+
+/***/ "./resources/ts/Components/atoms/CommentDeleteButton.tsx":
+/*!***************************************************************!*\
+  !*** ./resources/ts/Components/atoms/CommentDeleteButton.tsx ***!
+  \***************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var CommentDeleteButton = function CommentDeleteButton(props) {
+  return react_1["default"].createElement("button", {
+    onClick: function onClick() {
+      return props.deleteComment(props.id);
+    }
+  }, "\u524A\u9664");
+};
+
+exports["default"] = CommentDeleteButton;
 
 /***/ }),
 
@@ -4799,6 +4846,16 @@ var HabitStatus = function HabitStatus() {
     }
   };
 
+  var deleteComment = function deleteComment(commentId) {
+    if (window.confirm('コメントを削除します。もとに戻せませんがよろしいですか？')) {
+      axios_1["default"]["delete"]("/api/comments/".concat(commentId, "/habit")).then(function (res) {
+        updateHabit(res.data.data);
+      })["catch"](function (error) {
+        console.error(error);
+      });
+    }
+  };
+
   return react_1["default"].createElement(PageRender_1["default"], {
     status: statusCode
   }, react_1["default"].createElement(react_1["default"].Fragment, null, !editing ? react_1["default"].createElement("div", null, react_1["default"].createElement("h2", null, HabitItem.title), react_1["default"].createElement("p", null, (0, FormatText_1["default"])(HabitItem.description)), react_1["default"].createElement("p", null, "\u30AB\u30C6\u30B4\u30EA:", HabitItem.categoryName), react_1["default"].createElement("p", null, "\u7DCF\u9054\u6210\u65E5\u6570:", HabitItem.doneDaysCount, "\u65E5"), react_1["default"].createElement("p", null, "\u6700\u5927\u9023\u7D9A\u9054\u6210\u65E5\u6570:", HabitItem.maxDoneDay, "\u65E5"), react_1["default"].createElement("p", null, "\u4F5C\u6210\u65E5:", HabitItem.created_at), react_1["default"].createElement("div", null, react_1["default"].createElement(ContributionCalendar_1["default"], {
@@ -4833,6 +4890,7 @@ var HabitStatus = function HabitStatus() {
     return (0, CommentList_1["default"])({
       item: item,
       updateHabit: updateHabit,
+      deleteComment: deleteComment,
       index: index
     });
   }))));

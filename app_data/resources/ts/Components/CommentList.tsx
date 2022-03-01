@@ -5,20 +5,22 @@ import CommentReplyList from './CommentReplyList';
 type Props = {
     item: CommentItem;
     updateHabit: (habitItem: HabitItem) => void;
+    deleteComment: (commentId: number) => void;
     index: number;
 };
 
-const commentList = ({ item, updateHabit, index }: Props) => {
+const commentList = ({ item, updateHabit, deleteComment, index }: Props) => {
     if (item.children.length === 0) {
-        return <CommentItem {...{ item, updateHabit }} key={index} />;
+        return <CommentItem {...{ item, updateHabit, deleteComment }} key={index} />;
     }
 
     return (
         <React.Fragment key={index}>
-            <CommentItem {...{ item, updateHabit }} />
+            <CommentItem {...{ item, updateHabit, deleteComment }} />
             <CommentReplyList
                 item={item}
                 updateHabit={updateHabit}
+                deleteComment={deleteComment}
                 index={index}
                 key={`reply${index}`}
             />

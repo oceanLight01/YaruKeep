@@ -4,24 +4,39 @@ import CommentItem from './CommentItem';
 type Props = {
     item: CommentItem;
     updateHabit: (habitItem: HabitItem) => void;
+    deleteComment: (commentId: number) => void;
     index: number;
 };
 
-const CommentReplyList = ({ item, updateHabit, index }: Props) => {
+const CommentReplyList = ({ item, updateHabit, deleteComment, index }: Props) => {
     const [isHidden, setIsHidden] = useState<boolean>(true);
 
     const renderReplyComment = (item: CommentItem, updateHabit: (habitItem: HabitItem) => void) => {
         return item.children.map((itemChild) => {
             if (itemChild.children.length === 0) {
-                return <CommentItem item={itemChild} {...{ updateHabit }} key={itemChild.id} />;
+                return (
+                    <CommentItem
+                        item={itemChild}
+                        {...{ updateHabit, deleteComment }}
+                        key={itemChild.id}
+                    />
+                );
             }
 
             return (
                 <React.Fragment key={itemChild.id}>
-                    <CommentItem {...{ item: itemChild, updateHabit }} key={itemChild.id} />
+                    <CommentItem
+                        {...{ item: itemChild, updateHabit, deleteComment }}
+                        key={itemChild.id}
+                    />
                     {itemChild.children.map((item) => {
                         if (item.children.length === 0) {
-                            return <CommentItem {...{ item, updateHabit }} key={item.id} />;
+                            return (
+                                <CommentItem
+                                    {...{ item, updateHabit, deleteComment }}
+                                    key={item.id}
+                                />
+                            );
                         } else {
                             return renderReplyComment(item, updateHabit);
                         }

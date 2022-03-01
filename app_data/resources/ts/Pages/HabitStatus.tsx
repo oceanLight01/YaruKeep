@@ -116,6 +116,19 @@ const HabitStatus = () => {
         }
     };
 
+    const deleteComment = (commentId: number) => {
+        if (window.confirm('コメントを削除します。もとに戻せませんがよろしいですか？')) {
+            axios
+                .delete(`/api/comments/${commentId}/habit`)
+                .then((res) => {
+                    updateHabit(res.data.data);
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        }
+    };
+
     return (
         <PageRender status={statusCode}>
             <>
@@ -171,7 +184,7 @@ const HabitStatus = () => {
                 />
                 <ul>
                     {HabitItem.comments.map((item, index) => {
-                        return commentList({ item, updateHabit, index });
+                        return commentList({ item, updateHabit, deleteComment, index });
                     })}
                 </ul>
                 {/* <DiaryList diaries={HabitItem.diaries} user={HabitItem.user} /> */}

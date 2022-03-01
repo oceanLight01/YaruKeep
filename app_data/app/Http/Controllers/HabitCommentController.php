@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 class HabitCommentController extends Controller
 {
     /**
-     * Habitの新規作成
+     * HabitCommentの新規作成
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -34,6 +34,26 @@ class HabitCommentController extends Controller
             return new HabitResource(Habit::find($request->habitId));
         } else {
             return response(['message' => 'faild to post comment'], 400);
+        }
+    }
+
+    /**
+     * HabitCommentの削除
+     *
+     * @param  number  $id HabitCommentのid
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        $comment = HabitComment::where('id', $id);
+        $habit_id = $comment->value('habit_id');
+
+        if ($comment->exists() && $comment->value('user_id') === Auth::id())
+        {
+            $comment->delete();
+            return new HabitResource(Habit::find($habit_id));
+        } else {
+            return response(['message' => 'faild to delete'], 400);
         }
     }
 }
