@@ -9,12 +9,18 @@ type SettingsForm = {
     email: string;
 };
 
+type ErrorMessage = {
+    email: string[];
+    screen_name: string[];
+};
+
 type Props = {
     setShowSettingsForm: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const UserSettingsForm = (props: Props) => {
     const auth = useAuth();
+    const [errorMessage, setErrorMessage] = useState<ErrorMessage>({ email: [], screen_name: [] });
     const [clicked, setClicked] = useState<boolean>(false);
     const {
         register,
@@ -39,11 +45,18 @@ const UserSettingsForm = (props: Props) => {
         };
 
         auth?.edit(editData)
-            .then(() => {
-                props.setShowSettingsForm(false);
+            .then((value) => {
+                if (value[0] === undefined) {
+                    props.setShowSettingsForm(false);
+                } else {
+                    setErrorMessage({
+                        email: value[0].email ? value[0].email : [],
+                        screen_name: value[0].screen_name ? value[0].screen_name : [],
+                    });
+                }
+                setClicked(false);
             })
-            .catch((error) => {
-                console.error(error);
+            .catch(() => {
                 setClicked(false);
             });
     };
@@ -71,6 +84,9 @@ const UserSettingsForm = (props: Props) => {
                 {errors.screen_name?.type === 'pattern' && (
                     <p>アカウントIDは半角英数字のみ使用できます。</p>
                 )}
+                {errorMessage.screen_name.map((str, index) => {
+                    return <p key={index}>{str}</p>;
+                })}
                 <label>アカウントID</label>
                 <input
                     type="text"
@@ -91,6 +107,9 @@ const UserSettingsForm = (props: Props) => {
                 {errors.email?.type === 'pattern' && (
                     <p>正しい形式のメールアドレスを入力してください。</p>
                 )}
+                {errorMessage.email.map((str, index) => {
+                    return <p key={index}>{str}</p>;
+                })}
                 <label>メールアドレス</label>
                 <input
                     type="email"

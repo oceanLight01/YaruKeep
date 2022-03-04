@@ -2345,26 +2345,33 @@ var useProvideAuth = function useProvideAuth() {
 
   var edit = function edit(editData) {
     return __awaiter(void 0, void 0, void 0, function () {
+      var update, getUser;
       return __generator(this, function (_a) {
         switch (_a.label) {
           case 0:
             return [4
             /*yield*/
-            , axios_1["default"].put('/api/user/profile-information', editData)["catch"](function (error) {
-              console.error(error);
+            , axios_1["default"].put('/api/user/profile-information', editData).then(function () {
+              return Promise.resolve();
+            })["catch"](function (error) {
+              return error.response.data.errors;
             })];
 
           case 1:
-            _a.sent();
-
-            return [2
-            /*return*/
+            update = _a.sent();
+            return [4
+            /*yield*/
             , axios_1["default"].get('/api/user').then(function (res) {
               setUserData(res.data.data.user);
             })["catch"](function (error) {
-              setUserData(null);
               console.error(error);
             })];
+
+          case 2:
+            getUser = _a.sent();
+            return [2
+            /*return*/
+            , Promise.all([update, getUser])];
         }
       });
     });
@@ -3819,17 +3826,24 @@ var UserSettingsForm = function UserSettingsForm(props) {
 
   var auth = (0, Authenticate_1.useAuth)();
 
-  var _k = (0, react_1.useState)(false),
-      clicked = _k[0],
-      setClicked = _k[1];
+  var _k = (0, react_1.useState)({
+    email: [],
+    screen_name: []
+  }),
+      errorMessage = _k[0],
+      setErrorMessage = _k[1];
 
-  var _l = (0, react_hook_form_1.useForm)({
+  var _l = (0, react_1.useState)(false),
+      clicked = _l[0],
+      setClicked = _l[1];
+
+  var _m = (0, react_hook_form_1.useForm)({
     mode: 'onBlur'
   }),
-      register = _l.register,
-      handleSubmit = _l.handleSubmit,
-      errors = _l.formState.errors,
-      setValue = _l.setValue;
+      register = _m.register,
+      handleSubmit = _m.handleSubmit,
+      errors = _m.formState.errors,
+      setValue = _m.setValue;
 
   (0, react_1.useEffect)(function () {
     var _a, _b, _c, _d;
@@ -3849,10 +3863,18 @@ var UserSettingsForm = function UserSettingsForm(props) {
       id: (_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.id
     });
 
-    auth === null || auth === void 0 ? void 0 : auth.edit(editData).then(function () {
-      props.setShowSettingsForm(false);
-    })["catch"](function (error) {
-      console.error(error);
+    auth === null || auth === void 0 ? void 0 : auth.edit(editData).then(function (value) {
+      if (value[0] === undefined) {
+        props.setShowSettingsForm(false);
+      } else {
+        setErrorMessage({
+          email: value[0].email ? value[0].email : [],
+          screen_name: value[0].screen_name ? value[0].screen_name : []
+        });
+      }
+
+      setClicked(false);
+    })["catch"](function () {
       setClicked(false);
     });
   };
@@ -3866,7 +3888,11 @@ var UserSettingsForm = function UserSettingsForm(props) {
   }, register('name', {
     required: true,
     maxLength: 30
-  })))), react_1["default"].createElement("div", null, ((_c = errors.screen_name) === null || _c === void 0 ? void 0 : _c.type) === 'required' && react_1["default"].createElement("p", null, "\u30A2\u30AB\u30A6\u30F3\u30C8ID\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), ((_d = errors.screen_name) === null || _d === void 0 ? void 0 : _d.type) === 'maxLength' && react_1["default"].createElement("p", null, "\u30A2\u30AB\u30A6\u30F3\u30C8ID\u306F20\u6587\u5B57\u4EE5\u4E0B\u3067\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), ((_e = errors.screen_name) === null || _e === void 0 ? void 0 : _e.type) === 'pattern' && react_1["default"].createElement("p", null, "\u30A2\u30AB\u30A6\u30F3\u30C8ID\u306F\u534A\u89D2\u82F1\u6570\u5B57\u306E\u307F\u4F7F\u7528\u3067\u304D\u307E\u3059\u3002"), react_1["default"].createElement("label", null, "\u30A2\u30AB\u30A6\u30F3\u30C8ID"), react_1["default"].createElement("input", __assign({
+  })))), react_1["default"].createElement("div", null, ((_c = errors.screen_name) === null || _c === void 0 ? void 0 : _c.type) === 'required' && react_1["default"].createElement("p", null, "\u30A2\u30AB\u30A6\u30F3\u30C8ID\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), ((_d = errors.screen_name) === null || _d === void 0 ? void 0 : _d.type) === 'maxLength' && react_1["default"].createElement("p", null, "\u30A2\u30AB\u30A6\u30F3\u30C8ID\u306F20\u6587\u5B57\u4EE5\u4E0B\u3067\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), ((_e = errors.screen_name) === null || _e === void 0 ? void 0 : _e.type) === 'pattern' && react_1["default"].createElement("p", null, "\u30A2\u30AB\u30A6\u30F3\u30C8ID\u306F\u534A\u89D2\u82F1\u6570\u5B57\u306E\u307F\u4F7F\u7528\u3067\u304D\u307E\u3059\u3002"), errorMessage.screen_name.map(function (str, index) {
+    return react_1["default"].createElement("p", {
+      key: index
+    }, str);
+  }), react_1["default"].createElement("label", null, "\u30A2\u30AB\u30A6\u30F3\u30C8ID"), react_1["default"].createElement("input", __assign({
     type: "text",
     maxLength: 20,
     autoComplete: "on"
@@ -3874,7 +3900,11 @@ var UserSettingsForm = function UserSettingsForm(props) {
     required: true,
     maxLength: 20,
     pattern: /^(?=.*?[a-zA-Z\d])[a-zA-Z\d]+$/
-  })))), react_1["default"].createElement("div", null, ((_f = errors.email) === null || _f === void 0 ? void 0 : _f.type) === 'required' && react_1["default"].createElement("p", null, "\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), ((_g = errors.email) === null || _g === void 0 ? void 0 : _g.type) === 'maxLength' && react_1["default"].createElement("p", null, "\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9\u306F255\u6587\u5B57\u4EE5\u4E0B\u3067\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), ((_h = errors.email) === null || _h === void 0 ? void 0 : _h.type) === 'pattern' && react_1["default"].createElement("p", null, "\u6B63\u3057\u3044\u5F62\u5F0F\u306E\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), react_1["default"].createElement("label", null, "\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9"), react_1["default"].createElement("input", __assign({
+  })))), react_1["default"].createElement("div", null, ((_f = errors.email) === null || _f === void 0 ? void 0 : _f.type) === 'required' && react_1["default"].createElement("p", null, "\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), ((_g = errors.email) === null || _g === void 0 ? void 0 : _g.type) === 'maxLength' && react_1["default"].createElement("p", null, "\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9\u306F255\u6587\u5B57\u4EE5\u4E0B\u3067\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), ((_h = errors.email) === null || _h === void 0 ? void 0 : _h.type) === 'pattern' && react_1["default"].createElement("p", null, "\u6B63\u3057\u3044\u5F62\u5F0F\u306E\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), errorMessage.email.map(function (str, index) {
+    return react_1["default"].createElement("p", {
+      key: index
+    }, str);
+  }), react_1["default"].createElement("label", null, "\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9"), react_1["default"].createElement("input", __assign({
     type: "email",
     maxLength: 255,
     autoComplete: "on"

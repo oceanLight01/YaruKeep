@@ -47,7 +47,7 @@ type AuthProps = {
     register: (registerData: RegisterData) => Promise<void>;
     login: (loginData: LoginData) => Promise<void>;
     logout: () => Promise<void>;
-    edit: (editData: EditData) => Promise<void>;
+    edit: (editData: EditData) => Promise<any | void>;
 };
 
 type Props = {
@@ -126,19 +126,25 @@ const useProvideAuth = () => {
     };
 
     const edit = async (editData: EditData) => {
-        await axios.put('/api/user/profile-information', editData).catch((error) => {
-            console.error(error);
-        });
+        const update = await axios
+            .put('/api/user/profile-information', editData)
+            .then(() => {
+                return Promise.resolve();
+            })
+            .catch((error) => {
+                return error.response.data.errors;
+            });
 
-        return axios
+        const getUser = await axios
             .get('/api/user')
             .then((res) => {
                 setUserData(res.data.data.user);
             })
             .catch((error) => {
-                setUserData(null);
                 console.error(error);
             });
+
+        return Promise.all([update, getUser]);
     };
 
     useEffect(() => {
