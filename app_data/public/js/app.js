@@ -2343,6 +2343,33 @@ var useProvideAuth = function useProvideAuth() {
     });
   };
 
+  var edit = function edit(editData) {
+    return __awaiter(void 0, void 0, void 0, function () {
+      return __generator(this, function (_a) {
+        switch (_a.label) {
+          case 0:
+            return [4
+            /*yield*/
+            , axios_1["default"].put('/api/user/profile-information', editData)["catch"](function (error) {
+              console.error(error);
+            })];
+
+          case 1:
+            _a.sent();
+
+            return [2
+            /*return*/
+            , axios_1["default"].get('/api/user').then(function (res) {
+              setUserData(res.data.data.user);
+            })["catch"](function (error) {
+              setUserData(null);
+              console.error(error);
+            })];
+        }
+      });
+    });
+  };
+
   (0, react_1.useEffect)(function () {
     getUser();
   }, []);
@@ -2350,6 +2377,7 @@ var useProvideAuth = function useProvideAuth() {
     register: register,
     login: login,
     logout: logout,
+    edit: edit,
     userData: userData,
     isRender: isRender
   };
@@ -3708,10 +3736,164 @@ var Navigation = function Navigation() {
     to: "/user/".concat(auth === null || auth === void 0 ? void 0 : auth.userData.screen_name)
   }, "\u30DE\u30A4\u30DA\u30FC\u30B8")), react_1["default"].createElement("li", null, react_1["default"].createElement(react_router_dom_1.Link, {
     to: "/post/habit"
-  }, "\u30CF\u30D3\u30C3\u30C8\u30C8\u30E9\u30C3\u30AB\u30FC\u4F5C\u6210"))));
+  }, "\u30CF\u30D3\u30C3\u30C8\u30C8\u30E9\u30C3\u30AB\u30FC\u4F5C\u6210")), react_1["default"].createElement("li", null, react_1["default"].createElement(react_router_dom_1.Link, {
+    to: "/settings"
+  }, "\u8A2D\u5B9A"))));
 };
 
 exports["default"] = Navigation;
+
+/***/ }),
+
+/***/ "./resources/ts/Components/UserSettingsForm.tsx":
+/*!******************************************************!*\
+  !*** ./resources/ts/Components/UserSettingsForm.tsx ***!
+  \******************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __assign = this && this.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+
+      for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+    }
+
+    return t;
+  };
+
+  return __assign.apply(this, arguments);
+};
+
+var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  Object.defineProperty(o, k2, {
+    enumerable: true,
+    get: function get() {
+      return m[k];
+    }
+  });
+} : function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+});
+
+var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+  Object.defineProperty(o, "default", {
+    enumerable: true,
+    value: v
+  });
+} : function (o, v) {
+  o["default"] = v;
+});
+
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  }
+
+  __setModuleDefault(result, mod);
+
+  return result;
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var react_hook_form_1 = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.cjs.js");
+
+var Authenticate_1 = __webpack_require__(/*! ./Authenticate */ "./resources/ts/Components/Authenticate.tsx");
+
+var UserSettingsForm = function UserSettingsForm(props) {
+  var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+
+  var auth = (0, Authenticate_1.useAuth)();
+
+  var _k = (0, react_1.useState)(false),
+      clicked = _k[0],
+      setClicked = _k[1];
+
+  var _l = (0, react_hook_form_1.useForm)({
+    mode: 'onBlur'
+  }),
+      register = _l.register,
+      handleSubmit = _l.handleSubmit,
+      errors = _l.formState.errors,
+      setValue = _l.setValue;
+
+  (0, react_1.useEffect)(function () {
+    var _a, _b, _c, _d;
+
+    setValue('name', (_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.name);
+    setValue('screen_name', (_b = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _b === void 0 ? void 0 : _b.screen_name);
+    setValue('email', (_c = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _c === void 0 ? void 0 : _c.email);
+    setValue('profile', (_d = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _d === void 0 ? void 0 : _d.profile);
+  }, []);
+
+  var onSubmit = function onSubmit(data) {
+    var _a;
+
+    setClicked(true);
+
+    var editData = __assign(__assign({}, data), {
+      id: (_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.id
+    });
+
+    auth === null || auth === void 0 ? void 0 : auth.edit(editData).then(function () {
+      props.setShowSettingsForm(false);
+    })["catch"](function (error) {
+      console.error(error);
+      setClicked(false);
+    });
+  };
+
+  return react_1["default"].createElement("form", {
+    onSubmit: handleSubmit(onSubmit)
+  }, react_1["default"].createElement("div", null, ((_a = errors.name) === null || _a === void 0 ? void 0 : _a.type) === 'maxLength' && react_1["default"].createElement("p", null, "\u30A2\u30AB\u30A6\u30F3\u30C8\u540D\u306F30\u6587\u5B57\u4EE5\u4E0B\u3067\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), ((_b = errors.name) === null || _b === void 0 ? void 0 : _b.type) === 'required' && react_1["default"].createElement("p", null, "\u30A2\u30AB\u30A6\u30F3\u30C8\u540D\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), react_1["default"].createElement("label", null, "\u30A2\u30AB\u30A6\u30F3\u30C8\u540D"), react_1["default"].createElement("input", __assign({
+    type: "text",
+    maxLength: 30,
+    autoComplete: "on"
+  }, register('name', {
+    required: true,
+    maxLength: 30
+  })))), react_1["default"].createElement("div", null, ((_c = errors.screen_name) === null || _c === void 0 ? void 0 : _c.type) === 'required' && react_1["default"].createElement("p", null, "\u30A2\u30AB\u30A6\u30F3\u30C8ID\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), ((_d = errors.screen_name) === null || _d === void 0 ? void 0 : _d.type) === 'maxLength' && react_1["default"].createElement("p", null, "\u30A2\u30AB\u30A6\u30F3\u30C8ID\u306F20\u6587\u5B57\u4EE5\u4E0B\u3067\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), ((_e = errors.screen_name) === null || _e === void 0 ? void 0 : _e.type) === 'pattern' && react_1["default"].createElement("p", null, "\u30A2\u30AB\u30A6\u30F3\u30C8ID\u306F\u534A\u89D2\u82F1\u6570\u5B57\u306E\u307F\u4F7F\u7528\u3067\u304D\u307E\u3059\u3002"), react_1["default"].createElement("label", null, "\u30A2\u30AB\u30A6\u30F3\u30C8ID"), react_1["default"].createElement("input", __assign({
+    type: "text",
+    maxLength: 20,
+    autoComplete: "on"
+  }, register('screen_name', {
+    required: true,
+    maxLength: 20,
+    pattern: /^(?=.*?[a-zA-Z\d])[a-zA-Z\d]+$/
+  })))), react_1["default"].createElement("div", null, ((_f = errors.email) === null || _f === void 0 ? void 0 : _f.type) === 'required' && react_1["default"].createElement("p", null, "\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), ((_g = errors.email) === null || _g === void 0 ? void 0 : _g.type) === 'maxLength' && react_1["default"].createElement("p", null, "\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9\u306F255\u6587\u5B57\u4EE5\u4E0B\u3067\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), ((_h = errors.email) === null || _h === void 0 ? void 0 : _h.type) === 'pattern' && react_1["default"].createElement("p", null, "\u6B63\u3057\u3044\u5F62\u5F0F\u306E\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), react_1["default"].createElement("label", null, "\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9"), react_1["default"].createElement("input", __assign({
+    type: "email",
+    maxLength: 255,
+    autoComplete: "on"
+  }, register('email', {
+    required: true,
+    maxLength: 255,
+    pattern: /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+  })))), react_1["default"].createElement("div", null, ((_j = errors.profile) === null || _j === void 0 ? void 0 : _j.type) === 'maxLength' && react_1["default"].createElement("p", null, "\u30D7\u30ED\u30D5\u30A3\u30FC\u30EB\u306F300\u6587\u5B57\u4EE5\u4E0B\u3067\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), react_1["default"].createElement("label", null, "\u30D7\u30ED\u30D5\u30A3\u30FC\u30EB"), react_1["default"].createElement("textarea", __assign({
+    maxLength: 300
+  }, register('profile', {
+    maxLength: 300
+  })))), react_1["default"].createElement("input", {
+    type: "submit",
+    value: "\u5909\u66F4",
+    disabled: clicked
+  }));
+};
+
+exports["default"] = UserSettingsForm;
 
 /***/ }),
 
@@ -3995,6 +4177,8 @@ var HabitStatus_1 = __importDefault(__webpack_require__(/*! ./HabitStatus */ "./
 
 var Diary_1 = __importDefault(__webpack_require__(/*! ./Diary */ "./resources/ts/Pages/Diary.tsx"));
 
+var Settings_1 = __importDefault(__webpack_require__(/*! ./Settings */ "./resources/ts/Pages/Settings.tsx"));
+
 var App = function App() {
   return react_1["default"].createElement(Authenticate_1["default"], null, react_1["default"].createElement(Loading_1["default"], null, react_1["default"].createElement(react_router_dom_1.BrowserRouter, null, react_1["default"].createElement(Header_1["default"], null), react_1["default"].createElement(Navigation_1["default"], null), react_1["default"].createElement(react_router_dom_1.Routes, null, react_1["default"].createElement(react_router_dom_1.Route, {
     path: "/",
@@ -4023,6 +4207,9 @@ var App = function App() {
   }), react_1["default"].createElement(react_router_dom_1.Route, {
     path: "/user/:screenName/habit/:id/diary/:did",
     element: react_1["default"].createElement(Authenticate_1.PrivateRoute, null, react_1["default"].createElement(Diary_1["default"], null))
+  }), react_1["default"].createElement(react_router_dom_1.Route, {
+    path: "/settings",
+    element: react_1["default"].createElement(Authenticate_1.PrivateRoute, null, react_1["default"].createElement(Settings_1["default"], null))
   })), react_1["default"].createElement(Footer_1["default"], null))));
 };
 
@@ -5119,6 +5306,89 @@ var PageRender = function PageRender(_a) {
 };
 
 exports["default"] = PageRender;
+
+/***/ }),
+
+/***/ "./resources/ts/Pages/Settings.tsx":
+/*!*****************************************!*\
+  !*** ./resources/ts/Pages/Settings.tsx ***!
+  \*****************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  Object.defineProperty(o, k2, {
+    enumerable: true,
+    get: function get() {
+      return m[k];
+    }
+  });
+} : function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+});
+
+var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+  Object.defineProperty(o, "default", {
+    enumerable: true,
+    value: v
+  });
+} : function (o, v) {
+  o["default"] = v;
+});
+
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  }
+
+  __setModuleDefault(result, mod);
+
+  return result;
+};
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var Authenticate_1 = __webpack_require__(/*! ../Components/Authenticate */ "./resources/ts/Components/Authenticate.tsx");
+
+var FormatText_1 = __importDefault(__webpack_require__(/*! ../Components/FormatText */ "./resources/ts/Components/FormatText.tsx"));
+
+var UserSettingsForm_1 = __importDefault(__webpack_require__(/*! ../Components/UserSettingsForm */ "./resources/ts/Components/UserSettingsForm.tsx"));
+
+var Settings = function Settings() {
+  var _a, _b, _c, _d, _e;
+
+  var auth = (0, Authenticate_1.useAuth)();
+
+  var _f = (0, react_1.useState)(false),
+      showSettingsForm = _f[0],
+      setShowSettingsForm = _f[1];
+
+  return react_1["default"].createElement(react_1["default"].Fragment, null, showSettingsForm ? react_1["default"].createElement(UserSettingsForm_1["default"], {
+    setShowSettingsForm: setShowSettingsForm
+  }) : react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("h2", null, "\u30E6\u30FC\u30B6\u60C5\u5831"), react_1["default"].createElement("p", null, "\u30E6\u30FC\u30B6\u540D:", (_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.name), react_1["default"].createElement("p", null, "\u30E6\u30FC\u30B6ID:", (_b = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _b === void 0 ? void 0 : _b.screen_name), react_1["default"].createElement("p", null, "\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9:", (_c = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _c === void 0 ? void 0 : _c.email), react_1["default"].createElement("p", null, "\u30D7\u30ED\u30D5\u30A3\u30FC\u30EB\u753B\u50CF:", (_d = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _d === void 0 ? void 0 : _d.profile_image), react_1["default"].createElement("p", null, "\u30D7\u30ED\u30D5\u30A3\u30FC\u30EB:", (0, FormatText_1["default"])((_e = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _e === void 0 ? void 0 : _e.profile))), react_1["default"].createElement("button", {
+    onClick: function onClick() {
+      return setShowSettingsForm(!showSettingsForm);
+    }
+  }, showSettingsForm ? '戻る' : '編集する'));
+};
+
+exports["default"] = Settings;
 
 /***/ }),
 

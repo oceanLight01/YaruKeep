@@ -20,6 +20,7 @@ import User from './User';
 import HabitPost from './HabitPost';
 import HabitStatus from './HabitStatus';
 import Diary from './Diary';
+import Settings from './Settings';
 
 const App = () => {
     return (
@@ -98,6 +99,14 @@ const App = () => {
                             element={
                                 <PrivateRoute>
                                     <Diary />
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
+                            path="/settings"
+                            element={
+                                <PrivateRoute>
+                                    <Settings />
                                 </PrivateRoute>
                             }
                         />

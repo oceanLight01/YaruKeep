@@ -27,6 +27,7 @@ class LoginUserResource extends JsonResource
                 'email' => $this->email,
                 'email_verified_at' => $this->email_verified_at,
                 'profile' => $this->profile,
+                'profile_image' => $this->profile_image,
                 'following_count' => $following_count,
                 'followed_count' => $followed_count,
                 'created_at' => $this->created_at,

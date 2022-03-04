@@ -24,6 +24,9 @@ const Navigation = () => {
                 <li>
                     <Link to="/post/habit">ハビットトラッカー作成</Link>
                 </li>
+                <li>
+                    <Link to="/settings">設定</Link>
+                </li>
             </ul>
         </nav>
     );

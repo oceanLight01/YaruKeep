@@ -9,6 +9,7 @@ type UserData = {
     email: string;
     email_verified_at: string | null;
     profile: string;
+    profile_image: string;
     following_count: number;
     followed_count: number;
     created_at: string;
@@ -29,6 +30,13 @@ type LoginData = {
     remember: boolean;
 };
 
+type EditData = {
+    name: string;
+    screen_name: string;
+    email: string;
+    profile: string;
+};
+
 type Route = {
     children: JSX.Element;
 };
@@ -39,6 +47,7 @@ type AuthProps = {
     register: (registerData: RegisterData) => Promise<void>;
     login: (loginData: LoginData) => Promise<void>;
     logout: () => Promise<void>;
+    edit: (editData: EditData) => Promise<void>;
 };
 
 type Props = {
@@ -116,6 +125,22 @@ const useProvideAuth = () => {
             });
     };
 
+    const edit = async (editData: EditData) => {
+        await axios.put('/api/user/profile-information', editData).catch((error) => {
+            console.error(error);
+        });
+
+        return axios
+            .get('/api/user')
+            .then((res) => {
+                setUserData(res.data.data.user);
+            })
+            .catch((error) => {
+                setUserData(null);
+                console.error(error);
+            });
+    };
+
     useEffect(() => {
         getUser();
     }, []);
@@ -124,6 +149,7 @@ const useProvideAuth = () => {
         register,
         login,
         logout,
+        edit,
         userData,
         isRender,
     };
