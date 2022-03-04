@@ -11,8 +11,15 @@ type RegisterForm = {
     password_confirmation: string;
 };
 
+type ErrorMessage = {
+    email: string[];
+    screen_name: string[];
+};
+
 const Register = () => {
+    const auth = useAuth();
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [errorMessage, setErrorMessage] = useState<ErrorMessage>({ email: [], screen_name: [] });
     const {
         register,
         handleSubmit,
@@ -20,7 +27,6 @@ const Register = () => {
         getValues,
     } = useForm<RegisterForm>({ mode: 'onBlur' });
     const navigate = useNavigate();
-    const auth = useAuth();
 
     const onSubmit: SubmitHandler<RegisterForm> = (data) => {
         setIsLoading(true);
@@ -30,7 +36,10 @@ const Register = () => {
                 navigate('/home');
             })
             .catch((error) => {
-                console.error(error);
+                setErrorMessage({
+                    email: error.email ? error.email : [],
+                    screen_name: error.screen_name ? error.screen_name : [],
+                });
             })
             .finally(() => {
                 setIsLoading(false);
@@ -64,6 +73,9 @@ const Register = () => {
                     {errors.screen_name?.type === 'pattern' && (
                         <p>アカウントIDは半角英数字のみ使用できます。</p>
                     )}
+                    {errorMessage.screen_name.map((str, index) => {
+                        return <p key={index}>{str}</p>;
+                    })}
                     <label>アカウントID</label>
                     <input
                         type="text"
@@ -84,6 +96,9 @@ const Register = () => {
                     {errors.email?.type === 'pattern' && (
                         <p>正しい形式のメールアドレスを入力してください。</p>
                     )}
+                    {errorMessage.email.map((str, index) => {
+                        return <p key={index}>{str}</p>;
+                    })}
                     <label>メールアドレス</label>
                     <input
                         type="email"

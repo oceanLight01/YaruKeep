@@ -96,7 +96,7 @@ const useProvideAuth = () => {
                 getUser();
             })
             .catch((error) => {
-                console.error(error);
+                return Promise.reject(error.response.data.errors);
             });
     };
 

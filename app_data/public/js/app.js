@@ -2304,7 +2304,7 @@ var useProvideAuth = function useProvideAuth() {
       setIsRender(false);
       getUser();
     })["catch"](function (error) {
-      console.error(error);
+      return Promise.reject(error.response.data.errors);
     });
   };
 
@@ -4540,27 +4540,38 @@ var Authenticate_1 = __webpack_require__(/*! ../../Components/Authenticate */ ".
 var Register = function Register() {
   var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p;
 
+  var auth = (0, Authenticate_1.useAuth)();
+
   var _q = (0, react_1.useState)(false),
       isLoading = _q[0],
       setIsLoading = _q[1];
 
-  var _r = (0, react_hook_form_1.useForm)({
+  var _r = (0, react_1.useState)({
+    email: [],
+    screen_name: []
+  }),
+      errorMessage = _r[0],
+      setErrorMessage = _r[1];
+
+  var _s = (0, react_hook_form_1.useForm)({
     mode: 'onBlur'
   }),
-      register = _r.register,
-      handleSubmit = _r.handleSubmit,
-      errors = _r.formState.errors,
-      getValues = _r.getValues;
+      register = _s.register,
+      handleSubmit = _s.handleSubmit,
+      errors = _s.formState.errors,
+      getValues = _s.getValues;
 
   var navigate = (0, react_router_dom_1.useNavigate)();
-  var auth = (0, Authenticate_1.useAuth)();
 
   var onSubmit = function onSubmit(data) {
     setIsLoading(true);
     auth === null || auth === void 0 ? void 0 : auth.register(data).then(function () {
       navigate('/home');
     })["catch"](function (error) {
-      console.error(error);
+      setErrorMessage({
+        email: error.email ? error.email : [],
+        screen_name: error.screen_name ? error.screen_name : []
+      });
     })["finally"](function () {
       setIsLoading(false);
     });
@@ -4575,7 +4586,11 @@ var Register = function Register() {
   }, register('name', {
     required: true,
     maxLength: 30
-  })))), react_1["default"].createElement("div", null, ((_c = errors.screen_name) === null || _c === void 0 ? void 0 : _c.type) === 'required' && react_1["default"].createElement("p", null, "\u30A2\u30AB\u30A6\u30F3\u30C8ID\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), ((_d = errors.screen_name) === null || _d === void 0 ? void 0 : _d.type) === 'maxLength' && react_1["default"].createElement("p", null, "\u30A2\u30AB\u30A6\u30F3\u30C8ID\u306F20\u6587\u5B57\u4EE5\u4E0B\u3067\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), ((_e = errors.screen_name) === null || _e === void 0 ? void 0 : _e.type) === 'pattern' && react_1["default"].createElement("p", null, "\u30A2\u30AB\u30A6\u30F3\u30C8ID\u306F\u534A\u89D2\u82F1\u6570\u5B57\u306E\u307F\u4F7F\u7528\u3067\u304D\u307E\u3059\u3002"), react_1["default"].createElement("label", null, "\u30A2\u30AB\u30A6\u30F3\u30C8ID"), react_1["default"].createElement("input", __assign({
+  })))), react_1["default"].createElement("div", null, ((_c = errors.screen_name) === null || _c === void 0 ? void 0 : _c.type) === 'required' && react_1["default"].createElement("p", null, "\u30A2\u30AB\u30A6\u30F3\u30C8ID\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), ((_d = errors.screen_name) === null || _d === void 0 ? void 0 : _d.type) === 'maxLength' && react_1["default"].createElement("p", null, "\u30A2\u30AB\u30A6\u30F3\u30C8ID\u306F20\u6587\u5B57\u4EE5\u4E0B\u3067\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), ((_e = errors.screen_name) === null || _e === void 0 ? void 0 : _e.type) === 'pattern' && react_1["default"].createElement("p", null, "\u30A2\u30AB\u30A6\u30F3\u30C8ID\u306F\u534A\u89D2\u82F1\u6570\u5B57\u306E\u307F\u4F7F\u7528\u3067\u304D\u307E\u3059\u3002"), errorMessage.screen_name.map(function (str, index) {
+    return react_1["default"].createElement("p", {
+      key: index
+    }, str);
+  }), react_1["default"].createElement("label", null, "\u30A2\u30AB\u30A6\u30F3\u30C8ID"), react_1["default"].createElement("input", __assign({
     type: "text",
     maxLength: 20,
     autoComplete: "on"
@@ -4583,7 +4598,11 @@ var Register = function Register() {
     required: true,
     maxLength: 20,
     pattern: /^(?=.*?[a-zA-Z\d])[a-zA-Z\d]+$/
-  })))), react_1["default"].createElement("div", null, ((_f = errors.email) === null || _f === void 0 ? void 0 : _f.type) === 'required' && react_1["default"].createElement("p", null, "\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), ((_g = errors.email) === null || _g === void 0 ? void 0 : _g.type) === 'maxLength' && react_1["default"].createElement("p", null, "\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9\u306F255\u6587\u5B57\u4EE5\u4E0B\u3067\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), ((_h = errors.email) === null || _h === void 0 ? void 0 : _h.type) === 'pattern' && react_1["default"].createElement("p", null, "\u6B63\u3057\u3044\u5F62\u5F0F\u306E\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), react_1["default"].createElement("label", null, "\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9"), react_1["default"].createElement("input", __assign({
+  })))), react_1["default"].createElement("div", null, ((_f = errors.email) === null || _f === void 0 ? void 0 : _f.type) === 'required' && react_1["default"].createElement("p", null, "\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), ((_g = errors.email) === null || _g === void 0 ? void 0 : _g.type) === 'maxLength' && react_1["default"].createElement("p", null, "\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9\u306F255\u6587\u5B57\u4EE5\u4E0B\u3067\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), ((_h = errors.email) === null || _h === void 0 ? void 0 : _h.type) === 'pattern' && react_1["default"].createElement("p", null, "\u6B63\u3057\u3044\u5F62\u5F0F\u306E\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), errorMessage.email.map(function (str, index) {
+    return react_1["default"].createElement("p", {
+      key: index
+    }, str);
+  }), react_1["default"].createElement("label", null, "\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9"), react_1["default"].createElement("input", __assign({
     type: "email",
     maxLength: 255,
     autoComplete: "on"
