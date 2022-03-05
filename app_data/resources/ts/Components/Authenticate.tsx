@@ -44,6 +44,7 @@ type Route = {
 type AuthProps = {
     userData: UserData | null;
     isRender: boolean;
+    getUser: () => void;
     register: (registerData: RegisterData) => Promise<void>;
     login: (loginData: LoginData) => Promise<void>;
     logout: () => Promise<void>;
@@ -152,6 +153,7 @@ const useProvideAuth = () => {
     }, []);
 
     return {
+        getUser,
         register,
         login,
         logout,

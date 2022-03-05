@@ -17,6 +17,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     // ユーザに関するルーティング
     Route::get('/user', 'UserController@getLoginUserInfo');
     Route::get('/user/{id}', 'UserController@getUserInfo');
+    Route::post('/user/image', 'UserController@storeProfileImage');
 
     // Habitに関するルーティング
     Route::post('/habits', 'HabitController@store');

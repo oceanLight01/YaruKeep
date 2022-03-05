@@ -111,7 +111,10 @@ const User = () => {
                         <p>name:{userData?.name}</p>
                         <p>UserID{userData?.screenName}</p>
                         <p>Profile:{formatText(userData?.profile!)}</p>
-                        <p>{userData?.profileImage}</p>
+                        <img
+                            src={`/storage/profiles/${userData?.profileImage}`}
+                            alt="プロフィール画像"
+                        />
                         <p>フォロー中:{userData?.followingCount}</p>
                         <p>フォロワー:{userData?.followedCount}</p>
                     </div>
