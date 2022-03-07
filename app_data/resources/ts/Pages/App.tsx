@@ -21,6 +21,8 @@ import HabitPost from './HabitPost';
 import HabitStatus from './HabitStatus';
 import Diary from './Diary';
 import Settings from './Settings';
+import FollowingUser from './FollowingUser';
+import FollowedUser from './FollowedUser';
 
 const App = () => {
     return (
@@ -99,6 +101,22 @@ const App = () => {
                             element={
                                 <PrivateRoute>
                                     <Diary />
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
+                            path="/user/:screenName/following"
+                            element={
+                                <PrivateRoute>
+                                    <FollowingUser />
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
+                            path="/user/:screenName/followed"
+                            element={
+                                <PrivateRoute>
+                                    <FollowedUser />
                                 </PrivateRoute>
                             }
                         />

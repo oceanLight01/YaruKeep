@@ -38,4 +38,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::post('/comments/diary', 'DiaryCommentController@store');
     Route::delete('/comments/{id}/diary', 'DiaryCommentController@destroy');
+
+    // Followに関するルーティング
+    Route::get('/following/{screen_name}', 'FollowController@getFollowingUser');
+    Route::get('/followed/{screen_name}', 'FollowController@getFollowedUser');
 });

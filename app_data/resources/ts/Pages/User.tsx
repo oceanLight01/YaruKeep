@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useLocation, useParams } from 'react-router-dom';
 import { useAuth } from '../Components/Authenticate';
 import formatText from '../Components/FormatText';
@@ -115,8 +116,16 @@ const User = () => {
                             src={`/storage/profiles/${userData?.profileImage}`}
                             alt="プロフィール画像"
                         />
-                        <p>フォロー中:{userData?.followingCount}</p>
-                        <p>フォロワー:{userData?.followedCount}</p>
+                        <p>
+                            <Link to={`/user/${userData?.screenName}/following`}>
+                                フォロー中:{userData?.followingCount}
+                            </Link>
+                        </p>
+                        <p>
+                            <Link to={`/user/${userData?.screenName}/followed`}>
+                                フォロワー:{userData?.followedCount}
+                            </Link>
+                        </p>
                     </div>
                     <hr />
                     <div>

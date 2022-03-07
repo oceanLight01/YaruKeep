@@ -58,7 +58,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function follows()
     {
-        return $this->belongsToMany(self::class, 'follows', 'following_id', 'user_id')->orderBy('follows.id', 'desc');
+        return $this->belongsToMany(self::class, 'follows', 'user_id', 'following_user_id')->orderBy('follows.id', 'desc');
     }
 
     /**
@@ -66,7 +66,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function followers()
     {
-        return $this->belongsToMany(self::class, 'follows', 'user_id', 'following_id')->orderBy('follows.id', 'desc');
+        return $this->belongsToMany(self::class, 'follows', 'following_user_id', 'user_id')->orderBy('follows.id', 'desc');
     }
 
     /**

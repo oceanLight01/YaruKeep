@@ -4054,6 +4054,42 @@ exports["default"] = ProfileImageForm;
 
 /***/ }),
 
+/***/ "./resources/ts/Components/UserItem.tsx":
+/*!**********************************************!*\
+  !*** ./resources/ts/Components/UserItem.tsx ***!
+  \**********************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
+
+var UserItem = function UserItem(props) {
+  return react_1["default"].createElement("li", null, react_1["default"].createElement("p", null, react_1["default"].createElement(react_router_dom_1.Link, {
+    to: "/user/".concat(props.screen_name)
+  }, props.name)), react_1["default"].createElement("p", null, props.screen_name), react_1["default"].createElement("p", null, props.name), react_1["default"].createElement("img", {
+    src: "/storage/profiles/".concat(props.profile_image),
+    alt: "\u30D7\u30ED\u30D5\u30A3\u30FC\u30EB\u753B\u50CF"
+  }), props.following && react_1["default"].createElement("p", null, "\u30D5\u30A9\u30ED\u30FC\u4E2D"), props.followed_by && react_1["default"].createElement("p", null, "\u30D5\u30A9\u30ED\u30FC\u3055\u308C\u3066\u3044\u307E\u3059"));
+};
+
+exports["default"] = UserItem;
+
+/***/ }),
+
 /***/ "./resources/ts/Components/UserSettingsForm.tsx":
 /*!******************************************************!*\
   !*** ./resources/ts/Components/UserSettingsForm.tsx ***!
@@ -4511,6 +4547,10 @@ var Diary_1 = __importDefault(__webpack_require__(/*! ./Diary */ "./resources/ts
 
 var Settings_1 = __importDefault(__webpack_require__(/*! ./Settings */ "./resources/ts/Pages/Settings.tsx"));
 
+var FollowingUser_1 = __importDefault(__webpack_require__(/*! ./FollowingUser */ "./resources/ts/Pages/FollowingUser.tsx"));
+
+var FollowedUser_1 = __importDefault(__webpack_require__(/*! ./FollowedUser */ "./resources/ts/Pages/FollowedUser.tsx"));
+
 var App = function App() {
   return react_1["default"].createElement(Authenticate_1["default"], null, react_1["default"].createElement(Loading_1["default"], null, react_1["default"].createElement(react_router_dom_1.BrowserRouter, null, react_1["default"].createElement(Header_1["default"], null), react_1["default"].createElement(Navigation_1["default"], null), react_1["default"].createElement(react_router_dom_1.Routes, null, react_1["default"].createElement(react_router_dom_1.Route, {
     path: "/",
@@ -4539,6 +4579,12 @@ var App = function App() {
   }), react_1["default"].createElement(react_router_dom_1.Route, {
     path: "/user/:screenName/habit/:id/diary/:did",
     element: react_1["default"].createElement(Authenticate_1.PrivateRoute, null, react_1["default"].createElement(Diary_1["default"], null))
+  }), react_1["default"].createElement(react_router_dom_1.Route, {
+    path: "/user/:screenName/following",
+    element: react_1["default"].createElement(Authenticate_1.PrivateRoute, null, react_1["default"].createElement(FollowingUser_1["default"], null))
+  }), react_1["default"].createElement(react_router_dom_1.Route, {
+    path: "/user/:screenName/followed",
+    element: react_1["default"].createElement(Authenticate_1.PrivateRoute, null, react_1["default"].createElement(FollowedUser_1["default"], null))
   }), react_1["default"].createElement(react_router_dom_1.Route, {
     path: "/settings",
     element: react_1["default"].createElement(Authenticate_1.PrivateRoute, null, react_1["default"].createElement(Settings_1["default"], null))
@@ -5119,6 +5165,208 @@ var Diary = function Diary() {
 };
 
 exports["default"] = Diary;
+
+/***/ }),
+
+/***/ "./resources/ts/Pages/FollowedUser.tsx":
+/*!*********************************************!*\
+  !*** ./resources/ts/Pages/FollowedUser.tsx ***!
+  \*********************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __assign = this && this.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+
+      for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+    }
+
+    return t;
+  };
+
+  return __assign.apply(this, arguments);
+};
+
+var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  Object.defineProperty(o, k2, {
+    enumerable: true,
+    get: function get() {
+      return m[k];
+    }
+  });
+} : function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+});
+
+var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+  Object.defineProperty(o, "default", {
+    enumerable: true,
+    value: v
+  });
+} : function (o, v) {
+  o["default"] = v;
+});
+
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  }
+
+  __setModuleDefault(result, mod);
+
+  return result;
+};
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
+
+var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
+
+var UserItem_1 = __importDefault(__webpack_require__(/*! ../Components/UserItem */ "./resources/ts/Components/UserItem.tsx"));
+
+var FollowedUser = function FollowedUser() {
+  var _a = (0, react_1.useState)([]),
+      followedList = _a[0],
+      setFollowedList = _a[1];
+
+  var screenName = (0, react_router_dom_1.useParams)().screenName;
+  (0, react_1.useEffect)(function () {
+    axios_1["default"].get("/api/followed/".concat(screenName)).then(function (res) {
+      setFollowedList(res.data.data);
+    })["catch"](function (error) {
+      console.error(error);
+    });
+  }, []);
+  return react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("h2", null, "\u30D5\u30A9\u30ED\u30EF\u30FC\u306E\u30E6\u30FC\u30B6\u30FC"), react_1["default"].createElement("hr", null), react_1["default"].createElement("ul", null, followedList.map(function (item, index) {
+    return react_1["default"].createElement(UserItem_1["default"], __assign({}, item, {
+      key: index
+    }));
+  })));
+};
+
+exports["default"] = FollowedUser;
+
+/***/ }),
+
+/***/ "./resources/ts/Pages/FollowingUser.tsx":
+/*!**********************************************!*\
+  !*** ./resources/ts/Pages/FollowingUser.tsx ***!
+  \**********************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __assign = this && this.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+
+      for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+    }
+
+    return t;
+  };
+
+  return __assign.apply(this, arguments);
+};
+
+var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  Object.defineProperty(o, k2, {
+    enumerable: true,
+    get: function get() {
+      return m[k];
+    }
+  });
+} : function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+});
+
+var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+  Object.defineProperty(o, "default", {
+    enumerable: true,
+    value: v
+  });
+} : function (o, v) {
+  o["default"] = v;
+});
+
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  }
+
+  __setModuleDefault(result, mod);
+
+  return result;
+};
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
+
+var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
+
+var UserItem_1 = __importDefault(__webpack_require__(/*! ../Components/UserItem */ "./resources/ts/Components/UserItem.tsx"));
+
+var FollowingUser = function FollowingUser() {
+  var _a = (0, react_1.useState)([]),
+      followingList = _a[0],
+      setFollowingList = _a[1];
+
+  var screenName = (0, react_router_dom_1.useParams)().screenName;
+  (0, react_1.useEffect)(function () {
+    axios_1["default"].get("/api/following/".concat(screenName)).then(function (res) {
+      setFollowingList(res.data.data);
+    })["catch"](function (error) {
+      console.error(error);
+    });
+  }, []);
+  return react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("h2", null, "\u30D5\u30A9\u30ED\u30FC\u4E2D\u306E\u30E6\u30FC\u30B6\u30FC"), react_1["default"].createElement("hr", null), react_1["default"].createElement("ul", null, followingList.map(function (item, index) {
+    return react_1["default"].createElement(UserItem_1["default"], __assign({}, item, {
+      key: index
+    }));
+  })));
+};
+
+exports["default"] = FollowingUser;
 
 /***/ }),
 
@@ -5839,6 +6087,8 @@ var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/reac
 
 var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
 
+var react_router_dom_2 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
+
 var Authenticate_1 = __webpack_require__(/*! ../Components/Authenticate */ "./resources/ts/Components/Authenticate.tsx");
 
 var FormatText_1 = __importDefault(__webpack_require__(/*! ../Components/FormatText */ "./resources/ts/Components/FormatText.tsx"));
@@ -5848,7 +6098,7 @@ var HabitTracker_1 = __importDefault(__webpack_require__(/*! ../Components/Habit
 var PageRender_1 = __importDefault(__webpack_require__(/*! ./PageRender */ "./resources/ts/Pages/PageRender.tsx"));
 
 var User = function User() {
-  var screenName = (0, react_router_dom_1.useParams)().screenName;
+  var screenName = (0, react_router_dom_2.useParams)().screenName;
 
   var _a = (0, react_1.useState)(null),
       userData = _a[0],
@@ -5862,7 +6112,7 @@ var User = function User() {
       statusCode = _c[0],
       setStatusCode = _c[1];
 
-  var locationPath = (0, react_router_dom_1.useLocation)().pathname;
+  var locationPath = (0, react_router_dom_2.useLocation)().pathname;
   var auth = (0, Authenticate_1.useAuth)();
 
   var mapHabitItem = function mapHabitItem(props) {
@@ -5940,7 +6190,11 @@ var User = function User() {
   }, react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("div", null, react_1["default"].createElement("p", null, "ID:", userData === null || userData === void 0 ? void 0 : userData.id), react_1["default"].createElement("p", null, "name:", userData === null || userData === void 0 ? void 0 : userData.name), react_1["default"].createElement("p", null, "UserID", userData === null || userData === void 0 ? void 0 : userData.screenName), react_1["default"].createElement("p", null, "Profile:", (0, FormatText_1["default"])(userData === null || userData === void 0 ? void 0 : userData.profile)), react_1["default"].createElement("img", {
     src: "/storage/profiles/".concat(userData === null || userData === void 0 ? void 0 : userData.profileImage),
     alt: "\u30D7\u30ED\u30D5\u30A3\u30FC\u30EB\u753B\u50CF"
-  }), react_1["default"].createElement("p", null, "\u30D5\u30A9\u30ED\u30FC\u4E2D:", userData === null || userData === void 0 ? void 0 : userData.followingCount), react_1["default"].createElement("p", null, "\u30D5\u30A9\u30ED\u30EF\u30FC:", userData === null || userData === void 0 ? void 0 : userData.followedCount)), react_1["default"].createElement("hr", null), react_1["default"].createElement("div", null, react_1["default"].createElement("h2", null, "\u30CF\u30D3\u30C3\u30C8\u30C8\u30E9\u30C3\u30AB\u30FC"), react_1["default"].createElement("ul", null, habits.map(function (item, index) {
+  }), react_1["default"].createElement("p", null, react_1["default"].createElement(react_router_dom_1.Link, {
+    to: "/user/".concat(userData === null || userData === void 0 ? void 0 : userData.screenName, "/following")
+  }, "\u30D5\u30A9\u30ED\u30FC\u4E2D:", userData === null || userData === void 0 ? void 0 : userData.followingCount)), react_1["default"].createElement("p", null, react_1["default"].createElement(react_router_dom_1.Link, {
+    to: "/user/".concat(userData === null || userData === void 0 ? void 0 : userData.screenName, "/followed")
+  }, "\u30D5\u30A9\u30ED\u30EF\u30FC:", userData === null || userData === void 0 ? void 0 : userData.followedCount))), react_1["default"].createElement("hr", null), react_1["default"].createElement("div", null, react_1["default"].createElement("h2", null, "\u30CF\u30D3\u30C3\u30C8\u30C8\u30E9\u30C3\u30AB\u30FC"), react_1["default"].createElement("ul", null, habits.map(function (item, index) {
     return react_1["default"].createElement(HabitTracker_1["default"], {
       item: item,
       key: index,

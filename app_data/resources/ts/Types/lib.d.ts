@@ -1,3 +1,16 @@
+type UserItem = {
+    id: number;
+    name: string;
+    screen_name: string;
+    profile: string;
+    profile_image: string;
+    following: boolean;
+    followed_by: boolean;
+    following_count: number;
+    followers_count: number;
+    created_at: string;
+};
+
 type HabitItem = {
     id: number;
     title: string;

@@ -26,8 +26,8 @@ class UserResource extends JsonResource
             $habits = $habit_data->where('is_private', 0)->get();
         }
 
-        $following_count = Follow::where('following_user_id', $this->id)->count();
-        $followed_count = Follow::where('user_id', $this->id)->count();
+        $following_count = Follow::where('user_id', $this->id)->count();
+        $followers_count = Follow::where('following_user_id', $this->id)->count();
 
         return [
             'user' => [
@@ -38,7 +38,7 @@ class UserResource extends JsonResource
                 'profile_image' => $this->profile_image,
                 'habits' => HabitResource::collection($habits),
                 'following_count' => $following_count,
-                'followed_count' => $followed_count,
+                'followed_count' => $followers_count,
                 'created_at' => $this->created_at,
                 'updated_at' => $this->updated_at
             ]
