@@ -1,17 +1,33 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import FollowButton from './atoms/FollowButton';
+import { useAuth } from './Authenticate';
 
-const UserItem = (props: UserItem) => {
+type Props = {
+    userItem: UserItem;
+    index: number;
+    updateFollowInfo: (userItem: UserItem, index: number) => void;
+};
+
+const UserItem = ({ userItem, index, updateFollowInfo }: Props) => {
+    const auth = useAuth();
+    const buttonProps = {
+        following: userItem.following,
+        following_id: userItem.id,
+        index: index,
+        updateFollowInfo: updateFollowInfo,
+    };
+
     return (
         <li>
             <p>
-                <Link to={`/user/${props.screen_name}`}>{props.name}</Link>
+                <Link to={`/user/${userItem.screen_name}`}>{userItem.name}</Link>
             </p>
-            <p>{props.screen_name}</p>
-            <p>{props.name}</p>
-            <img src={`/storage/profiles/${props.profile_image}`} alt="プロフィール画像" />
-            {props.following && <p>フォロー中</p>}
-            {props.followed_by && <p>フォローされています</p>}
+            <p>{userItem.screen_name}</p>
+            <p>{userItem.name}</p>
+            <img src={`/storage/profiles/${userItem.profile_image}`} alt="プロフィール画像" />
+            {auth?.userData?.id !== userItem.id && <FollowButton {...buttonProps} />}
+            {userItem.followed_by && <p>フォローされています</p>}
         </li>
     );
 };

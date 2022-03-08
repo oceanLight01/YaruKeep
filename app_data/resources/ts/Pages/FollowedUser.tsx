@@ -18,13 +18,28 @@ const FollowedUser = () => {
             });
     }, []);
 
+    const updateFollowInfo = (userItem: UserItem, index: number) => {
+        setFollowedList(
+            followedList.map((user, key) => {
+                return key === index ? userItem : user;
+            })
+        );
+    };
+
     return (
         <>
             <h2>フォロワーのユーザー</h2>
             <hr />
             <ul>
                 {followedList.map((item, index) => {
-                    return <UserItem {...item} key={index} />;
+                    return (
+                        <UserItem
+                            userItem={item}
+                            key={index}
+                            index={index}
+                            updateFollowInfo={updateFollowInfo}
+                        />
+                    );
                 })}
             </ul>
         </>

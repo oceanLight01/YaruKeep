@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useLocation, useParams } from 'react-router-dom';
+import FollowButton from '../Components/atoms/FollowButton';
 import { useAuth } from '../Components/Authenticate';
 import formatText from '../Components/FormatText';
 import HabitTracker from '../Components/HabitTracker';
@@ -15,6 +16,8 @@ type UserData = {
     profileImage: string;
     followingCount: number;
     followedCount: number;
+    following: boolean;
+    followed_by: boolean;
     created_at: string;
     updated_at: string;
 };
@@ -64,6 +67,8 @@ const User = () => {
                     profileImage: data.profile_image,
                     followingCount: data.following_count,
                     followedCount: data.followed_count,
+                    following: data.following,
+                    followed_by: data.followed_by,
                     created_at: data.created_at,
                     updated_at: data.updated_at,
                 });
@@ -116,6 +121,13 @@ const User = () => {
                             src={`/storage/profiles/${userData?.profileImage}`}
                             alt="プロフィール画像"
                         />
+                        {auth?.userData?.id !== userData?.id && (
+                            <FollowButton
+                                following={userData?.following!}
+                                following_id={userData?.id!}
+                                getUserData={() => getUserData(userData?.screenName)!}
+                            />
+                        )}
                         <p>
                             <Link to={`/user/${userData?.screenName}/following`}>
                                 フォロー中:{userData?.followingCount}

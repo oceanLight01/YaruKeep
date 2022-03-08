@@ -42,4 +42,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     // Followに関するルーティング
     Route::get('/following/{screen_name}', 'FollowController@getFollowingUser');
     Route::get('/followed/{screen_name}', 'FollowController@getFollowedUser');
+    Route::post('/follow', 'FollowController@follow');
+    Route::post('/unfollow', 'FollowController@unfollow');
 });

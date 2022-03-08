@@ -4063,6 +4063,22 @@ exports["default"] = ProfileImageForm;
 "use strict";
 
 
+var __assign = this && this.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+
+      for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+    }
+
+    return t;
+  };
+
+  return __assign.apply(this, arguments);
+};
+
 var __importDefault = this && this.__importDefault || function (mod) {
   return mod && mod.__esModule ? mod : {
     "default": mod
@@ -4077,13 +4093,29 @@ var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/r
 
 var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
 
-var UserItem = function UserItem(props) {
+var FollowButton_1 = __importDefault(__webpack_require__(/*! ./atoms/FollowButton */ "./resources/ts/Components/atoms/FollowButton.tsx"));
+
+var Authenticate_1 = __webpack_require__(/*! ./Authenticate */ "./resources/ts/Components/Authenticate.tsx");
+
+var UserItem = function UserItem(_a) {
+  var _b;
+
+  var userItem = _a.userItem,
+      index = _a.index,
+      updateFollowInfo = _a.updateFollowInfo;
+  var auth = (0, Authenticate_1.useAuth)();
+  var buttonProps = {
+    following: userItem.following,
+    following_id: userItem.id,
+    index: index,
+    updateFollowInfo: updateFollowInfo
+  };
   return react_1["default"].createElement("li", null, react_1["default"].createElement("p", null, react_1["default"].createElement(react_router_dom_1.Link, {
-    to: "/user/".concat(props.screen_name)
-  }, props.name)), react_1["default"].createElement("p", null, props.screen_name), react_1["default"].createElement("p", null, props.name), react_1["default"].createElement("img", {
-    src: "/storage/profiles/".concat(props.profile_image),
+    to: "/user/".concat(userItem.screen_name)
+  }, userItem.name)), react_1["default"].createElement("p", null, userItem.screen_name), react_1["default"].createElement("p", null, userItem.name), react_1["default"].createElement("img", {
+    src: "/storage/profiles/".concat(userItem.profile_image),
     alt: "\u30D7\u30ED\u30D5\u30A3\u30FC\u30EB\u753B\u50CF"
-  }), props.following && react_1["default"].createElement("p", null, "\u30D5\u30A9\u30ED\u30FC\u4E2D"), props.followed_by && react_1["default"].createElement("p", null, "\u30D5\u30A9\u30ED\u30FC\u3055\u308C\u3066\u3044\u307E\u3059"));
+  }), ((_b = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _b === void 0 ? void 0 : _b.id) !== userItem.id && react_1["default"].createElement(FollowButton_1["default"], __assign({}, buttonProps)), userItem.followed_by && react_1["default"].createElement("p", null, "\u30D5\u30A9\u30ED\u30FC\u3055\u308C\u3066\u3044\u307E\u3059"));
 };
 
 exports["default"] = UserItem;
@@ -4340,6 +4372,131 @@ var DiaryDeleteButton = function DiaryDeleteButton(props) {
 };
 
 exports["default"] = DiaryDeleteButton;
+
+/***/ }),
+
+/***/ "./resources/ts/Components/atoms/FollowButton.tsx":
+/*!********************************************************!*\
+  !*** ./resources/ts/Components/atoms/FollowButton.tsx ***!
+  \********************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  Object.defineProperty(o, k2, {
+    enumerable: true,
+    get: function get() {
+      return m[k];
+    }
+  });
+} : function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+});
+
+var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+  Object.defineProperty(o, "default", {
+    enumerable: true,
+    value: v
+  });
+} : function (o, v) {
+  o["default"] = v;
+});
+
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  }
+
+  __setModuleDefault(result, mod);
+
+  return result;
+};
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
+
+var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var Authenticate_1 = __webpack_require__(/*! ../Authenticate */ "./resources/ts/Components/Authenticate.tsx");
+
+var FollowButton = function FollowButton(props) {
+  var auth = (0, Authenticate_1.useAuth)();
+
+  var _a = (0, react_1.useState)(false),
+      clicked = _a[0],
+      setClicked = _a[1];
+
+  var followUser = function followUser() {
+    var _a;
+
+    setClicked(true);
+    var data = {
+      user_id: (_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.id,
+      following_user_id: props.following_id
+    };
+    axios_1["default"].post("/api/follow", data).then(function (res) {
+      if (props.updateFollowInfo) {
+        props.updateFollowInfo(res.data.data, props.index);
+      }
+
+      if (props.getUserData) {
+        props.getUserData();
+      }
+    })["catch"](function (error) {
+      console.error(error);
+    })["finally"](function () {
+      setClicked(false);
+    });
+  };
+
+  var unFollowUser = function unFollowUser() {
+    var _a;
+
+    setClicked(true);
+    var data = {
+      user_id: (_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.id,
+      following_user_id: props.following_id
+    };
+    axios_1["default"].post("/api/unfollow", data).then(function (res) {
+      if (props.updateFollowInfo) {
+        props.updateFollowInfo(res.data.data, props.index);
+      }
+
+      if (props.getUserData) {
+        props.getUserData();
+      }
+    })["catch"](function (error) {
+      console.error(error);
+    })["finally"](function () {
+      setClicked(false);
+    });
+  };
+
+  var handleClick = props.following ? unFollowUser : followUser;
+  return react_1["default"].createElement("button", {
+    onClick: function onClick() {
+      return handleClick();
+    },
+    disabled: clicked
+  }, props.following ? 'フォロー中' : 'フォロー');
+};
+
+exports["default"] = FollowButton;
 
 /***/ }),
 
@@ -5177,22 +5334,6 @@ exports["default"] = Diary;
 "use strict";
 
 
-var __assign = this && this.__assign || function () {
-  __assign = Object.assign || function (t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-      s = arguments[i];
-
-      for (var p in s) {
-        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-      }
-    }
-
-    return t;
-  };
-
-  return __assign.apply(this, arguments);
-};
-
 var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
   if (k2 === undefined) k2 = k;
   Object.defineProperty(o, k2, {
@@ -5258,10 +5399,20 @@ var FollowedUser = function FollowedUser() {
       console.error(error);
     });
   }, []);
-  return react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("h2", null, "\u30D5\u30A9\u30ED\u30EF\u30FC\u306E\u30E6\u30FC\u30B6\u30FC"), react_1["default"].createElement("hr", null), react_1["default"].createElement("ul", null, followedList.map(function (item, index) {
-    return react_1["default"].createElement(UserItem_1["default"], __assign({}, item, {
-      key: index
+
+  var updateFollowInfo = function updateFollowInfo(userItem, index) {
+    setFollowedList(followedList.map(function (user, key) {
+      return key === index ? userItem : user;
     }));
+  };
+
+  return react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("h2", null, "\u30D5\u30A9\u30ED\u30EF\u30FC\u306E\u30E6\u30FC\u30B6\u30FC"), react_1["default"].createElement("hr", null), react_1["default"].createElement("ul", null, followedList.map(function (item, index) {
+    return react_1["default"].createElement(UserItem_1["default"], {
+      userItem: item,
+      key: index,
+      index: index,
+      updateFollowInfo: updateFollowInfo
+    });
   })));
 };
 
@@ -5277,22 +5428,6 @@ exports["default"] = FollowedUser;
 
 "use strict";
 
-
-var __assign = this && this.__assign || function () {
-  __assign = Object.assign || function (t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-      s = arguments[i];
-
-      for (var p in s) {
-        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-      }
-    }
-
-    return t;
-  };
-
-  return __assign.apply(this, arguments);
-};
 
 var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
   if (k2 === undefined) k2 = k;
@@ -5359,10 +5494,20 @@ var FollowingUser = function FollowingUser() {
       console.error(error);
     });
   }, []);
-  return react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("h2", null, "\u30D5\u30A9\u30ED\u30FC\u4E2D\u306E\u30E6\u30FC\u30B6\u30FC"), react_1["default"].createElement("hr", null), react_1["default"].createElement("ul", null, followingList.map(function (item, index) {
-    return react_1["default"].createElement(UserItem_1["default"], __assign({}, item, {
-      key: index
+
+  var updateFollowInfo = function updateFollowInfo(userItem, index) {
+    setFollowingList(followingList.map(function (user, key) {
+      return key === index ? userItem : user;
     }));
+  };
+
+  return react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("h2", null, "\u30D5\u30A9\u30ED\u30FC\u4E2D\u306E\u30E6\u30FC\u30B6\u30FC"), react_1["default"].createElement("hr", null), react_1["default"].createElement("ul", null, followingList.map(function (item, index) {
+    return react_1["default"].createElement(UserItem_1["default"], {
+      userItem: item,
+      key: index,
+      index: index,
+      updateFollowInfo: updateFollowInfo
+    });
   })));
 };
 
@@ -6089,6 +6234,8 @@ var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_mod
 
 var react_router_dom_2 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
 
+var FollowButton_1 = __importDefault(__webpack_require__(/*! ../Components/atoms/FollowButton */ "./resources/ts/Components/atoms/FollowButton.tsx"));
+
 var Authenticate_1 = __webpack_require__(/*! ../Components/Authenticate */ "./resources/ts/Components/Authenticate.tsx");
 
 var FormatText_1 = __importDefault(__webpack_require__(/*! ../Components/FormatText */ "./resources/ts/Components/FormatText.tsx"));
@@ -6098,19 +6245,21 @@ var HabitTracker_1 = __importDefault(__webpack_require__(/*! ../Components/Habit
 var PageRender_1 = __importDefault(__webpack_require__(/*! ./PageRender */ "./resources/ts/Pages/PageRender.tsx"));
 
 var User = function User() {
+  var _a;
+
   var screenName = (0, react_router_dom_2.useParams)().screenName;
 
-  var _a = (0, react_1.useState)(null),
-      userData = _a[0],
-      setUserData = _a[1];
+  var _b = (0, react_1.useState)(null),
+      userData = _b[0],
+      setUserData = _b[1];
 
-  var _b = (0, react_1.useState)([]),
-      habits = _b[0],
-      setHabits = _b[1];
+  var _c = (0, react_1.useState)([]),
+      habits = _c[0],
+      setHabits = _c[1];
 
-  var _c = (0, react_1.useState)(0),
-      statusCode = _c[0],
-      setStatusCode = _c[1];
+  var _d = (0, react_1.useState)(0),
+      statusCode = _d[0],
+      setStatusCode = _d[1];
 
   var locationPath = (0, react_router_dom_2.useLocation)().pathname;
   var auth = (0, Authenticate_1.useAuth)();
@@ -6139,7 +6288,7 @@ var User = function User() {
     };
   };
 
-  var getUserData = function getUserData(screenName) {
+  var _getUserData = function getUserData(screenName) {
     axios_1["default"].get("/api/user/".concat(screenName)).then(function (res) {
       var data = res.data.data.user;
       setUserData({
@@ -6150,6 +6299,8 @@ var User = function User() {
         profileImage: data.profile_image,
         followingCount: data.following_count,
         followedCount: data.followed_count,
+        following: data.following,
+        followed_by: data.followed_by,
         created_at: data.created_at,
         updated_at: data.updated_at
       });
@@ -6183,13 +6334,19 @@ var User = function User() {
   };
 
   (0, react_1.useEffect)(function () {
-    getUserData(screenName);
+    _getUserData(screenName);
   }, [locationPath]);
   return react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("h1", null, "\u30E6\u30FC\u30B6\u30DA\u30FC\u30B8"), react_1["default"].createElement(PageRender_1["default"], {
     status: statusCode
   }, react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("div", null, react_1["default"].createElement("p", null, "ID:", userData === null || userData === void 0 ? void 0 : userData.id), react_1["default"].createElement("p", null, "name:", userData === null || userData === void 0 ? void 0 : userData.name), react_1["default"].createElement("p", null, "UserID", userData === null || userData === void 0 ? void 0 : userData.screenName), react_1["default"].createElement("p", null, "Profile:", (0, FormatText_1["default"])(userData === null || userData === void 0 ? void 0 : userData.profile)), react_1["default"].createElement("img", {
     src: "/storage/profiles/".concat(userData === null || userData === void 0 ? void 0 : userData.profileImage),
     alt: "\u30D7\u30ED\u30D5\u30A3\u30FC\u30EB\u753B\u50CF"
+  }), ((_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.id) !== (userData === null || userData === void 0 ? void 0 : userData.id) && react_1["default"].createElement(FollowButton_1["default"], {
+    following: userData === null || userData === void 0 ? void 0 : userData.following,
+    following_id: userData === null || userData === void 0 ? void 0 : userData.id,
+    getUserData: function getUserData() {
+      return _getUserData(userData === null || userData === void 0 ? void 0 : userData.screenName);
+    }
   }), react_1["default"].createElement("p", null, react_1["default"].createElement(react_router_dom_1.Link, {
     to: "/user/".concat(userData === null || userData === void 0 ? void 0 : userData.screenName, "/following")
   }, "\u30D5\u30A9\u30ED\u30FC\u4E2D:", userData === null || userData === void 0 ? void 0 : userData.followingCount)), react_1["default"].createElement("p", null, react_1["default"].createElement(react_router_dom_1.Link, {
