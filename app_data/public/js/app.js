@@ -3745,6 +3745,8 @@ var Navigation = function Navigation() {
   }, "\u30DE\u30A4\u30DA\u30FC\u30B8")), react_1["default"].createElement("li", null, react_1["default"].createElement(react_router_dom_1.Link, {
     to: "/post/habit"
   }, "\u30CF\u30D3\u30C3\u30C8\u30C8\u30E9\u30C3\u30AB\u30FC\u4F5C\u6210")), react_1["default"].createElement("li", null, react_1["default"].createElement(react_router_dom_1.Link, {
+    to: "/search"
+  }, "\u691C\u7D22")), react_1["default"].createElement("li", null, react_1["default"].createElement(react_router_dom_1.Link, {
     to: "/settings"
   }, "\u8A2D\u5B9A"))));
 };
@@ -4051,6 +4053,94 @@ var ProfileImageForm = function ProfileImageForm() {
 };
 
 exports["default"] = ProfileImageForm;
+
+/***/ }),
+
+/***/ "./resources/ts/Components/SearchForm.tsx":
+/*!************************************************!*\
+  !*** ./resources/ts/Components/SearchForm.tsx ***!
+  \************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __assign = this && this.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+
+      for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+    }
+
+    return t;
+  };
+
+  return __assign.apply(this, arguments);
+};
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var react_hook_form_1 = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.cjs.js");
+
+var SearchForm = function SearchForm() {
+  var _a, _b;
+
+  var category = ['ビジネススキル', '自己啓発', 'プログラミング', 'スキルアップ', '資格取得', '外国語学習', '読書', '芸術', 'ゲーム', '創作', '趣味', '学習', '運動・スポーツ', '料理', '健康・美容'];
+
+  var _c = (0, react_hook_form_1.useForm)({
+    defaultValues: {
+      categoryies: []
+    },
+    reValidateMode: 'onSubmit'
+  }),
+      register = _c.register,
+      handleSubmit = _c.handleSubmit,
+      errors = _c.formState.errors,
+      getValues = _c.getValues;
+
+  var onSubmit = function onSubmit(data) {
+    console.log(data);
+  };
+
+  return react_1["default"].createElement("form", {
+    onSubmit: handleSubmit(onSubmit)
+  }, react_1["default"].createElement("div", null, ((_a = errors.keyword) === null || _a === void 0 ? void 0 : _a.type) === 'validate' && ((_b = errors.categoryies) === null || _b === void 0 ? void 0 : _b.type) === 'validate' && react_1["default"].createElement("p", null, "\u30AD\u30FC\u30EF\u30FC\u30C9\u304B\u30AB\u30C6\u30B4\u30EA\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), react_1["default"].createElement("label", null, "\u30AD\u30FC\u30EF\u30FC\u30C9"), react_1["default"].createElement("input", __assign({
+    type: "search"
+  }, register('keyword', {
+    validate: function validate(value) {
+      return value.length > 0 || getValues('categoryies').length > 0;
+    }
+  })))), react_1["default"].createElement("div", null, react_1["default"].createElement("label", null, "\u30AB\u30C6\u30B4\u30EA"), react_1["default"].createElement("div", null, category.map(function (item, index) {
+    return react_1["default"].createElement("label", {
+      key: item
+    }, react_1["default"].createElement("input", __assign({
+      type: "checkbox",
+      value: index + 1
+    }, register('categoryies', {
+      validate: function validate(value) {
+        return value.length > 0 || getValues('keyword').length > 0;
+      }
+    }))), item);
+  }))), react_1["default"].createElement("input", {
+    type: "submit",
+    value: "\u691C\u7D22"
+  }));
+};
+
+exports["default"] = SearchForm;
 
 /***/ }),
 
@@ -4708,6 +4798,8 @@ var FollowingUser_1 = __importDefault(__webpack_require__(/*! ./FollowingUser */
 
 var FollowedUser_1 = __importDefault(__webpack_require__(/*! ./FollowedUser */ "./resources/ts/Pages/FollowedUser.tsx"));
 
+var Search_1 = __importDefault(__webpack_require__(/*! ./Search */ "./resources/ts/Pages/Search.tsx"));
+
 var App = function App() {
   return react_1["default"].createElement(Authenticate_1["default"], null, react_1["default"].createElement(Loading_1["default"], null, react_1["default"].createElement(react_router_dom_1.BrowserRouter, null, react_1["default"].createElement(Header_1["default"], null), react_1["default"].createElement(Navigation_1["default"], null), react_1["default"].createElement(react_router_dom_1.Routes, null, react_1["default"].createElement(react_router_dom_1.Route, {
     path: "/",
@@ -4742,6 +4834,9 @@ var App = function App() {
   }), react_1["default"].createElement(react_router_dom_1.Route, {
     path: "/user/:screenName/followed",
     element: react_1["default"].createElement(Authenticate_1.PrivateRoute, null, react_1["default"].createElement(FollowedUser_1["default"], null))
+  }), react_1["default"].createElement(react_router_dom_1.Route, {
+    path: "/search",
+    element: react_1["default"].createElement(Authenticate_1.PrivateRoute, null, react_1["default"].createElement(Search_1["default"], null))
   }), react_1["default"].createElement(react_router_dom_1.Route, {
     path: "/settings",
     element: react_1["default"].createElement(Authenticate_1.PrivateRoute, null, react_1["default"].createElement(Settings_1["default"], null))
@@ -6050,6 +6145,75 @@ var PageRender = function PageRender(_a) {
 };
 
 exports["default"] = PageRender;
+
+/***/ }),
+
+/***/ "./resources/ts/Pages/Search.tsx":
+/*!***************************************!*\
+  !*** ./resources/ts/Pages/Search.tsx ***!
+  \***************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  Object.defineProperty(o, k2, {
+    enumerable: true,
+    get: function get() {
+      return m[k];
+    }
+  });
+} : function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+});
+
+var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+  Object.defineProperty(o, "default", {
+    enumerable: true,
+    value: v
+  });
+} : function (o, v) {
+  o["default"] = v;
+});
+
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  }
+
+  __setModuleDefault(result, mod);
+
+  return result;
+};
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var SearchForm_1 = __importDefault(__webpack_require__(/*! ../Components/SearchForm */ "./resources/ts/Components/SearchForm.tsx"));
+
+var Search = function Search() {
+  var _a = (0, react_1.useState)([]),
+      searchResult = _a[0],
+      setSearchResult = _a[1];
+
+  return react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("h1", null, "\u691C\u7D22\u30DA\u30FC\u30B8"), react_1["default"].createElement(SearchForm_1["default"], null), react_1["default"].createElement("hr", null));
+};
+
+exports["default"] = Search;
 
 /***/ }),
 

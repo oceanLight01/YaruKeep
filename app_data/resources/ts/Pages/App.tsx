@@ -23,6 +23,7 @@ import Diary from './Diary';
 import Settings from './Settings';
 import FollowingUser from './FollowingUser';
 import FollowedUser from './FollowedUser';
+import Search from './Search';
 
 const App = () => {
     return (
@@ -117,6 +118,14 @@ const App = () => {
                             element={
                                 <PrivateRoute>
                                     <FollowedUser />
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
+                            path="/search"
+                            element={
+                                <PrivateRoute>
+                                    <Search />
                                 </PrivateRoute>
                             }
                         />
