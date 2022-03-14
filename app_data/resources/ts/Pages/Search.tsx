@@ -15,31 +15,6 @@ const Search = () => {
     const [noContent, setNoContent] = useState<boolean>(false);
     const auth = useAuth();
 
-    const mapHabitItem = (props: any): HabitItem => {
-        return {
-            id: props.id,
-            title: props.title,
-            description: props.description,
-            categoryId: props.category_id,
-            categoryName: props.category_name,
-            maxDoneDay: props.max_done_day,
-            doneDaysCount: props.done_days_count,
-            doneDaysList: props.done_days_list,
-            isPrivate: props.is_private,
-            isDone: props.is_done,
-            user: {
-                id: props.user.id,
-                name: props.user.name,
-                screenName: props.user.screen_name,
-            },
-            diaries: props.diaries,
-            canPostDiary: props.can_post_diary,
-            comments: props.comments,
-            created_at: props.created_at,
-            updated_at: props.updated_at,
-        };
-    };
-
     const searchHabit = (data: SearchFormData) => {
         setSearchResult([]);
         setSearching(true);
@@ -50,11 +25,7 @@ const Search = () => {
             .then((res) => {
                 const data = res.data.data;
                 if (data !== undefined) {
-                    setSearchResult(
-                        data.map((item: HabitItem) => {
-                            return mapHabitItem(item);
-                        })
-                    );
+                    setSearchResult(data);
                 } else {
                     setNoContent(true);
                 }
@@ -71,7 +42,7 @@ const Search = () => {
         axios
             .post('/api/habits/done', { userId: auth?.userData?.id, id: habitId })
             .then((res) => {
-                const data = mapHabitItem(res.data.data);
+                const data = res.data.data;
                 if (index !== undefined) {
                     setSearchResult(
                         searchResult.map((habit, key) => {

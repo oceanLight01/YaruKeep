@@ -63,7 +63,7 @@ const SearchForm = (props: Props) => {
                                 <input
                                     type="checkbox"
                                     value={index + 1}
-                                    {...register('categories', {
+                                    {...register(`categories`, {
                                         validate: (value) =>
                                             value.length > 0 || getValues('keyword').length > 0,
                                     })}

@@ -11,11 +11,11 @@ import PageRender from './PageRender';
 type UserData = {
     id: number;
     name: string;
-    screenName: string;
+    screen_name: string;
     profile: string;
-    profileImage: string;
-    followingCount: number;
-    followedCount: number;
+    profile_image: string;
+    following_count: number;
+    followed_count: number;
     following: boolean;
     followed_by: boolean;
     created_at: string;
@@ -30,53 +30,13 @@ const User = () => {
     const locationPath = useLocation().pathname;
     const auth = useAuth();
 
-    const mapHabitItem = (props: any): HabitItem => {
-        return {
-            id: props.id,
-            title: props.title,
-            description: props.description,
-            categoryId: props.category_id,
-            categoryName: props.category_name,
-            maxDoneDay: props.max_done_day,
-            doneDaysCount: props.done_days_count,
-            doneDaysList: props.done_days_list,
-            isPrivate: props.is_private,
-            isDone: props.is_done,
-            user: {
-                id: props.user.id,
-                name: props.user.name,
-                screenName: props.user.screen_name,
-            },
-            diaries: props.diaries,
-            canPostDiary: props.can_post_diary,
-            created_at: props.created_at,
-            updated_at: props.updated_at,
-        };
-    };
-
     const getUserData = (screenName?: string) => {
         axios
             .get(`/api/user/${screenName}`)
             .then((res) => {
                 const data = res.data.data.user;
-                setUserData({
-                    id: data.id,
-                    name: data.name,
-                    screenName: data.screen_name,
-                    profile: data.profile,
-                    profileImage: data.profile_image,
-                    followingCount: data.following_count,
-                    followedCount: data.followed_count,
-                    following: data.following,
-                    followed_by: data.followed_by,
-                    created_at: data.created_at,
-                    updated_at: data.updated_at,
-                });
-                setHabits(
-                    data.habits.map((item: any) => {
-                        return mapHabitItem(item);
-                    })
-                );
+                setUserData(data);
+                setHabits(data.habits);
                 setStatusCode(res.data.status);
             })
             .catch((error) => {
@@ -89,7 +49,7 @@ const User = () => {
         axios
             .post('/api/habits/done', { userId: auth?.userData?.id, id: habitId })
             .then((res) => {
-                const data = mapHabitItem(res.data.data);
+                const data = res.data.data;
                 if (index !== undefined) {
                     setHabits(
                         habits.map((habit, key) => {
@@ -115,27 +75,27 @@ const User = () => {
                     <div>
                         <p>ID:{userData?.id}</p>
                         <p>name:{userData?.name}</p>
-                        <p>UserID{userData?.screenName}</p>
+                        <p>UserID{userData?.screen_name}</p>
                         <p>Profile:{formatText(userData?.profile!)}</p>
                         <img
-                            src={`/storage/profiles/${userData?.profileImage}`}
+                            src={`/storage/profiles/${userData?.profile_image}`}
                             alt="プロフィール画像"
                         />
                         {auth?.userData?.id !== userData?.id && (
                             <FollowButton
                                 following={userData?.following!}
                                 following_id={userData?.id!}
-                                getUserData={() => getUserData(userData?.screenName)!}
+                                getUserData={() => getUserData(userData?.screen_name)!}
                             />
                         )}
                         <p>
-                            <Link to={`/user/${userData?.screenName}/following`}>
-                                フォロー中:{userData?.followingCount}
+                            <Link to={`/user/${userData?.screen_name}/following`}>
+                                フォロー中:{userData?.following_count}
                             </Link>
                         </p>
                         <p>
-                            <Link to={`/user/${userData?.screenName}/followed`}>
-                                フォロワー:{userData?.followedCount}
+                            <Link to={`/user/${userData?.screen_name}/followed`}>
+                                フォロワー:{userData?.followed_count}
                             </Link>
                         </p>
                     </div>

@@ -19,20 +19,20 @@ const HabitStatus = () => {
         id: 0,
         title: '',
         description: '',
-        categoryId: 0,
-        categoryName: '',
-        maxDoneDay: -1,
-        doneDaysCount: -1,
-        doneDaysList: {},
-        isPrivate: false,
-        isDone: false,
+        category_id: 0,
+        category_name: '',
+        max_done_day: -1,
+        done_days_count: -1,
+        done_days_list: {},
+        is_private: false,
+        is_done: false,
         user: {
             id: 0,
             name: '',
-            screenName: '',
+            screen_name: '',
         },
         diaries: [],
-        canPostDiary: false,
+        can_post_diary: false,
         comments: [],
         created_at: '',
         updated_at: '',
@@ -44,48 +44,11 @@ const HabitStatus = () => {
     const isLoginUser = auth?.userData?.id === HabitItem.user.id;
     const navigate = useNavigate();
 
-    const mapHabitItem = (props: any) => {
-        return {
-            id: props.id,
-            title: props.title,
-            description: props.description,
-            categoryId: props.category_id,
-            categoryName: props.category_name,
-            maxDoneDay: props.max_done_day,
-            doneDaysCount: props.done_days_count,
-            doneDaysList: props.done_days_list,
-            isPrivate: props.is_private,
-            isDone: props.is_done,
-            user: {
-                id: props.user.id,
-                name: props.user.name,
-                screenName: props.user.screen_name,
-            },
-            diaries: props.diaries.map((item: any) => {
-                return {
-                    id: item.id,
-                    habit_id: item.habit_id,
-                    text: item.text,
-                    user: {
-                        id: item.user.id,
-                        screen_name: item.user.screen_name,
-                        name: item.user.name,
-                    },
-                    created_at: item.created_at,
-                };
-            }),
-            canPostDiary: props.can_post_diary,
-            comments: props.comments,
-            created_at: props.created_at,
-            updated_at: props.updated_at,
-        };
-    };
-
     useEffect(() => {
         axios
             .get(`/api/user/${params.screenName}/habits/${params.id}`)
             .then((res) => {
-                setHabitItem(mapHabitItem(res.data.data));
+                setHabitItem(res.data.data);
                 setStatusCode(res.data.status);
             })
             .catch((error) => {
@@ -97,7 +60,7 @@ const HabitStatus = () => {
         axios
             .post('/api/habits/done', { userId: auth?.userData?.id, id: habitId })
             .then((res) => {
-                setHabitItem(mapHabitItem(res.data.data));
+                setHabitItem(res.data.data);
             })
             .catch((error) => {
                 console.error(error);
@@ -105,7 +68,7 @@ const HabitStatus = () => {
     };
 
     const updateHabit = (habitItem: HabitItem) => {
-        setHabitItem(mapHabitItem(habitItem));
+        setHabitItem(habitItem);
         setEditing(false);
     };
 
@@ -129,22 +92,22 @@ const HabitStatus = () => {
                     <div>
                         <h2>{HabitItem.title}</h2>
                         <p>{formatText(HabitItem.description)}</p>
-                        <p>カテゴリ:{HabitItem.categoryName}</p>
-                        <p>総達成日数:{HabitItem.doneDaysCount}日</p>
-                        <p>最大連続達成日数:{HabitItem.maxDoneDay}日</p>
+                        <p>カテゴリ:{HabitItem.category_name}</p>
+                        <p>総達成日数:{HabitItem.done_days_count}日</p>
+                        <p>最大連続達成日数:{HabitItem.max_done_day}日</p>
                         <p>作成日:{HabitItem.created_at}</p>
                         <div>
-                            <DistributionCalendar values={HabitItem.doneDaysList} />
+                            <DistributionCalendar values={HabitItem.done_days_list} />
                         </div>
                         {isLoginUser ? (
                             <>
                                 <HabitDoneButton
                                     doneHabit={doneHabit}
                                     id={HabitItem.id}
-                                    isDone={HabitItem.isDone}
+                                    isDone={HabitItem.is_done}
                                 />
                                 <HabitDeleteButton id={HabitItem.id} deleteHabit={deleteHabit} />
-                                {HabitItem.canPostDiary ? (
+                                {HabitItem.can_post_diary ? (
                                     <DiaryForm habitId={HabitItem.id} updateHabit={updateHabit} />
                                 ) : null}
                             </>
@@ -155,8 +118,8 @@ const HabitStatus = () => {
                         {...{
                             title: HabitItem.title,
                             description: HabitItem.description ? HabitItem.description : '',
-                            categoryId: HabitItem.categoryId,
-                            isPrivate: HabitItem.isPrivate ? 'true' : 'false',
+                            categoryId: HabitItem.category_id,
+                            isPrivate: HabitItem.is_private ? 'true' : 'false',
                             habitId: HabitItem.id,
                             updateHabit: updateHabit,
                         }}

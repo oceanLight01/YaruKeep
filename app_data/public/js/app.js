@@ -3619,17 +3619,17 @@ var HabitTracker = function HabitTracker(_a) {
   var navigation = (0, react_router_dom_1.useNavigate)();
 
   var handleClick = function handleClick() {
-    navigation("/user/".concat(item.user.screenName, "/habit/").concat(item.id));
+    navigation("/user/".concat(item.user.screen_name, "/habit/").concat(item.id));
   };
 
   return react_1["default"].createElement("li", null, react_1["default"].createElement("div", {
     onClick: handleClick
-  }, react_1["default"].createElement("p", null, item.title), react_1["default"].createElement("p", null, (0, FormatText_1["default"])(item.description)), react_1["default"].createElement("p", null, "\u30AB\u30C6\u30B4\u30EA:", item.categoryName), react_1["default"].createElement("p", null, "\u7DCF\u9054\u6210\u65E5\u6570:", item.doneDaysCount, "\u65E5"), react_1["default"].createElement("p", null, "\u6700\u5927\u9023\u7D9A\u9054\u6210\u65E5\u6570:", item.maxDoneDay, "\u65E5"), react_1["default"].createElement("p", null, "\u4F5C\u6210\u65E5:", item.created_at), react_1["default"].createElement("div", null, react_1["default"].createElement(ContributionCalendar_1["default"], {
-    values: item.doneDaysList
+  }, react_1["default"].createElement("p", null, item.title), react_1["default"].createElement("p", null, (0, FormatText_1["default"])(item.description)), react_1["default"].createElement("p", null, "\u30AB\u30C6\u30B4\u30EA:", item.category_name), react_1["default"].createElement("p", null, "\u7DCF\u9054\u6210\u65E5\u6570:", item.done_days_count, "\u65E5"), react_1["default"].createElement("p", null, "\u6700\u5927\u9023\u7D9A\u9054\u6210\u65E5\u6570:", item.max_done_day, "\u65E5"), react_1["default"].createElement("p", null, "\u4F5C\u6210\u65E5:", item.created_at), react_1["default"].createElement("div", null, react_1["default"].createElement(ContributionCalendar_1["default"], {
+    values: item.done_days_list
   }))), ((_b = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _b === void 0 ? void 0 : _b.id) === item.user.id ? react_1["default"].createElement(HabitDoneButton_1["default"], {
     doneHabit: doneHabit,
     id: item.id,
-    isDone: item.isDone,
+    isDone: item.is_done,
     index: index
   }) : null);
 };
@@ -4129,7 +4129,7 @@ var SearchForm = function SearchForm(props) {
     }, react_1["default"].createElement("input", __assign({
       type: "checkbox",
       value: index + 1
-    }, register('categories', {
+    }, register("categories", {
       validate: function validate(value) {
         return value.length > 0 || getValues('keyword').length > 0;
       }
@@ -5902,20 +5902,20 @@ var HabitStatus = function HabitStatus() {
     id: 0,
     title: '',
     description: '',
-    categoryId: 0,
-    categoryName: '',
-    maxDoneDay: -1,
-    doneDaysCount: -1,
-    doneDaysList: {},
-    isPrivate: false,
-    isDone: false,
+    category_id: 0,
+    category_name: '',
+    max_done_day: -1,
+    done_days_count: -1,
+    done_days_list: {},
+    is_private: false,
+    is_done: false,
     user: {
       id: 0,
       name: '',
-      screenName: ''
+      screen_name: ''
     },
     diaries: [],
-    canPostDiary: false,
+    can_post_diary: false,
     comments: [],
     created_at: '',
     updated_at: ''
@@ -5938,47 +5938,9 @@ var HabitStatus = function HabitStatus() {
   var params = (0, react_router_dom_1.useParams)();
   var isLoginUser = ((_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.id) === HabitItem.user.id;
   var navigate = (0, react_router_dom_1.useNavigate)();
-
-  var mapHabitItem = function mapHabitItem(props) {
-    return {
-      id: props.id,
-      title: props.title,
-      description: props.description,
-      categoryId: props.category_id,
-      categoryName: props.category_name,
-      maxDoneDay: props.max_done_day,
-      doneDaysCount: props.done_days_count,
-      doneDaysList: props.done_days_list,
-      isPrivate: props.is_private,
-      isDone: props.is_done,
-      user: {
-        id: props.user.id,
-        name: props.user.name,
-        screenName: props.user.screen_name
-      },
-      diaries: props.diaries.map(function (item) {
-        return {
-          id: item.id,
-          habit_id: item.habit_id,
-          text: item.text,
-          user: {
-            id: item.user.id,
-            screen_name: item.user.screen_name,
-            name: item.user.name
-          },
-          created_at: item.created_at
-        };
-      }),
-      canPostDiary: props.can_post_diary,
-      comments: props.comments,
-      created_at: props.created_at,
-      updated_at: props.updated_at
-    };
-  };
-
   (0, react_1.useEffect)(function () {
     axios_1["default"].get("/api/user/".concat(params.screenName, "/habits/").concat(params.id)).then(function (res) {
-      setHabitItem(mapHabitItem(res.data.data));
+      setHabitItem(res.data.data);
       setStatusCode(res.data.status);
     })["catch"](function (error) {
       setStatusCode(error.response.status);
@@ -5992,14 +5954,14 @@ var HabitStatus = function HabitStatus() {
       userId: (_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.id,
       id: habitId
     }).then(function (res) {
-      setHabitItem(mapHabitItem(res.data.data));
+      setHabitItem(res.data.data);
     })["catch"](function (error) {
       console.error(error);
     });
   };
 
   var updateHabit = function updateHabit(habitItem) {
-    setHabitItem(mapHabitItem(habitItem));
+    setHabitItem(habitItem);
     setEditing(false);
   };
 
@@ -6017,23 +5979,23 @@ var HabitStatus = function HabitStatus() {
 
   return react_1["default"].createElement(PageRender_1["default"], {
     status: statusCode
-  }, react_1["default"].createElement(react_1["default"].Fragment, null, !editing ? react_1["default"].createElement("div", null, react_1["default"].createElement("h2", null, HabitItem.title), react_1["default"].createElement("p", null, (0, FormatText_1["default"])(HabitItem.description)), react_1["default"].createElement("p", null, "\u30AB\u30C6\u30B4\u30EA:", HabitItem.categoryName), react_1["default"].createElement("p", null, "\u7DCF\u9054\u6210\u65E5\u6570:", HabitItem.doneDaysCount, "\u65E5"), react_1["default"].createElement("p", null, "\u6700\u5927\u9023\u7D9A\u9054\u6210\u65E5\u6570:", HabitItem.maxDoneDay, "\u65E5"), react_1["default"].createElement("p", null, "\u4F5C\u6210\u65E5:", HabitItem.created_at), react_1["default"].createElement("div", null, react_1["default"].createElement(ContributionCalendar_1["default"], {
-    values: HabitItem.doneDaysList
+  }, react_1["default"].createElement(react_1["default"].Fragment, null, !editing ? react_1["default"].createElement("div", null, react_1["default"].createElement("h2", null, HabitItem.title), react_1["default"].createElement("p", null, (0, FormatText_1["default"])(HabitItem.description)), react_1["default"].createElement("p", null, "\u30AB\u30C6\u30B4\u30EA:", HabitItem.category_name), react_1["default"].createElement("p", null, "\u7DCF\u9054\u6210\u65E5\u6570:", HabitItem.done_days_count, "\u65E5"), react_1["default"].createElement("p", null, "\u6700\u5927\u9023\u7D9A\u9054\u6210\u65E5\u6570:", HabitItem.max_done_day, "\u65E5"), react_1["default"].createElement("p", null, "\u4F5C\u6210\u65E5:", HabitItem.created_at), react_1["default"].createElement("div", null, react_1["default"].createElement(ContributionCalendar_1["default"], {
+    values: HabitItem.done_days_list
   })), isLoginUser ? react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement(HabitDoneButton_1["default"], {
     doneHabit: doneHabit,
     id: HabitItem.id,
-    isDone: HabitItem.isDone
+    isDone: HabitItem.is_done
   }), react_1["default"].createElement(HabitDeleteButton_1["default"], {
     id: HabitItem.id,
     deleteHabit: deleteHabit
-  }), HabitItem.canPostDiary ? react_1["default"].createElement(DiaryForm_1["default"], {
+  }), HabitItem.can_post_diary ? react_1["default"].createElement(DiaryForm_1["default"], {
     habitId: HabitItem.id,
     updateHabit: updateHabit
   }) : null) : null) : isLoginUser ? react_1["default"].createElement(EditHabitForm_1["default"], __assign({}, {
     title: HabitItem.title,
     description: HabitItem.description ? HabitItem.description : '',
-    categoryId: HabitItem.categoryId,
-    isPrivate: HabitItem.isPrivate ? 'true' : 'false',
+    categoryId: HabitItem.category_id,
+    isPrivate: HabitItem.is_private ? 'true' : 'false',
     habitId: HabitItem.id,
     updateHabit: updateHabit
   })) : null, isLoginUser ? react_1["default"].createElement("button", {
@@ -6226,31 +6188,6 @@ var Search = function Search() {
 
   var auth = (0, Authenticate_1.useAuth)();
 
-  var mapHabitItem = function mapHabitItem(props) {
-    return {
-      id: props.id,
-      title: props.title,
-      description: props.description,
-      categoryId: props.category_id,
-      categoryName: props.category_name,
-      maxDoneDay: props.max_done_day,
-      doneDaysCount: props.done_days_count,
-      doneDaysList: props.done_days_list,
-      isPrivate: props.is_private,
-      isDone: props.is_done,
-      user: {
-        id: props.user.id,
-        name: props.user.name,
-        screenName: props.user.screen_name
-      },
-      diaries: props.diaries,
-      canPostDiary: props.can_post_diary,
-      comments: props.comments,
-      created_at: props.created_at,
-      updated_at: props.updated_at
-    };
-  };
-
   var searchHabit = function searchHabit(data) {
     setSearchResult([]);
     setSearching(true);
@@ -6259,9 +6196,7 @@ var Search = function Search() {
       var data = res.data.data;
 
       if (data !== undefined) {
-        setSearchResult(data.map(function (item) {
-          return mapHabitItem(item);
-        }));
+        setSearchResult(data);
       } else {
         setNoContent(true);
       }
@@ -6279,7 +6214,7 @@ var Search = function Search() {
       userId: (_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.id,
       id: habitId
     }).then(function (res) {
-      var data = mapHabitItem(res.data.data);
+      var data = res.data.data;
 
       if (index !== undefined) {
         setSearchResult(searchResult.map(function (habit, key) {
@@ -6518,49 +6453,11 @@ var User = function User() {
   var locationPath = (0, react_router_dom_2.useLocation)().pathname;
   var auth = (0, Authenticate_1.useAuth)();
 
-  var mapHabitItem = function mapHabitItem(props) {
-    return {
-      id: props.id,
-      title: props.title,
-      description: props.description,
-      categoryId: props.category_id,
-      categoryName: props.category_name,
-      maxDoneDay: props.max_done_day,
-      doneDaysCount: props.done_days_count,
-      doneDaysList: props.done_days_list,
-      isPrivate: props.is_private,
-      isDone: props.is_done,
-      user: {
-        id: props.user.id,
-        name: props.user.name,
-        screenName: props.user.screen_name
-      },
-      diaries: props.diaries,
-      canPostDiary: props.can_post_diary,
-      created_at: props.created_at,
-      updated_at: props.updated_at
-    };
-  };
-
   var _getUserData = function getUserData(screenName) {
     axios_1["default"].get("/api/user/".concat(screenName)).then(function (res) {
       var data = res.data.data.user;
-      setUserData({
-        id: data.id,
-        name: data.name,
-        screenName: data.screen_name,
-        profile: data.profile,
-        profileImage: data.profile_image,
-        followingCount: data.following_count,
-        followedCount: data.followed_count,
-        following: data.following,
-        followed_by: data.followed_by,
-        created_at: data.created_at,
-        updated_at: data.updated_at
-      });
-      setHabits(data.habits.map(function (item) {
-        return mapHabitItem(item);
-      }));
+      setUserData(data);
+      setHabits(data.habits);
       setStatusCode(res.data.status);
     })["catch"](function (error) {
       setStatusCode(error.response.status);
@@ -6575,7 +6472,7 @@ var User = function User() {
       userId: (_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.id,
       id: habitId
     }).then(function (res) {
-      var data = mapHabitItem(res.data.data);
+      var data = res.data.data;
 
       if (index !== undefined) {
         setHabits(habits.map(function (habit, key) {
@@ -6592,20 +6489,20 @@ var User = function User() {
   }, [locationPath]);
   return react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("h1", null, "\u30E6\u30FC\u30B6\u30DA\u30FC\u30B8"), react_1["default"].createElement(PageRender_1["default"], {
     status: statusCode
-  }, react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("div", null, react_1["default"].createElement("p", null, "ID:", userData === null || userData === void 0 ? void 0 : userData.id), react_1["default"].createElement("p", null, "name:", userData === null || userData === void 0 ? void 0 : userData.name), react_1["default"].createElement("p", null, "UserID", userData === null || userData === void 0 ? void 0 : userData.screenName), react_1["default"].createElement("p", null, "Profile:", (0, FormatText_1["default"])(userData === null || userData === void 0 ? void 0 : userData.profile)), react_1["default"].createElement("img", {
-    src: "/storage/profiles/".concat(userData === null || userData === void 0 ? void 0 : userData.profileImage),
+  }, react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("div", null, react_1["default"].createElement("p", null, "ID:", userData === null || userData === void 0 ? void 0 : userData.id), react_1["default"].createElement("p", null, "name:", userData === null || userData === void 0 ? void 0 : userData.name), react_1["default"].createElement("p", null, "UserID", userData === null || userData === void 0 ? void 0 : userData.screen_name), react_1["default"].createElement("p", null, "Profile:", (0, FormatText_1["default"])(userData === null || userData === void 0 ? void 0 : userData.profile)), react_1["default"].createElement("img", {
+    src: "/storage/profiles/".concat(userData === null || userData === void 0 ? void 0 : userData.profile_image),
     alt: "\u30D7\u30ED\u30D5\u30A3\u30FC\u30EB\u753B\u50CF"
   }), ((_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.id) !== (userData === null || userData === void 0 ? void 0 : userData.id) && react_1["default"].createElement(FollowButton_1["default"], {
     following: userData === null || userData === void 0 ? void 0 : userData.following,
     following_id: userData === null || userData === void 0 ? void 0 : userData.id,
     getUserData: function getUserData() {
-      return _getUserData(userData === null || userData === void 0 ? void 0 : userData.screenName);
+      return _getUserData(userData === null || userData === void 0 ? void 0 : userData.screen_name);
     }
   }), react_1["default"].createElement("p", null, react_1["default"].createElement(react_router_dom_1.Link, {
-    to: "/user/".concat(userData === null || userData === void 0 ? void 0 : userData.screenName, "/following")
-  }, "\u30D5\u30A9\u30ED\u30FC\u4E2D:", userData === null || userData === void 0 ? void 0 : userData.followingCount)), react_1["default"].createElement("p", null, react_1["default"].createElement(react_router_dom_1.Link, {
-    to: "/user/".concat(userData === null || userData === void 0 ? void 0 : userData.screenName, "/followed")
-  }, "\u30D5\u30A9\u30ED\u30EF\u30FC:", userData === null || userData === void 0 ? void 0 : userData.followedCount))), react_1["default"].createElement("hr", null), react_1["default"].createElement("div", null, react_1["default"].createElement("h2", null, "\u30CF\u30D3\u30C3\u30C8\u30C8\u30E9\u30C3\u30AB\u30FC"), react_1["default"].createElement("ul", null, habits.map(function (item, index) {
+    to: "/user/".concat(userData === null || userData === void 0 ? void 0 : userData.screen_name, "/following")
+  }, "\u30D5\u30A9\u30ED\u30FC\u4E2D:", userData === null || userData === void 0 ? void 0 : userData.following_count)), react_1["default"].createElement("p", null, react_1["default"].createElement(react_router_dom_1.Link, {
+    to: "/user/".concat(userData === null || userData === void 0 ? void 0 : userData.screen_name, "/followed")
+  }, "\u30D5\u30A9\u30ED\u30EF\u30FC:", userData === null || userData === void 0 ? void 0 : userData.followed_count))), react_1["default"].createElement("hr", null), react_1["default"].createElement("div", null, react_1["default"].createElement("h2", null, "\u30CF\u30D3\u30C3\u30C8\u30C8\u30E9\u30C3\u30AB\u30FC"), react_1["default"].createElement("ul", null, habits.map(function (item, index) {
     return react_1["default"].createElement(HabitTracker_1["default"], {
       item: item,
       key: index,
