@@ -3,10 +3,14 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 
 type SearchForm = {
     keyword: string;
-    categoryies: string[];
+    categories: string[];
 };
 
-const SearchForm = () => {
+type Props = {
+    searchHabit: (data: SearchForm) => void;
+};
+
+const SearchForm = (props: Props) => {
     const category = [
         'ビジネススキル',
         '自己啓発',
@@ -30,24 +34,23 @@ const SearchForm = () => {
         handleSubmit,
         formState: { errors },
         getValues,
-    } = useForm<SearchForm>({ defaultValues: { categoryies: [] }, reValidateMode: 'onSubmit' });
+    } = useForm<SearchForm>({ defaultValues: { categories: [] }, reValidateMode: 'onSubmit' });
 
     const onSubmit: SubmitHandler<SearchForm> = (data) => {
-        console.log(data);
+        props.searchHabit(data);
     };
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <div>
-                {errors.keyword?.type === 'validate' && errors.categoryies?.type === 'validate' && (
+                {errors.keyword?.type === 'validate' && errors.categories?.type === 'validate' && (
                     <p>キーワードかカテゴリを入力してください。</p>
                 )}
                 <label>キーワード</label>
                 <input
                     type="search"
                     {...register('keyword', {
-                        validate: (value) =>
-                            value.length > 0 || getValues('categoryies').length > 0,
+                        validate: (value) => value.length > 0 || getValues('categories').length > 0,
                     })}
                 />
             </div>
@@ -60,7 +63,7 @@ const SearchForm = () => {
                                 <input
                                     type="checkbox"
                                     value={index + 1}
-                                    {...register('categoryies', {
+                                    {...register('categories', {
                                         validate: (value) =>
                                             value.length > 0 || getValues('keyword').length > 0,
                                     })}

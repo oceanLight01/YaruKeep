@@ -2933,7 +2933,7 @@ var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/r
 
 var react_github_contribution_calendar_1 = __importDefault(__webpack_require__(/*! react-github-contribution-calendar */ "./node_modules/react-github-contribution-calendar/lib/index.js"));
 
-var DistributionCalendar = function DistributionCalendar(props) {
+var ContributionCalendar = function ContributionCalendar(props) {
   var date = new Date();
   var until = "".concat(date.getFullYear(), "-").concat(date.getMonth() + 1, "-").concat(date.getDate());
   var values = props.values;
@@ -2957,7 +2957,7 @@ var DistributionCalendar = function DistributionCalendar(props) {
   });
 };
 
-exports["default"] = DistributionCalendar;
+exports["default"] = ContributionCalendar;
 
 /***/ }),
 
@@ -4095,14 +4095,14 @@ var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/r
 
 var react_hook_form_1 = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.cjs.js");
 
-var SearchForm = function SearchForm() {
+var SearchForm = function SearchForm(props) {
   var _a, _b;
 
   var category = ['ビジネススキル', '自己啓発', 'プログラミング', 'スキルアップ', '資格取得', '外国語学習', '読書', '芸術', 'ゲーム', '創作', '趣味', '学習', '運動・スポーツ', '料理', '健康・美容'];
 
   var _c = (0, react_hook_form_1.useForm)({
     defaultValues: {
-      categoryies: []
+      categories: []
     },
     reValidateMode: 'onSubmit'
   }),
@@ -4112,16 +4112,16 @@ var SearchForm = function SearchForm() {
       getValues = _c.getValues;
 
   var onSubmit = function onSubmit(data) {
-    console.log(data);
+    props.searchHabit(data);
   };
 
   return react_1["default"].createElement("form", {
     onSubmit: handleSubmit(onSubmit)
-  }, react_1["default"].createElement("div", null, ((_a = errors.keyword) === null || _a === void 0 ? void 0 : _a.type) === 'validate' && ((_b = errors.categoryies) === null || _b === void 0 ? void 0 : _b.type) === 'validate' && react_1["default"].createElement("p", null, "\u30AD\u30FC\u30EF\u30FC\u30C9\u304B\u30AB\u30C6\u30B4\u30EA\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), react_1["default"].createElement("label", null, "\u30AD\u30FC\u30EF\u30FC\u30C9"), react_1["default"].createElement("input", __assign({
+  }, react_1["default"].createElement("div", null, ((_a = errors.keyword) === null || _a === void 0 ? void 0 : _a.type) === 'validate' && ((_b = errors.categories) === null || _b === void 0 ? void 0 : _b.type) === 'validate' && react_1["default"].createElement("p", null, "\u30AD\u30FC\u30EF\u30FC\u30C9\u304B\u30AB\u30C6\u30B4\u30EA\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), react_1["default"].createElement("label", null, "\u30AD\u30FC\u30EF\u30FC\u30C9"), react_1["default"].createElement("input", __assign({
     type: "search"
   }, register('keyword', {
     validate: function validate(value) {
-      return value.length > 0 || getValues('categoryies').length > 0;
+      return value.length > 0 || getValues('categories').length > 0;
     }
   })))), react_1["default"].createElement("div", null, react_1["default"].createElement("label", null, "\u30AB\u30C6\u30B4\u30EA"), react_1["default"].createElement("div", null, category.map(function (item, index) {
     return react_1["default"].createElement("label", {
@@ -4129,7 +4129,7 @@ var SearchForm = function SearchForm() {
     }, react_1["default"].createElement("input", __assign({
       type: "checkbox",
       value: index + 1
-    }, register('categoryies', {
+    }, register('categories', {
       validate: function validate(value) {
         return value.length > 0 || getValues('keyword').length > 0;
       }
@@ -6201,7 +6201,13 @@ Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
 
+var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
+
 var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var Authenticate_1 = __webpack_require__(/*! ../Components/Authenticate */ "./resources/ts/Components/Authenticate.tsx");
+
+var HabitTracker_1 = __importDefault(__webpack_require__(/*! ../Components/HabitTracker */ "./resources/ts/Components/HabitTracker.tsx"));
 
 var SearchForm_1 = __importDefault(__webpack_require__(/*! ../Components/SearchForm */ "./resources/ts/Components/SearchForm.tsx"));
 
@@ -6210,7 +6216,91 @@ var Search = function Search() {
       searchResult = _a[0],
       setSearchResult = _a[1];
 
-  return react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("h1", null, "\u691C\u7D22\u30DA\u30FC\u30B8"), react_1["default"].createElement(SearchForm_1["default"], null), react_1["default"].createElement("hr", null));
+  var _b = (0, react_1.useState)(false),
+      searching = _b[0],
+      setSearching = _b[1];
+
+  var _c = (0, react_1.useState)(false),
+      noContent = _c[0],
+      setNoContent = _c[1];
+
+  var auth = (0, Authenticate_1.useAuth)();
+
+  var mapHabitItem = function mapHabitItem(props) {
+    return {
+      id: props.id,
+      title: props.title,
+      description: props.description,
+      categoryId: props.category_id,
+      categoryName: props.category_name,
+      maxDoneDay: props.max_done_day,
+      doneDaysCount: props.done_days_count,
+      doneDaysList: props.done_days_list,
+      isPrivate: props.is_private,
+      isDone: props.is_done,
+      user: {
+        id: props.user.id,
+        name: props.user.name,
+        screenName: props.user.screen_name
+      },
+      diaries: props.diaries,
+      canPostDiary: props.can_post_diary,
+      comments: props.comments,
+      created_at: props.created_at,
+      updated_at: props.updated_at
+    };
+  };
+
+  var searchHabit = function searchHabit(data) {
+    setSearchResult([]);
+    setSearching(true);
+    setNoContent(false);
+    axios_1["default"].post('/api/search', data).then(function (res) {
+      var data = res.data.data;
+
+      if (data !== undefined) {
+        setSearchResult(data.map(function (item) {
+          return mapHabitItem(item);
+        }));
+      } else {
+        setNoContent(true);
+      }
+    })["catch"](function (error) {
+      console.error(error);
+    })["finally"](function () {
+      setSearching(false);
+    });
+  };
+
+  var doneHabit = function doneHabit(habitId, index) {
+    var _a;
+
+    axios_1["default"].post('/api/habits/done', {
+      userId: (_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.id,
+      id: habitId
+    }).then(function (res) {
+      var data = mapHabitItem(res.data.data);
+
+      if (index !== undefined) {
+        setSearchResult(searchResult.map(function (habit, key) {
+          return key === index ? data : habit;
+        }));
+      }
+    })["catch"](function (error) {
+      console.error(error);
+    });
+  };
+
+  return react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("h1", null, "\u691C\u7D22\u30DA\u30FC\u30B8"), react_1["default"].createElement(SearchForm_1["default"], {
+    searchHabit: searchHabit
+  }), react_1["default"].createElement("hr", null), noContent && react_1["default"].createElement("p", null, "\u691C\u7D22\u7D50\u679C\u306F\u3042\u308A\u307E\u305B\u3093\u3067\u3057\u305F\u3002"), react_1["default"].createElement("div", null, searching ? react_1["default"].createElement("p", null, "\u691C\u7D22\u4E2D...") : react_1["default"].createElement("ul", null, searchResult.map(function (item, index) {
+    return react_1["default"].createElement(HabitTracker_1["default"], {
+      item: item,
+      index: index,
+      doneHabit: doneHabit,
+      key: index
+    });
+  }))));
 };
 
 exports["default"] = Search;

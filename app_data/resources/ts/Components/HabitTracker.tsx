@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import HabitDoneButton from './atoms/HabitDoneButton';
 import { useAuth } from './Authenticate';
-import DistributionCalendar from './ContributionCalendar';
+import ContributionCalendar from './ContributionCalendar';
 import formatText from './FormatText';
 import FormatText from './FormatText';
 
@@ -30,7 +30,7 @@ const HabitTracker = ({ item, index, doneHabit }: Props) => {
                 <p>最大連続達成日数:{item.maxDoneDay}日</p>
                 <p>作成日:{item.created_at}</p>
                 <div>
-                    <DistributionCalendar values={item.doneDaysList} />
+                    <ContributionCalendar values={item.doneDaysList} />
                 </div>
             </div>
             {auth?.userData?.id === item.user.id ? (

@@ -5,7 +5,7 @@ type Props = {
     values: { [date: string]: number };
 };
 
-const DistributionCalendar = (props: Props) => {
+const ContributionCalendar = (props: Props) => {
     const date = new Date();
     const until = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
     const values = props.values;
@@ -29,4 +29,4 @@ const DistributionCalendar = (props: Props) => {
     );
 };
 
-export default DistributionCalendar;
+export default ContributionCalendar;
