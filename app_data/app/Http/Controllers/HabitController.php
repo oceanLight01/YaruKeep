@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\HabitResource;
+use App\Models\Follow;
 use App\Models\Habit;
 use App\Models\HabitDoneDay;
 use App\Models\User;
@@ -170,5 +171,85 @@ class HabitController extends Controller
         } else {
             return response(['message' => 'faild to delete'], 400);
         }
+    }
+
+    public function getTopPageHabits()
+    {
+        $user_id = Auth::id();
+
+        // フォロー中のユーザのハビットトラッカーを取得
+        $following_list = Follow::where('user_id', $user_id)->pluck('following_user_id');
+        $following_user_habits = Habit::where('is_private', 0)
+                                      ->whereIn('user_id', $following_list)
+                                      ->inRandomOrder()
+                                      ->limit(10)
+                                      ->get();
+
+        // 自身が投稿しているハビットトラッカーと同じカテゴリのハビットトラッカーを取得
+        $category = Habit::where('user_id', $user_id);
+        $category_id = null;
+        $same_category_habits = [];
+        $category_name = null;
+        $category_list = [
+            'ビジネススキル',
+            '自己啓発',
+            'プログラミング・開発',
+            'スキルアップ',
+            '資格取得',
+            '外国語学習',
+            '読書',
+            '芸術',
+            'ゲーム',
+            '創作',
+            '趣味',
+            '学習',
+            '運動・スポーツ',
+            '料理',
+            '美容・健康',
+        ];
+
+        if ($category->exists())
+        {
+            $category_ids = $category->groupBy('category_id')
+                                     ->inRandomOrder()
+                                     ->pluck('category_id');
+
+            // 自身が投稿しているカテゴリかつ自身の投稿を除いた同カテゴリのハビットトラッカーが最低一件あるものを取得
+            $category_random_id = Habit::where('is_private', 0)
+                                       ->whereNotIn('user_id', [$user_id])
+                                       ->whereIn('category_id', $category_ids)
+                                       ->selectRaw('COUNT(*) as category_count, category_id')
+                                       ->groupBy('category_id')
+                                       ->having('category_count', '>', 0)
+                                       ->inRandomOrder()
+                                       ->value('category_id');
+
+            $same_category_habits = Habit::where('is_private', 0)
+                                         ->whereNotIn('user_id', [$user_id])
+                                         ->where('category_id', $category_random_id)
+                                         ->inRandomOrder()
+                                         ->limit(10)
+                                         ->get();
+
+            $category_id = $category_random_id;
+            $category_name = $category_list[$category_random_id - 1];
+        }
+
+        // 達成日時が最新のハビットトラッカーを取得
+        $newest_done_habits = Habit::where('is_private', 0)
+                                   ->whereNotIn('done_days_count', [0])
+                                   ->latest('updated_at')
+                                   ->limit(10)
+                                   ->get();
+
+        return [
+            'following_user_habits' => HabitResource::collection($following_user_habits),
+            'same_category_habits' => [
+                'category_id' => $category_id,
+                'category_name' => $category_name,
+                'habits' => HabitResource::collection($same_category_habits),
+            ],
+            'newest_done_habits' => HabitResource::collection($newest_done_habits),
+        ];
     }
 }

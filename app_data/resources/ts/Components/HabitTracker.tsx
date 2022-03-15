@@ -8,7 +8,7 @@ import formatText from './FormatText';
 type Props = {
     item: HabitItem;
     index: number;
-    doneHabit: (habitId: number) => void;
+    doneHabit?: (habitId: number) => void;
 };
 
 const HabitTracker = ({ item, index, doneHabit }: Props) => {
@@ -32,9 +32,9 @@ const HabitTracker = ({ item, index, doneHabit }: Props) => {
                     <ContributionCalendar values={item.done_days_list} />
                 </div>
             </div>
-            {auth?.userData?.id === item.user.id ? (
+            {auth?.userData?.id === item.user.id && doneHabit !== undefined ? (
                 <HabitDoneButton
-                    doneHabit={doneHabit}
+                    doneHabit={doneHabit!}
                     id={item.id}
                     isDone={item.is_done}
                     index={index}

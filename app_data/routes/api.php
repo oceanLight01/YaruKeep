@@ -25,6 +25,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/user/{screen_name}/habits/{id}', 'HabitController@show');
     Route::put('/habits/{id}', 'HabitController@update');
     Route::delete('/habits/{id}', 'HabitController@destroy');
+    Route::get('/habits/top', 'HabitController@getTopPageHabits');
 
     // Diaryに関するルーティング
     Route::get('/habits/{id}/diaries/{diary_id}', 'DiaryController@show');

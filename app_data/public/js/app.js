@@ -3626,7 +3626,7 @@ var HabitTracker = function HabitTracker(_a) {
     onClick: handleClick
   }, react_1["default"].createElement("p", null, item.title), react_1["default"].createElement("p", null, (0, FormatText_1["default"])(item.description)), react_1["default"].createElement("p", null, "\u30AB\u30C6\u30B4\u30EA:", item.category_name), react_1["default"].createElement("p", null, "\u7DCF\u9054\u6210\u65E5\u6570:", item.done_days_count, "\u65E5"), react_1["default"].createElement("p", null, "\u6700\u5927\u9023\u7D9A\u9054\u6210\u65E5\u6570:", item.max_done_day, "\u65E5"), react_1["default"].createElement("p", null, "\u4F5C\u6210\u65E5:", item.created_at), react_1["default"].createElement("div", null, react_1["default"].createElement(ContributionCalendar_1["default"], {
     values: item.done_days_list
-  }))), ((_b = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _b === void 0 ? void 0 : _b.id) === item.user.id ? react_1["default"].createElement(HabitDoneButton_1["default"], {
+  }))), ((_b = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _b === void 0 ? void 0 : _b.id) === item.user.id && doneHabit !== undefined ? react_1["default"].createElement(HabitDoneButton_1["default"], {
     doneHabit: doneHabit,
     id: item.id,
     isDone: item.is_done,
@@ -4141,6 +4141,133 @@ var SearchForm = function SearchForm(props) {
 };
 
 exports["default"] = SearchForm;
+
+/***/ }),
+
+/***/ "./resources/ts/Components/TopPageHabit.tsx":
+/*!**************************************************!*\
+  !*** ./resources/ts/Components/TopPageHabit.tsx ***!
+  \**************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  Object.defineProperty(o, k2, {
+    enumerable: true,
+    get: function get() {
+      return m[k];
+    }
+  });
+} : function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+});
+
+var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+  Object.defineProperty(o, "default", {
+    enumerable: true,
+    value: v
+  });
+} : function (o, v) {
+  o["default"] = v;
+});
+
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  }
+
+  __setModuleDefault(result, mod);
+
+  return result;
+};
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
+
+var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var Authenticate_1 = __webpack_require__(/*! ./Authenticate */ "./resources/ts/Components/Authenticate.tsx");
+
+var HabitTracker_1 = __importDefault(__webpack_require__(/*! ./HabitTracker */ "./resources/ts/Components/HabitTracker.tsx"));
+
+var TopPageHabit = function TopPageHabit() {
+  var _a = (0, react_1.useState)([]),
+      followUserHabits = _a[0],
+      setFollowUserHabits = _a[1];
+
+  var _b = (0, react_1.useState)([]),
+      sameCategoryHabits = _b[0],
+      setSameCategoryHabits = _b[1];
+
+  var _c = (0, react_1.useState)({
+    categoryId: 0,
+    categoryName: ''
+  }),
+      category = _c[0],
+      setCategory = _c[1];
+
+  var _d = (0, react_1.useState)([]),
+      newestDoneHabits = _d[0],
+      setNewestDoneHabits = _d[1];
+
+  var _e = (0, react_1.useState)(true),
+      loading = _e[0],
+      setLoading = _e[1];
+
+  var auth = (0, Authenticate_1.useAuth)();
+  (0, react_1.useEffect)(function () {
+    axios_1["default"].get('/api/habits/top').then(function (res) {
+      var data = res.data;
+      setFollowUserHabits(data.following_user_habits);
+      var category = data.same_category_habits;
+      setSameCategoryHabits(category.habits);
+      setCategory({
+        categoryId: category.category_id,
+        categoryName: category.category_name
+      });
+      setNewestDoneHabits(data.newest_done_habits);
+      setLoading(false);
+    })["catch"](function (error) {
+      console.error(error);
+    });
+  }, []);
+  return loading ? react_1["default"].createElement("p", null, "\u8AAD\u307F\u8FBC\u307F\u4E2D...") : react_1["default"].createElement("div", null, followUserHabits.length > 0 ? react_1["default"].createElement("div", null, react_1["default"].createElement("h2", null, "\u30D5\u30A9\u30ED\u30FC\u4E2D\u306E\u30E6\u30FC\u30B6\u30FC\u306E\u30CF\u30D3\u30C3\u30C8\u30C8\u30E9\u30C3\u30AB\u30FC"), react_1["default"].createElement("ul", null, followUserHabits.map(function (item, index) {
+    return react_1["default"].createElement(HabitTracker_1["default"], {
+      item: item,
+      index: index,
+      key: index
+    });
+  }))) : null, category.categoryId === null || sameCategoryHabits.length === 0 ? null : react_1["default"].createElement("div", null, react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("h2", null, "\u300C", category.categoryName, "\u300D\u30AB\u30C6\u30B4\u30EA\u306E\u30CF\u30D3\u30C3\u30C8\u30C8\u30E9\u30C3\u30AB\u30FC"), react_1["default"].createElement("ul", null, sameCategoryHabits.map(function (item, index) {
+    return react_1["default"].createElement(HabitTracker_1["default"], {
+      item: item,
+      index: index,
+      key: index
+    });
+  })))), newestDoneHabits.length > 0 ? react_1["default"].createElement("div", null, react_1["default"].createElement("h2", null, "\u6700\u65B0\u306E\u9054\u6210\u30CF\u30D3\u30C3\u30C8\u30C8\u30E9\u30C3\u30AB\u30FC"), react_1["default"].createElement("ul", null, newestDoneHabits.map(function (item, index) {
+    return react_1["default"].createElement(HabitTracker_1["default"], {
+      item: item,
+      index: index,
+      key: index
+    });
+  }))) : null);
+};
+
+exports["default"] = TopPageHabit;
 
 /***/ }),
 
@@ -6053,13 +6180,10 @@ var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/r
 
 var LogoutButton_1 = __importDefault(__webpack_require__(/*! ../Components/atoms/LogoutButton */ "./resources/ts/Components/atoms/LogoutButton.tsx"));
 
-var Authenticate_1 = __webpack_require__(/*! ../Components/Authenticate */ "./resources/ts/Components/Authenticate.tsx");
+var TopPageHabit_1 = __importDefault(__webpack_require__(/*! ../Components/TopPageHabit */ "./resources/ts/Components/TopPageHabit.tsx"));
 
 var Home = function Home() {
-  var _a;
-
-  var auth = (0, Authenticate_1.useAuth)();
-  return react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("h1", null, "\u30DB\u30FC\u30E0\u753B\u9762"), react_1["default"].createElement("p", null, "\u30E6\u30FC\u30B6\u540D\uFF1A", (_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.name), react_1["default"].createElement(LogoutButton_1["default"], null));
+  return react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("h1", null, "\u30DB\u30FC\u30E0\u753B\u9762"), react_1["default"].createElement(LogoutButton_1["default"], null), react_1["default"].createElement(TopPageHabit_1["default"], null));
 };
 
 exports["default"] = Home;
