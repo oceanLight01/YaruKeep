@@ -5944,7 +5944,8 @@ var HabitPost = function HabitPost() {
   }),
       register = _f.register,
       handleSubmit = _f.handleSubmit,
-      errors = _f.formState.errors;
+      errors = _f.formState.errors,
+      reset = _f.reset;
 
   var onSubmit = function onSubmit(data) {
     var _a;
@@ -5957,8 +5958,8 @@ var HabitPost = function HabitPost() {
       categoryId: data.categoryId,
       isPrivate: data.isPrivate === 'true'
     };
-    axios_1["default"].post('/api/habits', habitData).then(function (res) {
-      return console.log(res);
+    axios_1["default"].post('/api/habits', habitData).then(function () {
+      reset();
     })["catch"](function (error) {
       return console.log(error);
     })["finally"](function () {

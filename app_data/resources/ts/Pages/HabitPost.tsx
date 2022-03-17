@@ -17,6 +17,7 @@ const HabitPost = () => {
         register,
         handleSubmit,
         formState: { errors },
+        reset,
     } = useForm<HabitForm>({ mode: 'onBlur' });
 
     const onSubmit: SubmitHandler<HabitForm> = (data) => {
@@ -32,7 +33,9 @@ const HabitPost = () => {
 
         axios
             .post('/api/habits', habitData)
-            .then((res) => console.log(res))
+            .then(() => {
+                reset();
+            })
             .catch((error) => console.log(error))
             .finally(() => setIsLoading(false));
     };
