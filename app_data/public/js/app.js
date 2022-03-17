@@ -2678,6 +2678,7 @@ var CommentItem = function CommentItem(_a) {
       showCommentForm = _d[0],
       setShowCommentForm = _d[1];
 
+  var isHabitComment = commentType === 'habit';
   return react_1["default"].createElement("li", null, react_1["default"].createElement("p", null, (0, FormatText_1["default"])(item.comment)), react_1["default"].createElement("p", null, react_1["default"].createElement(react_router_dom_1.Link, {
     to: "/user/".concat(item.user.screen_name)
   }, item.user.name)), react_1["default"].createElement("div", null, showCommentForm ? react_1["default"].createElement(CommentForm_1["default"], __assign({}, {
@@ -2685,7 +2686,8 @@ var CommentItem = function CommentItem(_a) {
     userId: (_b = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _b === void 0 ? void 0 : _b.id,
     itemId: item.item_id,
     parentId: item.parent_id,
-    updateItem: updateItem
+    updateItem: updateItem,
+    habitComment: isHabitComment
   })) : null, react_1["default"].createElement("button", {
     onClick: function onClick() {
       return setShowCommentForm(!showCommentForm);
@@ -2698,82 +2700,6 @@ var CommentItem = function CommentItem(_a) {
 };
 
 exports["default"] = CommentItem;
-
-/***/ }),
-
-/***/ "./resources/ts/Components/CommentList.tsx":
-/*!*************************************************!*\
-  !*** ./resources/ts/Components/CommentList.tsx ***!
-  \*************************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var __assign = this && this.__assign || function () {
-  __assign = Object.assign || function (t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-      s = arguments[i];
-
-      for (var p in s) {
-        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-      }
-    }
-
-    return t;
-  };
-
-  return __assign.apply(this, arguments);
-};
-
-var __importDefault = this && this.__importDefault || function (mod) {
-  return mod && mod.__esModule ? mod : {
-    "default": mod
-  };
-};
-
-Object.defineProperty(exports, "__esModule", ({
-  value: true
-}));
-
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-
-var CommentItem_1 = __importDefault(__webpack_require__(/*! ./CommentItem */ "./resources/ts/Components/CommentItem.tsx"));
-
-var CommentReplyList_1 = __importDefault(__webpack_require__(/*! ./CommentReplyList */ "./resources/ts/Components/CommentReplyList.tsx"));
-
-var commentList = function commentList(_a) {
-  var item = _a.item,
-      commentType = _a.commentType,
-      updateItem = _a.updateItem,
-      index = _a.index;
-
-  if (item.children.length === 0) {
-    return react_1["default"].createElement(CommentItem_1["default"], __assign({}, {
-      item: item,
-      commentType: commentType,
-      updateItem: updateItem
-    }, {
-      key: index
-    }));
-  }
-
-  return react_1["default"].createElement(react_1["default"].Fragment, {
-    key: index
-  }, react_1["default"].createElement(CommentItem_1["default"], __assign({}, {
-    item: item,
-    commentType: commentType,
-    updateItem: updateItem
-  })), react_1["default"].createElement(CommentReplyList_1["default"], {
-    item: item,
-    updateItem: updateItem,
-    commentType: commentType,
-    index: index,
-    key: "reply".concat(index)
-  }));
-};
-
-exports["default"] = commentList;
 
 /***/ }),
 
@@ -4890,6 +4816,82 @@ exports["default"] = LogoutButton;
 
 /***/ }),
 
+/***/ "./resources/ts/Components/commentList.tsx":
+/*!*************************************************!*\
+  !*** ./resources/ts/Components/commentList.tsx ***!
+  \*************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __assign = this && this.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+
+      for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+    }
+
+    return t;
+  };
+
+  return __assign.apply(this, arguments);
+};
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var CommentItem_1 = __importDefault(__webpack_require__(/*! ./CommentItem */ "./resources/ts/Components/CommentItem.tsx"));
+
+var CommentReplyList_1 = __importDefault(__webpack_require__(/*! ./CommentReplyList */ "./resources/ts/Components/CommentReplyList.tsx"));
+
+var commentList = function commentList(_a) {
+  var item = _a.item,
+      commentType = _a.commentType,
+      updateItem = _a.updateItem,
+      index = _a.index;
+
+  if (item.children.length === 0) {
+    return react_1["default"].createElement(CommentItem_1["default"], __assign({}, {
+      item: item,
+      commentType: commentType,
+      updateItem: updateItem
+    }, {
+      key: index
+    }));
+  }
+
+  return react_1["default"].createElement(react_1["default"].Fragment, {
+    key: index
+  }, react_1["default"].createElement(CommentItem_1["default"], __assign({}, {
+    item: item,
+    commentType: commentType,
+    updateItem: updateItem
+  })), react_1["default"].createElement(CommentReplyList_1["default"], {
+    item: item,
+    updateItem: updateItem,
+    commentType: commentType,
+    index: index,
+    key: "reply".concat(index)
+  }));
+};
+
+exports["default"] = commentList;
+
+/***/ }),
+
 /***/ "./resources/ts/Pages/App.tsx":
 /*!************************************!*\
   !*** ./resources/ts/Pages/App.tsx ***!
@@ -5507,7 +5509,7 @@ var Authenticate_1 = __webpack_require__(/*! ../Components/Authenticate */ "./re
 
 var CommentForm_1 = __importDefault(__webpack_require__(/*! ../Components/CommentForm */ "./resources/ts/Components/CommentForm.tsx"));
 
-var CommentList_1 = __importDefault(__webpack_require__(/*! ../Components/CommentList */ "./resources/ts/Components/CommentList.tsx"));
+var commentList_1 = __importDefault(__webpack_require__(/*! ../Components/commentList */ "./resources/ts/Components/commentList.tsx"));
 
 var EditDiaryForm_1 = __importDefault(__webpack_require__(/*! ../Components/EditDiaryForm */ "./resources/ts/Components/EditDiaryForm.tsx"));
 
@@ -5592,7 +5594,7 @@ var Diary = function Diary() {
     parentId: null,
     updateItem: updateDiary
   })), react_1["default"].createElement("ul", null, diary.comments.map(function (item, index) {
-    return (0, CommentList_1["default"])({
+    return (0, commentList_1["default"])({
       item: item,
       updateItem: updateDiary,
       commentType: 'diary',
@@ -6207,7 +6209,7 @@ var Authenticate_1 = __webpack_require__(/*! ../Components/Authenticate */ "./re
 
 var CommentForm_1 = __importDefault(__webpack_require__(/*! ../Components/CommentForm */ "./resources/ts/Components/CommentForm.tsx"));
 
-var CommentList_1 = __importDefault(__webpack_require__(/*! ../Components/CommentList */ "./resources/ts/Components/CommentList.tsx"));
+var commentList_1 = __importDefault(__webpack_require__(/*! ../Components/commentList */ "./resources/ts/Components/commentList.tsx"));
 
 var ContributionCalendar_1 = __importDefault(__webpack_require__(/*! ../Components/ContributionCalendar */ "./resources/ts/Components/ContributionCalendar.tsx"));
 
@@ -6415,7 +6417,7 @@ var HabitStatus = function HabitStatus() {
     itemCount: paginateData.totalItem,
     getData: paginateDiary
   }) : react_1["default"].createElement("p", null, "\u65E5\u8A18\u306F\u3042\u308A\u307E\u305B\u3093\u3002")) : react_1["default"].createElement("ul", null, HabitItem.comments.map(function (item, index) {
-    return (0, CommentList_1["default"])({
+    return (0, commentList_1["default"])({
       item: item,
       updateItem: updateHabit,
       commentType: 'habit',

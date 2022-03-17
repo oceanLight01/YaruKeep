@@ -15,6 +15,8 @@ const CommentItem = ({ item, updateItem, commentType }: Props) => {
     const auth = useAuth();
     const [showCommentForm, setShowCommentForm] = useState<boolean>(false);
 
+    const isHabitComment = commentType === 'habit';
+
     return (
         <li>
             <p>{formatText(item.comment)}</p>
@@ -30,6 +32,7 @@ const CommentItem = ({ item, updateItem, commentType }: Props) => {
                             itemId: item.item_id,
                             parentId: item.parent_id,
                             updateItem: updateItem,
+                            habitComment: isHabitComment,
                         }}
                     />
                 ) : null}

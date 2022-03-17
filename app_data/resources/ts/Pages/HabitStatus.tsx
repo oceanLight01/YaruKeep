@@ -5,7 +5,7 @@ import HabitDeleteButton from '../Components/atoms/HabitDeleteButton';
 import HabitDoneButton from '../Components/atoms/HabitDoneButton';
 import { useAuth } from '../Components/Authenticate';
 import CommentForm from '../Components/CommentForm';
-import commentList from '../Components/CommentList';
+import commentList from '../Components/commentList';
 import DistributionCalendar from '../Components/ContributionCalendar';
 import DiaryForm from '../Components/DiaryForm';
 import DiaryList from '../Components/DiaryList';

@@ -19,9 +19,9 @@ class DiaryCommentResource extends JsonResource
             'id' => $this->id,
             'item_id' => $this->diary_id,
             'user' => [
-                'id' => $this->diary->habit->user->id,
-                'name' => $this->diary->habit->user->name,
-                'screen_name' => $this->diary->habit->user->screen_name,
+                'id' => $this->user->id,
+                'name' => $this->user->name,
+                'screen_name' => $this->user->screen_name,
             ],
             'parent_id' => $this->parent_id,
             'comment' => $this->comment,

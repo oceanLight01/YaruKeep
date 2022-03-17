@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import DiaryDeleteButton from '../Components/atoms/DiaryDeleteButton';
 import { useAuth } from '../Components/Authenticate';
 import CommentForm from '../Components/CommentForm';
-import commentList from '../Components/CommentList';
+import commentList from '../Components/commentList';
 import EditDiaryForm from '../Components/EditDiaryForm';
 import formatText from '../Components/FormatText';
 import PageRender from './PageRender';
