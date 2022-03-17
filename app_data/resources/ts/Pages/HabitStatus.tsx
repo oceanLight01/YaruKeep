@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import HabitDeleteButton from '../Components/atoms/HabitDeleteButton';
 import HabitDoneButton from '../Components/atoms/HabitDoneButton';
 import { useAuth } from '../Components/Authenticate';
@@ -131,6 +131,11 @@ const HabitStatus = () => {
                         <p>カテゴリ:{HabitItem.category_name}</p>
                         <p>総達成日数:{HabitItem.done_days_count}日</p>
                         <p>最大連続達成日数:{HabitItem.max_done_day}日</p>
+                        <p>
+                            <Link to={`/user/${HabitItem.user.screen_name}`}>
+                                {HabitItem.user.name}
+                            </Link>
+                        </p>
                         <p>作成日:{HabitItem.created_at}</p>
                         <div>
                             <DistributionCalendar values={HabitItem.done_days_list} />

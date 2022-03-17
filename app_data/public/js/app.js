@@ -3601,6 +3601,8 @@ var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/r
 
 var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
 
+var react_router_dom_2 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
+
 var HabitDoneButton_1 = __importDefault(__webpack_require__(/*! ./atoms/HabitDoneButton */ "./resources/ts/Components/atoms/HabitDoneButton.tsx"));
 
 var Authenticate_1 = __webpack_require__(/*! ./Authenticate */ "./resources/ts/Components/Authenticate.tsx");
@@ -3616,7 +3618,7 @@ var HabitTracker = function HabitTracker(_a) {
       index = _a.index,
       doneHabit = _a.doneHabit;
   var auth = (0, Authenticate_1.useAuth)();
-  var navigation = (0, react_router_dom_1.useNavigate)();
+  var navigation = (0, react_router_dom_2.useNavigate)();
 
   var handleClick = function handleClick() {
     navigation("/user/".concat(item.user.screen_name, "/habit/").concat(item.id));
@@ -3624,7 +3626,9 @@ var HabitTracker = function HabitTracker(_a) {
 
   return react_1["default"].createElement("li", null, react_1["default"].createElement("div", {
     onClick: handleClick
-  }, react_1["default"].createElement("p", null, item.title), react_1["default"].createElement("p", null, (0, FormatText_1["default"])(item.description)), react_1["default"].createElement("p", null, "\u30AB\u30C6\u30B4\u30EA:", item.category_name), react_1["default"].createElement("p", null, "\u7DCF\u9054\u6210\u65E5\u6570:", item.done_days_count, "\u65E5"), react_1["default"].createElement("p", null, "\u6700\u5927\u9023\u7D9A\u9054\u6210\u65E5\u6570:", item.max_done_day, "\u65E5"), react_1["default"].createElement("p", null, "\u4F5C\u6210\u65E5:", item.created_at), react_1["default"].createElement("div", null, react_1["default"].createElement(ContributionCalendar_1["default"], {
+  }, react_1["default"].createElement("p", null, item.title), react_1["default"].createElement("p", null, (0, FormatText_1["default"])(item.description)), react_1["default"].createElement("p", null, "\u30AB\u30C6\u30B4\u30EA:", item.category_name), react_1["default"].createElement("p", null, "\u7DCF\u9054\u6210\u65E5\u6570:", item.done_days_count, "\u65E5"), react_1["default"].createElement("p", null, "\u6700\u5927\u9023\u7D9A\u9054\u6210\u65E5\u6570:", item.max_done_day, "\u65E5"), react_1["default"].createElement("p", null, react_1["default"].createElement(react_router_dom_1.Link, {
+    to: "/user/".concat(item.user.screen_name)
+  }, item.user.name)), react_1["default"].createElement("p", null, "\u4F5C\u6210\u65E5:", item.created_at), react_1["default"].createElement("div", null, react_1["default"].createElement(ContributionCalendar_1["default"], {
     values: item.done_days_list
   }))), ((_b = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _b === void 0 ? void 0 : _b.id) === item.user.id && doneHabit !== undefined ? react_1["default"].createElement(HabitDoneButton_1["default"], {
     doneHabit: doneHabit,
@@ -6367,7 +6371,9 @@ var HabitStatus = function HabitStatus() {
 
   return react_1["default"].createElement(PageRender_1["default"], {
     status: statusCode
-  }, react_1["default"].createElement(react_1["default"].Fragment, null, !editing ? react_1["default"].createElement("div", null, react_1["default"].createElement("h2", null, HabitItem.title), react_1["default"].createElement("p", null, (0, FormatText_1["default"])(HabitItem.description)), react_1["default"].createElement("p", null, "\u30AB\u30C6\u30B4\u30EA:", HabitItem.category_name), react_1["default"].createElement("p", null, "\u7DCF\u9054\u6210\u65E5\u6570:", HabitItem.done_days_count, "\u65E5"), react_1["default"].createElement("p", null, "\u6700\u5927\u9023\u7D9A\u9054\u6210\u65E5\u6570:", HabitItem.max_done_day, "\u65E5"), react_1["default"].createElement("p", null, "\u4F5C\u6210\u65E5:", HabitItem.created_at), react_1["default"].createElement("div", null, react_1["default"].createElement(ContributionCalendar_1["default"], {
+  }, react_1["default"].createElement(react_1["default"].Fragment, null, !editing ? react_1["default"].createElement("div", null, react_1["default"].createElement("h2", null, HabitItem.title), react_1["default"].createElement("p", null, (0, FormatText_1["default"])(HabitItem.description)), react_1["default"].createElement("p", null, "\u30AB\u30C6\u30B4\u30EA:", HabitItem.category_name), react_1["default"].createElement("p", null, "\u7DCF\u9054\u6210\u65E5\u6570:", HabitItem.done_days_count, "\u65E5"), react_1["default"].createElement("p", null, "\u6700\u5927\u9023\u7D9A\u9054\u6210\u65E5\u6570:", HabitItem.max_done_day, "\u65E5"), react_1["default"].createElement("p", null, react_1["default"].createElement(react_router_dom_1.Link, {
+    to: "/user/".concat(HabitItem.user.screen_name)
+  }, HabitItem.user.name)), react_1["default"].createElement("p", null, "\u4F5C\u6210\u65E5:", HabitItem.created_at), react_1["default"].createElement("div", null, react_1["default"].createElement(ContributionCalendar_1["default"], {
     values: HabitItem.done_days_list
   })), isLoginUser ? react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement(HabitDoneButton_1["default"], {
     doneHabit: doneHabit,

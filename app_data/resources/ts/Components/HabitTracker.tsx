@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import HabitDoneButton from './atoms/HabitDoneButton';
 import { useAuth } from './Authenticate';
@@ -27,6 +28,9 @@ const HabitTracker = ({ item, index, doneHabit }: Props) => {
                 <p>カテゴリ:{item.category_name}</p>
                 <p>総達成日数:{item.done_days_count}日</p>
                 <p>最大連続達成日数:{item.max_done_day}日</p>
+                <p>
+                    <Link to={`/user/${item.user.screen_name}`}>{item.user.name}</Link>
+                </p>
                 <p>作成日:{item.created_at}</p>
                 <div>
                     <ContributionCalendar values={item.done_days_list} />
