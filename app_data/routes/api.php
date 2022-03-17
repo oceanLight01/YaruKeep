@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::delete('/user/delete', 'UserController@destroy')->middleware('auth');
+
 Route::group(['middleware' => ['auth:sanctum']], function () {
     // ユーザに関するルーティング
     Route::get('/user', 'UserController@getLoginUserInfo');

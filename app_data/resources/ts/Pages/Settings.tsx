@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import UserDeleteButton from '../Components/atoms/UserDeleteButton';
 import { useAuth } from '../Components/Authenticate';
 import formatText from '../Components/FormatText';
 import ProfileImageForm from '../Components/ProfileImageForm';
@@ -25,6 +26,11 @@ const Settings = () => {
                 {showSettingsForm ? '戻る' : '編集する'}
             </button>
             <ProfileImageForm />
+            <div>
+                <h2>アカウント削除</h2>
+                <p>アカウントを削除します。一度削除するともとに戻せません。</p>
+                <UserDeleteButton />
+            </div>
         </>
     );
 };

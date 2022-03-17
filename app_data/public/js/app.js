@@ -4816,6 +4816,62 @@ exports["default"] = LogoutButton;
 
 /***/ }),
 
+/***/ "./resources/ts/Components/atoms/UserDeleteButton.tsx":
+/*!************************************************************!*\
+  !*** ./resources/ts/Components/atoms/UserDeleteButton.tsx ***!
+  \************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
+
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
+
+var Authenticate_1 = __webpack_require__(/*! ../Authenticate */ "./resources/ts/Components/Authenticate.tsx");
+
+var UserDeleteButton = function UserDeleteButton() {
+  var auth = (0, Authenticate_1.useAuth)();
+  var navigate = (0, react_router_dom_1.useNavigate)();
+
+  var deleteUser = function deleteUser() {
+    var _a;
+
+    if (window.confirm('アカウントを削除します。削除するともとに戻せませんがよろしいですか？')) {
+      axios_1["default"]["delete"]('/api/user/delete', {
+        data: {
+          id: (_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.id
+        }
+      }).then(function () {
+        auth === null || auth === void 0 ? void 0 : auth.logout();
+      })["catch"](function (error) {
+        console.error(error);
+      });
+    }
+  };
+
+  return react_1["default"].createElement("button", {
+    onClick: deleteUser
+  }, "\u30A2\u30AB\u30A6\u30F3\u30C8\u3092\u524A\u9664");
+};
+
+exports["default"] = UserDeleteButton;
+
+/***/ }),
+
 /***/ "./resources/ts/Components/commentList.tsx":
 /*!*************************************************!*\
   !*** ./resources/ts/Components/commentList.tsx ***!
@@ -6753,6 +6809,8 @@ Object.defineProperty(exports, "__esModule", ({
 
 var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 
+var UserDeleteButton_1 = __importDefault(__webpack_require__(/*! ../Components/atoms/UserDeleteButton */ "./resources/ts/Components/atoms/UserDeleteButton.tsx"));
+
 var Authenticate_1 = __webpack_require__(/*! ../Components/Authenticate */ "./resources/ts/Components/Authenticate.tsx");
 
 var FormatText_1 = __importDefault(__webpack_require__(/*! ../Components/FormatText */ "./resources/ts/Components/FormatText.tsx"));
@@ -6776,7 +6834,7 @@ var Settings = function Settings() {
     onClick: function onClick() {
       return setShowSettingsForm(!showSettingsForm);
     }
-  }, showSettingsForm ? '戻る' : '編集する'), react_1["default"].createElement(ProfileImageForm_1["default"], null));
+  }, showSettingsForm ? '戻る' : '編集する'), react_1["default"].createElement(ProfileImageForm_1["default"], null), react_1["default"].createElement("div", null, react_1["default"].createElement("h2", null, "\u30A2\u30AB\u30A6\u30F3\u30C8\u524A\u9664"), react_1["default"].createElement("p", null, "\u30A2\u30AB\u30A6\u30F3\u30C8\u3092\u524A\u9664\u3057\u307E\u3059\u3002\u4E00\u5EA6\u524A\u9664\u3059\u308B\u3068\u3082\u3068\u306B\u623B\u305B\u307E\u305B\u3093\u3002"), react_1["default"].createElement(UserDeleteButton_1["default"], null)));
 };
 
 exports["default"] = Settings;

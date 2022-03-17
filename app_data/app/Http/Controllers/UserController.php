@@ -82,4 +82,21 @@ class UserController extends Controller
             return response(['message' => 'Faild to upload profile image'], 400);
         }
     }
+
+    /**
+     * ユーザデータを削除
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Request $request)
+    {
+        if (Auth::id() === $request->id) {
+            $user = User::find($request->id);
+            Auth::logout();
+            $user->delete();
+        } else {
+            return response(['message' => 'faild to delete account'], 400);
+        }
+    }
 }
