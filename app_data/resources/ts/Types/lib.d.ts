@@ -27,7 +27,6 @@ type HabitItem = {
         name: string;
         screen_name: string;
     };
-    diaries: DiaryItem[];
     can_post_diary: boolean;
     comments: CommentItem[];
     created_at: string;

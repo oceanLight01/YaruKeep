@@ -59,7 +59,6 @@ class HabitResource extends JsonResource
                 'name' => $this->user->name,
                 'screen_name' => $this->user->screen_name,
             ],
-            'diaries' => DiaryResource::collection($this->diariesLatest($this->id)),
             'can_post_diary' => !$can_post_diary,
             'comments' => HabitCommentResource::collection($tree),
             'comment_count' => $comment_count,

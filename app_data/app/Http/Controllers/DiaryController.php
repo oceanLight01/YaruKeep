@@ -103,4 +103,26 @@ class DiaryController extends Controller
             return response(['message' => 'faild to delete'], 400);
         }
     }
+
+    /**
+     * ハビットトラッカーに関連する日記一覧を取得
+     */
+    public function getDiaries($habit_id)
+    {
+        $diary = Diary::where('habit_id', $habit_id);
+
+        if ($diary->exists())
+        {
+            $is_private = $diary->first()->habit->is_private;
+
+            if ($is_private === 0)
+            {
+                return DiaryResource::collection($diary->orderBy('id', 'desc')->paginate(5));
+            } else {
+                return response(['message' => 'Not found diaries'], 404);
+            }
+        } else {
+            return response([], 204);
+        }
+    }
 }

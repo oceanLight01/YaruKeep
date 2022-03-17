@@ -6,6 +6,7 @@ import FollowButton from '../Components/atoms/FollowButton';
 import { useAuth } from '../Components/Authenticate';
 import formatText from '../Components/FormatText';
 import HabitTracker from '../Components/HabitTracker';
+import Paginate from '../Components/Paginate';
 import PageRender from './PageRender';
 
 type UserData = {
@@ -30,13 +31,18 @@ const User = () => {
     const locationPath = useLocation().pathname;
     const auth = useAuth();
 
+    const [paginateData, setPaginateData] = useState({
+        perPage: 1,
+        totalItem: 1,
+        currentPage: 1,
+    });
+
     const getUserData = (screenName?: string) => {
         axios
             .get(`/api/user/${screenName}`)
             .then((res) => {
                 const data = res.data.data.user;
                 setUserData(data);
-                setHabits(data.habits);
                 setStatusCode(res.data.status);
             })
             .catch((error) => {
@@ -63,8 +69,33 @@ const User = () => {
             });
     };
 
+    const getUserHabits = (screenName?: string, page = paginateData.currentPage) => {
+        axios
+            .get(`/api/habits/${screenName}?page=${page}`)
+            .then((res) => {
+                setHabits(res.data.data);
+
+                const paginate = res.data.meta;
+                setPaginateData({
+                    ...paginateData,
+                    perPage: paginate.per_page,
+                    totalItem: paginate.total,
+                    currentPage: paginate.current_page,
+                });
+            })
+            .catch((error) => {
+                setStatusCode(error.response.status);
+                console.error(error);
+            });
+    };
+
+    const paginateHabit = (page: number) => {
+        getUserHabits(screenName, page);
+    };
+
     useEffect(() => {
         getUserData(screenName);
+        getUserHabits(screenName);
     }, [locationPath]);
 
     return (
@@ -114,6 +145,15 @@ const User = () => {
                                 );
                             })}
                         </ul>
+                        {habits.length > 0 ? (
+                            <Paginate
+                                perPage={paginateData.perPage}
+                                itemCount={paginateData.totalItem}
+                                getData={paginateHabit}
+                            />
+                        ) : (
+                            <p>ハビットトラッカーはありません。</p>
+                        )}
                     </div>
                 </>
             </PageRender>

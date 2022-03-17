@@ -11,6 +11,7 @@ import DiaryForm from '../Components/DiaryForm';
 import DiaryList from '../Components/DiaryList';
 import EditHabitForm from '../Components/EditHabitForm';
 import formatText from '../Components/FormatText';
+import Paginate from '../Components/Paginate';
 import PageRender from './PageRender';
 
 const HabitStatus = () => {
@@ -31,7 +32,6 @@ const HabitStatus = () => {
             name: '',
             screen_name: '',
         },
-        diaries: [],
         can_post_diary: false,
         comments: [],
         created_at: '',
@@ -43,6 +43,13 @@ const HabitStatus = () => {
     const params = useParams<{ screenName: string; id: string }>();
     const isLoginUser = auth?.userData?.id === HabitItem.user.id;
     const navigate = useNavigate();
+    const [diaries, setDiaries] = useState<DiaryItem[]>([]);
+
+    const [paginateData, setPaginateData] = useState({
+        perPage: 1,
+        totalItem: 1,
+        currentPage: 1,
+    });
 
     useEffect(() => {
         axios
@@ -54,6 +61,8 @@ const HabitStatus = () => {
             .catch((error) => {
                 setStatusCode(error.response.status);
             });
+
+        getDiary(params.id, paginateData.currentPage);
     }, []);
 
     const doneHabit = (habitId: number) => {
@@ -67,7 +76,8 @@ const HabitStatus = () => {
             });
     };
 
-    const updateHabit = (habitItem: HabitItem) => {
+    const updateHabit = async (habitItem: HabitItem) => {
+        await getDiary(params.id, paginateData.currentPage);
         setHabitItem(habitItem);
         setEditing(false);
     };
@@ -83,6 +93,32 @@ const HabitStatus = () => {
                     console.error(error);
                 });
         }
+    };
+
+    const getDiary = async (id?: string, page = paginateData.currentPage) => {
+        return axios
+            .get(`/api/habits/${id}/diaries?page=${page}`)
+            .then((res) => {
+                const data = res.data.data;
+                if (data.length > 0) {
+                    setDiaries(data);
+
+                    const paginate = res.data.meta;
+                    setPaginateData({
+                        ...paginateData,
+                        perPage: paginate.per_page,
+                        totalItem: paginate.total,
+                        currentPage: paginate.current_page,
+                    });
+                }
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    };
+
+    const paginateDiary = (page: number) => {
+        getDiary(params.id, page);
     };
 
     return (
@@ -145,7 +181,18 @@ const HabitStatus = () => {
                     {tab === 'diary' ? 'コメント' : '日記'}
                 </button>
                 {tab === 'diary' ? (
-                    <DiaryList diaries={HabitItem.diaries} />
+                    <>
+                        <DiaryList diaries={diaries} />
+                        {diaries.length > 0 ? (
+                            <Paginate
+                                perPage={paginateData.perPage}
+                                itemCount={paginateData.totalItem}
+                                getData={paginateDiary}
+                            />
+                        ) : (
+                            <p>日記はありません。</p>
+                        )}
+                    </>
                 ) : (
                     <ul>
                         {HabitItem.comments.map((item, index) => {

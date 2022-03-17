@@ -173,6 +173,13 @@ class HabitController extends Controller
         }
     }
 
+    /**
+     * トップページに表示する以下のハビットトラッカーを取得
+     *
+     * ・フォロー中ユーザのハビットトラッカー
+     * ・作成したハビットトラッカーと同カテゴリのもの
+     * ・達成日時が新しいハビットトラッカー
+     */
     public function getTopPageHabits()
     {
         $user_id = Auth::id();
@@ -251,5 +258,29 @@ class HabitController extends Controller
             ],
             'newest_done_habits' => HabitResource::collection($newest_done_habits),
         ];
+    }
+
+    /**
+     * ユーザごとのハビットトラッカーをページネーションで取得
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return HabitResource
+     */
+    public function getUserHabits(Request $request)
+    {
+        $user_id = User::where('screen_name', $request->screen_name)->value('id');
+        $habit_data = Habit::where('user_id', $user_id);
+
+        if (Auth::id() !== $user_id)
+        {
+            $habit_data = $habit_data->where('is_private', 0);
+        }
+
+        if ($user_id) {
+            return HabitResource::collection($habit_data->orderBy('id', 'desc')
+                                                    ->paginate(5));
+        } else {
+            return response(['message' => 'Faild get habits'], 400);
+        }
     }
 }

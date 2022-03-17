@@ -26,12 +26,14 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::put('/habits/{id}', 'HabitController@update');
     Route::delete('/habits/{id}', 'HabitController@destroy');
     Route::get('/habits/top', 'HabitController@getTopPageHabits');
+    Route::get('/habits/{screen_name}', 'HabitController@getUserHabits');
 
     // Diaryに関するルーティング
     Route::get('/habits/{id}/diaries/{diary_id}', 'DiaryController@show');
     Route::post('/diaries', 'DiaryController@store');
     Route::put('/diaries/{diary_id}', 'DiaryController@update');
     Route::delete('/diaries/{diary_id}', 'DiaryController@destroy');
+    Route::get('/habits/{habit_id}/diaries', 'DiaryController@getDiaries');
 
     // Commentに関するルーティング
     Route::post('/comments/habit', 'HabitCommentController@store');
