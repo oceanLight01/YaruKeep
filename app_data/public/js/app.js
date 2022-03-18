@@ -3639,6 +3639,91 @@ exports["default"] = Loading;
 
 /***/ }),
 
+/***/ "./resources/ts/Components/NavNotificationItem.tsx":
+/*!*********************************************************!*\
+  !*** ./resources/ts/Components/NavNotificationItem.tsx ***!
+  \*********************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var Authenticate_1 = __webpack_require__(/*! ./Authenticate */ "./resources/ts/Components/Authenticate.tsx");
+
+var NotificationItem = function NotificationItem(props) {
+  var _a, _b;
+
+  var auth = (0, Authenticate_1.useAuth)();
+  var notificationType = props.item.data.type;
+  var data = props.item.data;
+  var itemId = props.item.id;
+  var screenName = (_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.screen_name;
+
+  switch (notificationType) {
+    case 'follow_notification':
+      return react_1["default"].createElement("li", {
+        onClick: function onClick() {
+          return props.updateNotification(itemId, "/user/".concat(data.screen_name));
+        }
+      }, react_1["default"].createElement("p", null, data.name, "\u3055\u3093\u306B\u30D5\u30A9\u30ED\u30FC\u3055\u308C\u307E\u3057\u305F\u3002"));
+
+    case 'habit_comment':
+      return react_1["default"].createElement("li", {
+        onClick: function onClick() {
+          var _a;
+
+          return props.updateNotification(itemId, "/user/".concat(screenName, "/habit/").concat((_a = data.habit) === null || _a === void 0 ? void 0 : _a.habit_id));
+        }
+      }, react_1["default"].createElement("p", null, data.name, "\u3055\u3093\u304C\u30CF\u30D3\u30C3\u30C8\u30C8\u30E9\u30C3\u30AB\u30FC\u306B\u30B3\u30E1\u30F3\u30C8\u3057\u307E\u3057\u305F\u3002"), react_1["default"].createElement("div", null, react_1["default"].createElement("p", null, (_b = data.habit) === null || _b === void 0 ? void 0 : _b.title)));
+
+    case 'habit_comment_reply':
+      return react_1["default"].createElement("li", {
+        onClick: function onClick() {
+          var _a;
+
+          return props.updateNotification(itemId, "/user/".concat(screenName, "/habit/").concat((_a = data.habit) === null || _a === void 0 ? void 0 : _a.habit_id));
+        }
+      }, react_1["default"].createElement("p", null, data.name, "\u3055\u3093\u304C\u30B3\u30E1\u30F3\u30C8\u306B\u8FD4\u4FE1\u3057\u307E\u3057\u305F\u3002"));
+
+    case 'diary_comment':
+      return react_1["default"].createElement("li", {
+        onClick: function onClick() {
+          var _a, _b;
+
+          return props.updateNotification(itemId, "/user/".concat(screenName, "/habit/").concat((_a = data.diary) === null || _a === void 0 ? void 0 : _a.habit_id, "/diary/").concat((_b = data.diary) === null || _b === void 0 ? void 0 : _b.diary_id));
+        }
+      }, react_1["default"].createElement("p", null, data.name, "\u3055\u3093\u304C\u65E5\u8A18\u306B\u30B3\u30E1\u30F3\u30C8\u3057\u307E\u3057\u305F\u3002"));
+
+    case 'diary_comment_reply':
+      return react_1["default"].createElement("li", {
+        onClick: function onClick() {
+          var _a, _b;
+
+          return props.updateNotification(itemId, "/user/".concat(screenName, "/habit/").concat((_a = data.diary) === null || _a === void 0 ? void 0 : _a.habit_id, "/diary/").concat((_b = data.diary) === null || _b === void 0 ? void 0 : _b.diary_id));
+        }
+      }, react_1["default"].createElement("p", null, data.name, "\u3055\u3093\u304C\u30B3\u30E1\u30F3\u30C8\u306B\u8FD4\u4FE1\u3057\u307E\u3057\u305F\u3002"));
+
+    default:
+      return null;
+  }
+};
+
+exports["default"] = NotificationItem;
+
+/***/ }),
+
 /***/ "./resources/ts/Components/Navigation.tsx":
 /*!************************************************!*\
   !*** ./resources/ts/Components/Navigation.tsx ***!
@@ -3664,6 +3749,8 @@ var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_mod
 
 var Authenticate_1 = __webpack_require__(/*! ./Authenticate */ "./resources/ts/Components/Authenticate.tsx");
 
+var NavigationNotification_1 = __importDefault(__webpack_require__(/*! ./NavigationNotification */ "./resources/ts/Components/NavigationNotification.tsx"));
+
 var Navigation = function Navigation() {
   var auth = (0, Authenticate_1.useAuth)();
   return (auth === null || auth === void 0 ? void 0 : auth.userData) === null ? react_1["default"].createElement("nav", null, react_1["default"].createElement("ul", null, react_1["default"].createElement("li", null, react_1["default"].createElement(react_router_dom_1.Link, {
@@ -3680,10 +3767,175 @@ var Navigation = function Navigation() {
     to: "/notifications"
   }, "\u901A\u77E5")), react_1["default"].createElement("li", null, react_1["default"].createElement(react_router_dom_1.Link, {
     to: "/settings"
-  }, "\u8A2D\u5B9A"))));
+  }, "\u8A2D\u5B9A"))), react_1["default"].createElement(NavigationNotification_1["default"], null));
 };
 
 exports["default"] = Navigation;
+
+/***/ }),
+
+/***/ "./resources/ts/Components/NavigationNotification.tsx":
+/*!************************************************************!*\
+  !*** ./resources/ts/Components/NavigationNotification.tsx ***!
+  \************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __assign = this && this.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+
+      for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+    }
+
+    return t;
+  };
+
+  return __assign.apply(this, arguments);
+};
+
+var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  Object.defineProperty(o, k2, {
+    enumerable: true,
+    get: function get() {
+      return m[k];
+    }
+  });
+} : function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+});
+
+var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+  Object.defineProperty(o, "default", {
+    enumerable: true,
+    value: v
+  });
+} : function (o, v) {
+  o["default"] = v;
+});
+
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  }
+
+  __setModuleDefault(result, mod);
+
+  return result;
+};
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
+
+var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
+
+var NavNotificationItem_1 = __importDefault(__webpack_require__(/*! ./NavNotificationItem */ "./resources/ts/Components/NavNotificationItem.tsx"));
+
+var NavigationNotification = function NavigationNotification() {
+  var _a = (0, react_1.useState)(false),
+      isOpen = _a[0],
+      setIsOpen = _a[1];
+
+  var navigate = (0, react_router_dom_1.useNavigate)();
+  var location = (0, react_router_dom_1.useLocation)();
+
+  var _b = (0, react_1.useState)({
+    count: 0,
+    notificationList: []
+  }),
+      notification = _b[0],
+      setNotification = _b[1];
+
+  (0, react_1.useEffect)(function () {
+    setIsOpen(false);
+
+    if (location.pathname === '/notifications' && notification.notificationList.length > 0) {
+      readAllNotification();
+    }
+  }, [location.pathname]);
+  (0, react_1.useEffect)(function () {
+    axios_1["default"].get('/api/notifications/unread').then(function (res) {
+      var data = res.data;
+      setNotification(__assign(__assign({}, notification), {
+        count: data.unread_notification_count,
+        notificationList: data.unread_notification
+      }));
+    })["catch"](function (error) {
+      console.error(error);
+    });
+  }, []);
+
+  var updateNotification = function updateNotification(id, url) {
+    setIsOpen(false);
+    axios_1["default"].put('/api/notifications', {
+      id: id
+    }).then(function (res) {
+      var data = res.data;
+      setNotification(__assign(__assign({}, notification), {
+        count: data.unread_notification_count,
+        notificationList: data.unread_notification
+      }));
+    })["catch"](function (error) {
+      console.error(error);
+    });
+    navigate(url);
+  };
+
+  var readAllNotification = function readAllNotification() {
+    setIsOpen(false);
+    axios_1["default"].put('/api/notifications/read').then(function (res) {
+      var data = res.data;
+      setNotification(__assign(__assign({}, notification), {
+        count: data.unread_notification_count,
+        notificationList: data.unread_notification
+      }));
+    })["catch"](function (error) {
+      console.error(error);
+    });
+    navigate('/notifications');
+  };
+
+  return react_1["default"].createElement("div", null, isOpen ? react_1["default"].createElement("div", null, react_1["default"].createElement("div", {
+    onClick: function onClick() {
+      return setIsOpen(false);
+    }
+  }, "\u9589\u3058\u308B"), notification.notificationList.length > 0 ? react_1["default"].createElement("ul", null, notification.notificationList.map(function (item, index) {
+    return react_1["default"].createElement(NavNotificationItem_1["default"], __assign({}, {
+      item: item,
+      updateNotification: updateNotification
+    }, {
+      key: index
+    }));
+  })) : react_1["default"].createElement("p", null, "\u901A\u77E5\u306F\u3042\u308A\u307E\u305B\u3093"), react_1["default"].createElement("p", {
+    onClick: readAllNotification
+  }, "\u5168\u3066\u306E\u901A\u77E5\u3092\u78BA\u8A8D")) : react_1["default"].createElement("p", {
+    onClick: function onClick() {
+      return setIsOpen(true);
+    }
+  }, "\u901A\u77E5\uFF1A", notification.count));
+};
+
+exports["default"] = NavigationNotification;
 
 /***/ }),
 

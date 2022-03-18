@@ -55,4 +55,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     // 通知に関するルーティング
     Route::get('/notifications', 'NotificationController@index');
+    Route::get('/notifications/unread', 'NotificationController@unread');
+    Route::put('/notifications', 'NotificationController@update');
+    Route::put('/notifications/read', 'NotificationController@allUpdate');
 });

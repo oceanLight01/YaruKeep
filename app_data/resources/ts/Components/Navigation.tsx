@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from './Authenticate';
+import NavigationNotification from './NavigationNotification';
 
 const Navigation = () => {
     const auth = useAuth();
@@ -34,6 +35,7 @@ const Navigation = () => {
                     <Link to="/settings">設定</Link>
                 </li>
             </ul>
+            <NavigationNotification />
         </nav>
     );
 };
