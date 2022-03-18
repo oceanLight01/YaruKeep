@@ -59,7 +59,7 @@ class HabitCommentNotification extends Notification
                 'title' => $this->habit->title,
             ],
             'text' => $this->text,
-            'type' => $this->is_reply ? 'HabitCommentReply' : 'HabitComment',
+            'type' => $this->is_reply ? 'habit_comment_reply' : 'habit_comment',
         ];
     }
 }

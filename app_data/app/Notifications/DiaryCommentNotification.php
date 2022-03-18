@@ -59,7 +59,7 @@ class DiaryCommentNotification extends Notification
                 'habit_id' => $this->diary->habit_id,
             ],
             'text' => $this->text,
-            'type' => $this->is_reply ? 'DiaryCommentReply' : 'DiaryComment',
+            'type' => $this->is_reply ? 'diary_comment_reply' : 'diary_comment',
         ];
     }
 }

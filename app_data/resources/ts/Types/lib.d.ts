@@ -58,3 +58,30 @@ type CommentItem = {
     };
     children: CommentItem[];
 };
+
+type NotificationType =
+    | 'follow_notification'
+    | 'habit_comment'
+    | 'habit_comment_reply'
+    | 'diary_comment'
+    | 'diary_comment_reply';
+
+type NotificationItem = {
+    id: string;
+    data: {
+        type: NotificationType;
+        user_id: number;
+        name: string;
+        screen_name: string;
+        habit?: {
+            habit_id: number;
+            title: string;
+        };
+        diary?: {
+            diary_id: number;
+            habit_id: number;
+        };
+        text?: string;
+    };
+    read_at: string | null;
+};

@@ -24,6 +24,7 @@ import Settings from './Settings';
 import FollowingUser from './FollowingUser';
 import FollowedUser from './FollowedUser';
 import Search from './Search';
+import Notification from './Notification';
 
 const App = () => {
     return (
@@ -134,6 +135,14 @@ const App = () => {
                             element={
                                 <PrivateRoute>
                                     <Settings />
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
+                            path="/notifications"
+                            element={
+                                <PrivateRoute>
+                                    <Notification />
                                 </PrivateRoute>
                             }
                         />

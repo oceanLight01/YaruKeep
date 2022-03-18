@@ -3677,11 +3677,87 @@ var Navigation = function Navigation() {
   }, "\u30CF\u30D3\u30C3\u30C8\u30C8\u30E9\u30C3\u30AB\u30FC\u4F5C\u6210")), react_1["default"].createElement("li", null, react_1["default"].createElement(react_router_dom_1.Link, {
     to: "/search"
   }, "\u691C\u7D22")), react_1["default"].createElement("li", null, react_1["default"].createElement(react_router_dom_1.Link, {
+    to: "/notifications"
+  }, "\u901A\u77E5")), react_1["default"].createElement("li", null, react_1["default"].createElement(react_router_dom_1.Link, {
     to: "/settings"
   }, "\u8A2D\u5B9A"))));
 };
 
 exports["default"] = Navigation;
+
+/***/ }),
+
+/***/ "./resources/ts/Components/NotificationItem.tsx":
+/*!******************************************************!*\
+  !*** ./resources/ts/Components/NotificationItem.tsx ***!
+  \******************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
+
+var Authenticate_1 = __webpack_require__(/*! ./Authenticate */ "./resources/ts/Components/Authenticate.tsx");
+
+var NotificationItem = function NotificationItem(props) {
+  var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
+
+  var auth = (0, Authenticate_1.useAuth)();
+  var notificationType = props.data.type;
+
+  switch (notificationType) {
+    case 'follow_notification':
+      return react_1["default"].createElement("li", null, react_1["default"].createElement("p", null, react_1["default"].createElement(react_router_dom_1.Link, {
+        to: "/user/".concat(props.data.screen_name)
+      }, props.data.name), "\u3055\u3093\u306B\u30D5\u30A9\u30ED\u30FC\u3055\u308C\u307E\u3057\u305F\u3002"));
+
+    case 'habit_comment':
+      return react_1["default"].createElement("li", null, react_1["default"].createElement("p", null, react_1["default"].createElement(react_router_dom_1.Link, {
+        to: "/user/".concat(props.data.screen_name)
+      }, props.data.name), "\u3055\u3093\u304C\u30CF\u30D3\u30C3\u30C8\u30C8\u30E9\u30C3\u30AB\u30FC\u306B\u30B3\u30E1\u30F3\u30C8\u3057\u307E\u3057\u305F\u3002"), react_1["default"].createElement("div", null, react_1["default"].createElement(react_router_dom_1.Link, {
+        to: "/user/".concat((_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.screen_name, "/habit/").concat((_b = props.data.habit) === null || _b === void 0 ? void 0 : _b.habit_id)
+      }, react_1["default"].createElement("p", null, (_c = props.data.habit) === null || _c === void 0 ? void 0 : _c.title), react_1["default"].createElement("p", null, props.data.text))));
+
+    case 'habit_comment_reply':
+      return react_1["default"].createElement("li", null, react_1["default"].createElement("p", null, react_1["default"].createElement(react_router_dom_1.Link, {
+        to: "/user/".concat(props.data.screen_name)
+      }, props.data.name), "\u3055\u3093\u304C\u30B3\u30E1\u30F3\u30C8\u306B\u8FD4\u4FE1\u3057\u307E\u3057\u305F\u3002"), react_1["default"].createElement("div", null, react_1["default"].createElement(react_router_dom_1.Link, {
+        to: "/user/".concat((_d = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _d === void 0 ? void 0 : _d.screen_name, "/habit/").concat((_e = props.data.habit) === null || _e === void 0 ? void 0 : _e.habit_id)
+      }, react_1["default"].createElement("p", null, props.data.text))));
+
+    case 'diary_comment':
+      return react_1["default"].createElement("li", null, react_1["default"].createElement("p", null, react_1["default"].createElement(react_router_dom_1.Link, {
+        to: "/user/".concat(props.data.screen_name)
+      }, props.data.name), "\u3055\u3093\u304C\u65E5\u8A18\u306B\u30B3\u30E1\u30F3\u30C8\u3057\u307E\u3057\u305F\u3002"), react_1["default"].createElement("div", null, react_1["default"].createElement(react_router_dom_1.Link, {
+        to: "/user/".concat((_f = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _f === void 0 ? void 0 : _f.screen_name, "/habit/").concat((_g = props.data.diary) === null || _g === void 0 ? void 0 : _g.habit_id, "/diary/").concat((_h = props.data.diary) === null || _h === void 0 ? void 0 : _h.diary_id)
+      }, react_1["default"].createElement("p", null, props.data.text))));
+
+    case 'diary_comment_reply':
+      return react_1["default"].createElement("li", null, react_1["default"].createElement("p", null, react_1["default"].createElement(react_router_dom_1.Link, {
+        to: "/user/".concat(props.data.screen_name)
+      }, props.data.name), "\u3055\u3093\u304C\u30B3\u30E1\u30F3\u30C8\u306B\u8FD4\u4FE1\u3057\u307E\u3057\u305F\u3002"), react_1["default"].createElement("div", null, react_1["default"].createElement(react_router_dom_1.Link, {
+        to: "/user/".concat((_j = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _j === void 0 ? void 0 : _j.screen_name, "/habit/").concat((_k = props.data.diary) === null || _k === void 0 ? void 0 : _k.habit_id, "/diary/").concat((_l = props.data.diary) === null || _l === void 0 ? void 0 : _l.diary_id)
+      }, react_1["default"].createElement("p", null, props.data.text))));
+
+    default:
+      return null;
+  }
+};
+
+exports["default"] = NotificationItem;
 
 /***/ }),
 
@@ -5043,6 +5119,8 @@ var FollowedUser_1 = __importDefault(__webpack_require__(/*! ./FollowedUser */ "
 
 var Search_1 = __importDefault(__webpack_require__(/*! ./Search */ "./resources/ts/Pages/Search.tsx"));
 
+var Notification_1 = __importDefault(__webpack_require__(/*! ./Notification */ "./resources/ts/Pages/Notification.tsx"));
+
 var App = function App() {
   return react_1["default"].createElement(Authenticate_1["default"], null, react_1["default"].createElement(Loading_1["default"], null, react_1["default"].createElement(react_router_dom_1.BrowserRouter, null, react_1["default"].createElement(Header_1["default"], null), react_1["default"].createElement(Navigation_1["default"], null), react_1["default"].createElement(react_router_dom_1.Routes, null, react_1["default"].createElement(react_router_dom_1.Route, {
     path: "/",
@@ -5083,6 +5161,9 @@ var App = function App() {
   }), react_1["default"].createElement(react_router_dom_1.Route, {
     path: "/settings",
     element: react_1["default"].createElement(Authenticate_1.PrivateRoute, null, react_1["default"].createElement(Settings_1["default"], null))
+  }), react_1["default"].createElement(react_router_dom_1.Route, {
+    path: "/notifications",
+    element: react_1["default"].createElement(Authenticate_1.PrivateRoute, null, react_1["default"].createElement(Notification_1["default"], null))
   })), react_1["default"].createElement(Footer_1["default"], null))));
 };
 
@@ -6496,6 +6577,55 @@ exports["default"] = HabitStatus;
 "use strict";
 
 
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var LogoutButton_1 = __importDefault(__webpack_require__(/*! ../Components/atoms/LogoutButton */ "./resources/ts/Components/atoms/LogoutButton.tsx"));
+
+var TopPageHabit_1 = __importDefault(__webpack_require__(/*! ../Components/TopPageHabit */ "./resources/ts/Components/TopPageHabit.tsx"));
+
+var Home = function Home() {
+  return react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("h1", null, "\u30DB\u30FC\u30E0\u753B\u9762"), react_1["default"].createElement(LogoutButton_1["default"], null), react_1["default"].createElement(TopPageHabit_1["default"], null));
+};
+
+exports["default"] = Home;
+
+/***/ }),
+
+/***/ "./resources/ts/Pages/Notification.tsx":
+/*!*********************************************!*\
+  !*** ./resources/ts/Pages/Notification.tsx ***!
+  \*********************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __assign = this && this.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+
+      for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+    }
+
+    return t;
+  };
+
+  return __assign.apply(this, arguments);
+};
+
 var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
   if (k2 === undefined) k2 = k;
   Object.defineProperty(o, k2, {
@@ -6530,6 +6660,16 @@ var __importStar = this && this.__importStar || function (mod) {
   return result;
 };
 
+var __spreadArray = this && this.__spreadArray || function (to, from, pack) {
+  if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+    if (ar || !(i in from)) {
+      if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+      ar[i] = from[i];
+    }
+  }
+  return to.concat(ar || Array.prototype.slice.call(from));
+};
+
 var __importDefault = this && this.__importDefault || function (mod) {
   return mod && mod.__esModule ? mod : {
     "default": mod
@@ -6540,30 +6680,66 @@ Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
 
-var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
-
 var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 
-var LogoutButton_1 = __importDefault(__webpack_require__(/*! ../Components/atoms/LogoutButton */ "./resources/ts/Components/atoms/LogoutButton.tsx"));
+var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
 
-var TopPageHabit_1 = __importDefault(__webpack_require__(/*! ../Components/TopPageHabit */ "./resources/ts/Components/TopPageHabit.tsx"));
+var NotificationItem_1 = __importDefault(__webpack_require__(/*! ../Components/NotificationItem */ "./resources/ts/Components/NotificationItem.tsx"));
 
-var Home = function Home() {
-  var _a = (0, react_1.useState)(0),
-      notification = _a[0],
-      setNotification = _a[1];
+var Notification = function Notification() {
+  var _a = (0, react_1.useState)(false),
+      clicked = _a[0],
+      setClicked = _a[1];
 
-  (0, react_1.useEffect)(function () {
-    axios_1["default"].get('/api/notifications').then(function (res) {
-      setNotification(res.data.notification_count);
+  var _b = (0, react_1.useState)([]),
+      notification = _b[0],
+      setNotification = _b[1];
+
+  var _c = (0, react_1.useState)({
+    nextCursor: '',
+    hasNext: false
+  }),
+      paginate = _c[0],
+      setPaginate = _c[1];
+
+  var getNotificationData = function getNotificationData(nextCursor) {
+    setClicked(true);
+    var cursor = '';
+
+    if (nextCursor !== undefined) {
+      cursor = "?cursor=".concat(nextCursor);
+    }
+
+    axios_1["default"].get("/api/notifications".concat(cursor)).then(function (res) {
+      var data = res.data;
+      setNotification(__spreadArray(__spreadArray([], notification, true), data.notification, true));
+      setPaginate(__assign(__assign({}, paginate), {
+        nextCursor: data.next_cursor,
+        hasNext: data.has_next
+      }));
     })["catch"](function (error) {
       console.log(error);
+    })["finally"](function () {
+      setClicked(false);
     });
+  };
+
+  (0, react_1.useEffect)(function () {
+    getNotificationData();
   }, []);
-  return react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("h1", null, "\u30DB\u30FC\u30E0\u753B\u9762"), react_1["default"].createElement("p", null, "\u901A\u77E5\u4EF6\u6570\uFF1A", notification), react_1["default"].createElement(LogoutButton_1["default"], null), react_1["default"].createElement(TopPageHabit_1["default"], null));
+  return react_1["default"].createElement("div", null, react_1["default"].createElement("h2", null, "\u901A\u77E5"), react_1["default"].createElement("hr", null), react_1["default"].createElement("ul", null, notification.map(function (item, index) {
+    return react_1["default"].createElement(NotificationItem_1["default"], __assign({}, item, {
+      key: index
+    }));
+  })), paginate.hasNext && react_1["default"].createElement("button", {
+    onClick: function onClick() {
+      return getNotificationData(paginate.nextCursor);
+    },
+    disabled: clicked
+  }, "\u3055\u3089\u306B\u901A\u77E5\u3092\u53D6\u5F97"));
 };
 
-exports["default"] = Home;
+exports["default"] = Notification;
 
 /***/ }),
 

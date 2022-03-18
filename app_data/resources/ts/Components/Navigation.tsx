@@ -28,6 +28,9 @@ const Navigation = () => {
                     <Link to="/search">検索</Link>
                 </li>
                 <li>
+                    <Link to="/notifications">通知</Link>
+                </li>
+                <li>
                     <Link to="/settings">設定</Link>
                 </li>
             </ul>
