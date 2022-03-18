@@ -50,5 +50,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/follow', 'FollowController@follow');
     Route::post('/unfollow', 'FollowController@unfollow');
 
+    // 検索に関するルーティング
     Route::post('/search', 'SearchController@search');
+
+    // 通知に関するルーティング
+    Route::get('/notifications', 'NotificationController@index');
 });

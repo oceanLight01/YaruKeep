@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\FollowUserResource;
-use App\Models\User;
 use App\Models\Follow;
+use App\Models\User;
+use App\Notifications\FollowUserNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 
 class FollowController extends Controller
 {
@@ -32,7 +34,7 @@ class FollowController extends Controller
         return FollowUserResource::collection(User::find($user_id)->followers()->get());
     }
 
-        /**
+    /**
      * ユーザをフォローする
      *
      * @param  \Illuminate\Http\Request  $request
@@ -59,7 +61,14 @@ class FollowController extends Controller
         $follow->following_user_id = $following_user;
         $follow->save();
 
-        return new FollowUserResource(User::find($following_user));
+        // 被フォローユーザへ通知
+        $follow_user_info = User::find($user_id);
+        $notification_user = User::find($following_user);
+        $notification_user->notify(
+            new FollowUserNotification($follow_user_info)
+        );
+
+        return new FollowUserResource($notification_user);
     }
 
     /**

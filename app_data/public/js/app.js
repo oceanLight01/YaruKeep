@@ -6496,6 +6496,40 @@ exports["default"] = HabitStatus;
 "use strict";
 
 
+var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  Object.defineProperty(o, k2, {
+    enumerable: true,
+    get: function get() {
+      return m[k];
+    }
+  });
+} : function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+});
+
+var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+  Object.defineProperty(o, "default", {
+    enumerable: true,
+    value: v
+  });
+} : function (o, v) {
+  o["default"] = v;
+});
+
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  }
+
+  __setModuleDefault(result, mod);
+
+  return result;
+};
+
 var __importDefault = this && this.__importDefault || function (mod) {
   return mod && mod.__esModule ? mod : {
     "default": mod
@@ -6506,14 +6540,27 @@ Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
 
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
+
+var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 
 var LogoutButton_1 = __importDefault(__webpack_require__(/*! ../Components/atoms/LogoutButton */ "./resources/ts/Components/atoms/LogoutButton.tsx"));
 
 var TopPageHabit_1 = __importDefault(__webpack_require__(/*! ../Components/TopPageHabit */ "./resources/ts/Components/TopPageHabit.tsx"));
 
 var Home = function Home() {
-  return react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("h1", null, "\u30DB\u30FC\u30E0\u753B\u9762"), react_1["default"].createElement(LogoutButton_1["default"], null), react_1["default"].createElement(TopPageHabit_1["default"], null));
+  var _a = (0, react_1.useState)(0),
+      notification = _a[0],
+      setNotification = _a[1];
+
+  (0, react_1.useEffect)(function () {
+    axios_1["default"].get('/api/notifications').then(function (res) {
+      setNotification(res.data.notification_count);
+    })["catch"](function (error) {
+      console.log(error);
+    });
+  }, []);
+  return react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("h1", null, "\u30DB\u30FC\u30E0\u753B\u9762"), react_1["default"].createElement("p", null, "\u901A\u77E5\u4EF6\u6570\uFF1A", notification), react_1["default"].createElement(LogoutButton_1["default"], null), react_1["default"].createElement(TopPageHabit_1["default"], null));
 };
 
 exports["default"] = Home;
