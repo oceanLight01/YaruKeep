@@ -1,12 +1,14 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from './Authenticate';
 import NavNotificationItem from './NavNotificationItem';
 
 const NavigationNotification = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const navigate = useNavigate();
     const location = useLocation();
+    const auth = useAuth();
 
     const [notification, setNotification] = useState<{
         count: number;
@@ -21,7 +23,7 @@ const NavigationNotification = () => {
         }
     }, [location.pathname]);
 
-    useEffect(() => {
+    const getUnreadNotifications = () => {
         axios
             .get('/api/notifications/unread')
             .then((res) => {
@@ -35,6 +37,21 @@ const NavigationNotification = () => {
             .catch((error) => {
                 console.error(error);
             });
+    };
+
+    useEffect(() => {
+        getUnreadNotifications();
+
+        window.Echo.private(`notification.${auth?.userData?.id}`).listen(
+            'NotificationPusher',
+            (res: any) => {
+                setNotification({
+                    ...notification,
+                    count: res.unread_notification_count,
+                    notificationList: res.unread_notification,
+                });
+            }
+        );
     }, []);
 
     const updateNotification = (id: string, url: string) => {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NotificationPusher;
 use App\Http\Resources\DiaryResource;
 use App\Models\Diary;
 use App\Models\DiaryComment;
@@ -51,13 +52,18 @@ class DiaryCommentController extends Controller
                     $diary_comment = DiaryComment::find($request->parentId);
                     $notification_user = User::find($diary_comment->user_id);
                     $notification_user->notify(new DiaryCommentNotification($comment_user_info, $diary, $request->comment, $is_reply));
+
+                    broadcast(new NotificationPusher($diary_comment->user_id));
                 }
             } else  {
                 // ハビットトラッカー主とコメント主が同じじゃない場合
-                if ($diary->user_id !== Auth::id())
+                $notification_user_id = Habit::where('id', $diary->habit_id)->value('user_id');
+                if ($notification_user_id !== Auth::id())
                 {
-                        $notification_user = User::find(Habit::where('id', $diary->habit_id)->value('user_id'));
-                        $notification_user->notify(new DiaryCommentNotification($comment_user_info, $diary, $request->comment, $is_reply));
+                    $notification_user = User::find($notification_user_id);
+                    $notification_user->notify(new DiaryCommentNotification($comment_user_info, $diary, $request->comment, $is_reply));
+
+                    broadcast(new NotificationPusher($notification_user_id));
                 }
             }
 

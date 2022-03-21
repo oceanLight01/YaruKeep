@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NotificationPusher;
 use App\Http\Resources\FollowUserResource;
 use App\Models\Follow;
 use App\Models\User;
@@ -67,6 +68,7 @@ class FollowController extends Controller
         $notification_user->notify(
             new FollowUserNotification($follow_user_info)
         );
+        broadcast(new NotificationPusher($following_user));
 
         return new FollowUserResource($notification_user);
     }

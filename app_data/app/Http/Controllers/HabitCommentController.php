@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NotificationPusher;
 use App\Http\Resources\HabitResource;
 use App\Models\Habit;
 use App\Models\HabitComment;
@@ -51,6 +52,8 @@ class HabitCommentController extends Controller
                     $habit_comment = HabitComment::find($request->parentId);
                     $notification_user = User::find($habit_comment->user_id);
                     $notification_user->notify(new HabitCommentNotification($comment_user_info, $habit, $request->comment, $is_reply));
+
+                    broadcast(new NotificationPusher($habit_comment->user_id));
                 }
             } else  {
                 // ハビットトラッカー主とコメント主が同じじゃない場合
@@ -58,6 +61,8 @@ class HabitCommentController extends Controller
                 {
                         $notification_user = User::find($habit->user_id);
                         $notification_user->notify(new HabitCommentNotification($comment_user_info, $habit, $request->comment, $is_reply));
+
+                        broadcast(new NotificationPusher($habit->user_id));
                 }
             }
 
