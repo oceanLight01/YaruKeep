@@ -2377,6 +2377,10 @@ var useProvideAuth = function useProvideAuth() {
     });
   };
 
+  var changePassword = function changePassword(data) {
+    return axios_1["default"].put('/api/user/password', data);
+  };
+
   (0, react_1.useEffect)(function () {
     getUser();
   }, []);
@@ -2386,6 +2390,7 @@ var useProvideAuth = function useProvideAuth() {
     login: login,
     logout: logout,
     edit: edit,
+    changePassword: changePassword,
     userData: userData,
     isRender: isRender
   };
@@ -4080,6 +4085,160 @@ var Paginate = function Paginate(_a) {
 };
 
 exports["default"] = Paginate;
+
+/***/ }),
+
+/***/ "./resources/ts/Components/PasswordChangeForm.tsx":
+/*!********************************************************!*\
+  !*** ./resources/ts/Components/PasswordChangeForm.tsx ***!
+  \********************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __assign = this && this.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+
+      for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+    }
+
+    return t;
+  };
+
+  return __assign.apply(this, arguments);
+};
+
+var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  Object.defineProperty(o, k2, {
+    enumerable: true,
+    get: function get() {
+      return m[k];
+    }
+  });
+} : function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+});
+
+var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+  Object.defineProperty(o, "default", {
+    enumerable: true,
+    value: v
+  });
+} : function (o, v) {
+  o["default"] = v;
+});
+
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  }
+
+  __setModuleDefault(result, mod);
+
+  return result;
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var react_hook_form_1 = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.cjs.js");
+
+var Authenticate_1 = __webpack_require__(/*! ./Authenticate */ "./resources/ts/Components/Authenticate.tsx");
+
+var PasswordChangeForm = function PasswordChangeForm() {
+  var _a, _b, _c, _d, _e, _f, _g;
+
+  var auth = (0, Authenticate_1.useAuth)();
+
+  var _h = (0, react_1.useState)({
+    success: false,
+    errors: {
+      curren_password: '',
+      password: ''
+    }
+  }),
+      formStatus = _h[0],
+      setFormStatus = _h[1];
+
+  var _j = (0, react_hook_form_1.useForm)(),
+      register = _j.register,
+      handleSubmit = _j.handleSubmit,
+      errors = _j.formState.errors,
+      getValues = _j.getValues,
+      reset = _j.reset;
+
+  var onSubmit = function onSubmit(data) {
+    var postData = {
+      current_password: data.current_password,
+      password: data.password,
+      password_confirmation: data.password_confirmation
+    };
+    auth === null || auth === void 0 ? void 0 : auth.changePassword(postData).then(function () {
+      setFormStatus(__assign(__assign({}, formStatus), {
+        success: true,
+        errors: {
+          curren_password: '',
+          password: ''
+        }
+      }));
+      reset();
+    })["catch"](function (error) {
+      var errorMessage = error.response.data.errors;
+      setFormStatus(__assign(__assign({}, formStatus), {
+        success: false,
+        errors: {
+          curren_password: errorMessage.current_password ? errorMessage.current_password[0] : '',
+          password: errorMessage.password ? errorMessage.password[0] : ''
+        }
+      }));
+    });
+  };
+
+  return react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("div", null, formStatus.success && react_1["default"].createElement("p", null, "\u30D1\u30B9\u30EF\u30FC\u30C9\u306E\u5909\u66F4\u304C\u5B8C\u4E86\u3057\u307E\u3057\u305F\u3002"), formStatus.errors.curren_password.length > 0 && react_1["default"].createElement("p", null, formStatus.errors.curren_password), formStatus.errors.password.length > 0 && react_1["default"].createElement("p", null, formStatus.errors.password)), react_1["default"].createElement("form", {
+    onSubmit: handleSubmit(onSubmit)
+  }, react_1["default"].createElement("div", null, ((_a = errors.current_password) === null || _a === void 0 ? void 0 : _a.type) === 'required' && react_1["default"].createElement("p", null, "\u30D1\u30B9\u30EF\u30FC\u30C9\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), react_1["default"].createElement("label", null, "\u73FE\u5728\u306E\u30D1\u30B9\u30EF\u30FC\u30C9", react_1["default"].createElement("input", __assign({
+    type: "password",
+    maxLength: 64,
+    autoComplete: "off"
+  }, register('current_password', {
+    required: true
+  }))))), react_1["default"].createElement("div", null, ((_b = errors.password) === null || _b === void 0 ? void 0 : _b.type) === 'required' && react_1["default"].createElement("p", null, "\u30D1\u30B9\u30EF\u30FC\u30C9\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), ((_c = errors.password) === null || _c === void 0 ? void 0 : _c.type) === 'minLength' && react_1["default"].createElement("p", null, "\u30D1\u30B9\u30EF\u30FC\u30C9\u306F\uFF18\u6587\u5B57\u4EE5\u4E0A\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), ((_d = errors.password) === null || _d === void 0 ? void 0 : _d.type) === 'maxLength' && react_1["default"].createElement("p", null, "\u30D1\u30B9\u30EF\u30FC\u30C9\u306F64\u6587\u5B57\u4EE5\u4E0B\u3067\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), ((_e = errors.password) === null || _e === void 0 ? void 0 : _e.type) === 'pattern' && react_1["default"].createElement("p", null, "\u30D1\u30B9\u30EF\u30FC\u30C9\u306F\u534A\u89D2\u82F1\u5927\u6587\u5B57\u3001\u82F1\u5C0F\u6587\u5B57\u3001\u6570\u5B57\u3092\u6700\u4F4E\uFF11\u3064\u305A\u3064\u4F7F\u7528\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), react_1["default"].createElement("label", null, "\u65B0\u3057\u3044\u30D1\u30B9\u30EF\u30FC\u30C9", react_1["default"].createElement("input", __assign({
+    type: "password",
+    autoComplete: "off",
+    maxLength: 64
+  }, register('password', {
+    required: true,
+    minLength: 8,
+    maxLength: 64,
+    pattern: /^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\d)[a-zA-Z\d]+$/
+  }))))), react_1["default"].createElement("div", null, ((_f = errors.password_confirmation) === null || _f === void 0 ? void 0 : _f.type) === 'required' && react_1["default"].createElement("p", null, "\u78BA\u8A8D\u7528\u30D1\u30B9\u30EF\u30FC\u30C9\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), ((_g = errors.password_confirmation) === null || _g === void 0 ? void 0 : _g.type) === 'validate' && react_1["default"].createElement("p", null, "\u65B0\u3057\u3044\u30D1\u30B9\u30EF\u30FC\u30C9\u304C\u4E00\u81F4\u3057\u307E\u305B\u3093\u3002"), react_1["default"].createElement("label", null, "\u65B0\u3057\u3044\u30D1\u30B9\u30EF\u30FC\u30C9\u306E\u78BA\u8A8D", react_1["default"].createElement("input", __assign({
+    type: "password",
+    autoComplete: "off",
+    maxLength: 64
+  }, register('password_confirmation', {
+    required: true,
+    validate: function validate(value) {
+      return value === getValues('password');
+    }
+  }))))), react_1["default"].createElement("input", {
+    type: "submit",
+    value: "\u5909\u66F4"
+  })));
+};
+
+exports["default"] = PasswordChangeForm;
 
 /***/ }),
 
@@ -7307,6 +7466,8 @@ var Authenticate_1 = __webpack_require__(/*! ../Components/Authenticate */ "./re
 
 var FormatText_1 = __importDefault(__webpack_require__(/*! ../Components/FormatText */ "./resources/ts/Components/FormatText.tsx"));
 
+var PasswordChangeForm_1 = __importDefault(__webpack_require__(/*! ../Components/PasswordChangeForm */ "./resources/ts/Components/PasswordChangeForm.tsx"));
+
 var ProfileImageForm_1 = __importDefault(__webpack_require__(/*! ../Components/ProfileImageForm */ "./resources/ts/Components/ProfileImageForm.tsx"));
 
 var UserSettingsForm_1 = __importDefault(__webpack_require__(/*! ../Components/UserSettingsForm */ "./resources/ts/Components/UserSettingsForm.tsx"));
@@ -7326,7 +7487,7 @@ var Settings = function Settings() {
     onClick: function onClick() {
       return setShowSettingsForm(!showSettingsForm);
     }
-  }, showSettingsForm ? '戻る' : '編集する'), react_1["default"].createElement(ProfileImageForm_1["default"], null), react_1["default"].createElement("div", null, react_1["default"].createElement("h2", null, "\u30A2\u30AB\u30A6\u30F3\u30C8\u524A\u9664"), react_1["default"].createElement("p", null, "\u30A2\u30AB\u30A6\u30F3\u30C8\u3092\u524A\u9664\u3057\u307E\u3059\u3002\u4E00\u5EA6\u524A\u9664\u3059\u308B\u3068\u3082\u3068\u306B\u623B\u305B\u307E\u305B\u3093\u3002"), react_1["default"].createElement(UserDeleteButton_1["default"], null)));
+  }, showSettingsForm ? '戻る' : '編集する'), react_1["default"].createElement("h2", null, "\u30D7\u30ED\u30D5\u30A3\u30FC\u30EB\u753B\u50CF"), react_1["default"].createElement(ProfileImageForm_1["default"], null), react_1["default"].createElement("h2", null, "\u30D1\u30B9\u30EF\u30FC\u30C9\u5909\u66F4"), react_1["default"].createElement(PasswordChangeForm_1["default"], null), react_1["default"].createElement("div", null, react_1["default"].createElement("h2", null, "\u30A2\u30AB\u30A6\u30F3\u30C8\u524A\u9664"), react_1["default"].createElement("p", null, "\u30A2\u30AB\u30A6\u30F3\u30C8\u3092\u524A\u9664\u3057\u307E\u3059\u3002\u4E00\u5EA6\u524A\u9664\u3059\u308B\u3068\u3082\u3068\u306B\u623B\u305B\u307E\u305B\u3093\u3002"), react_1["default"].createElement(UserDeleteButton_1["default"], null)));
 };
 
 exports["default"] = Settings;

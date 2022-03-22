@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import UserDeleteButton from '../Components/atoms/UserDeleteButton';
 import { useAuth } from '../Components/Authenticate';
 import formatText from '../Components/FormatText';
+import PasswordChangeForm from '../Components/PasswordChangeForm';
 import ProfileImageForm from '../Components/ProfileImageForm';
 import UserSettingsForm from '../Components/UserSettingsForm';
 
@@ -25,7 +26,10 @@ const Settings = () => {
             <button onClick={() => setShowSettingsForm(!showSettingsForm)}>
                 {showSettingsForm ? '戻る' : '編集する'}
             </button>
+            <h2>プロフィール画像</h2>
             <ProfileImageForm />
+            <h2>パスワード変更</h2>
+            <PasswordChangeForm />
             <div>
                 <h2>アカウント削除</h2>
                 <p>アカウントを削除します。一度削除するともとに戻せません。</p>

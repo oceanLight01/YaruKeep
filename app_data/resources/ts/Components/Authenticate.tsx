@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Route, Navigate } from 'react-router-dom';
 
@@ -37,6 +37,12 @@ type EditData = {
     profile: string;
 };
 
+type ChangePasswordData = {
+    current_password: string;
+    password: string;
+    password_confirmation: string;
+};
+
 type Route = {
     children: JSX.Element;
 };
@@ -49,6 +55,7 @@ type AuthProps = {
     login: (loginData: LoginData) => Promise<void>;
     logout: () => Promise<void>;
     edit: (editData: EditData) => Promise<any | void>;
+    changePassword: (data: ChangePasswordData) => Promise<AxiosResponse<any>>;
 };
 
 type Props = {
@@ -148,6 +155,10 @@ const useProvideAuth = () => {
         return Promise.all([update, getUser]);
     };
 
+    const changePassword = (data: ChangePasswordData) => {
+        return axios.put('/api/user/password', data);
+    };
+
     useEffect(() => {
         getUser();
     }, []);
@@ -158,6 +169,7 @@ const useProvideAuth = () => {
         login,
         logout,
         edit,
+        changePassword,
         userData,
         isRender,
     };
