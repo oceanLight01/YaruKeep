@@ -25,6 +25,8 @@ import FollowingUser from './FollowingUser';
 import FollowedUser from './FollowedUser';
 import Search from './Search';
 import Notification from './Notification';
+import ForgotPassword from './ForgotPassword';
+import ResetPassword from './ResetPassword';
 
 const App = () => {
     return (
@@ -55,6 +57,22 @@ const App = () => {
                             element={
                                 <PublicRoute>
                                     <Register />
+                                </PublicRoute>
+                            }
+                        />
+                        <Route
+                            path="/password/forgot"
+                            element={
+                                <PublicRoute>
+                                    <ForgotPassword />
+                                </PublicRoute>
+                            }
+                        />
+                        <Route
+                            path="/password/reset/:token"
+                            element={
+                                <PublicRoute>
+                                    <ResetPassword />
                                 </PublicRoute>
                             }
                         />

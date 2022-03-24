@@ -16,6 +16,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::delete('/user/delete', 'UserController@destroy')->middleware('auth');
 
+Route::get('/reset-password/{token}', ResetPasswordController::class)
+    ->name('password.reset');
+
 Route::group(['middleware' => ['auth:sanctum']], function () {
     // Pusherの認可ルーティング
     Route::post('/pusher/auth', 'PushController@auth');

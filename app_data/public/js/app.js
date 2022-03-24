@@ -5548,6 +5548,10 @@ var Search_1 = __importDefault(__webpack_require__(/*! ./Search */ "./resources/
 
 var Notification_1 = __importDefault(__webpack_require__(/*! ./Notification */ "./resources/ts/Pages/Notification.tsx"));
 
+var ForgotPassword_1 = __importDefault(__webpack_require__(/*! ./ForgotPassword */ "./resources/ts/Pages/ForgotPassword.tsx"));
+
+var ResetPassword_1 = __importDefault(__webpack_require__(/*! ./ResetPassword */ "./resources/ts/Pages/ResetPassword.tsx"));
+
 var App = function App() {
   return react_1["default"].createElement(Authenticate_1["default"], null, react_1["default"].createElement(Loading_1["default"], null, react_1["default"].createElement(react_router_dom_1.BrowserRouter, null, react_1["default"].createElement(Header_1["default"], null), react_1["default"].createElement(Navigation_1["default"], null), react_1["default"].createElement(react_router_dom_1.Routes, null, react_1["default"].createElement(react_router_dom_1.Route, {
     path: "/",
@@ -5558,6 +5562,12 @@ var App = function App() {
   }), react_1["default"].createElement(react_router_dom_1.Route, {
     path: "/register",
     element: react_1["default"].createElement(Authenticate_1.PublicRoute, null, react_1["default"].createElement(Register_1["default"], null))
+  }), react_1["default"].createElement(react_router_dom_1.Route, {
+    path: "/password/forgot",
+    element: react_1["default"].createElement(Authenticate_1.PublicRoute, null, react_1["default"].createElement(ForgotPassword_1["default"], null))
+  }), react_1["default"].createElement(react_router_dom_1.Route, {
+    path: "/password/reset/:token",
+    element: react_1["default"].createElement(Authenticate_1.PublicRoute, null, react_1["default"].createElement(ResetPassword_1["default"], null))
   }), react_1["default"].createElement(react_router_dom_1.Route, {
     path: "/verified",
     element: react_1["default"].createElement(Authenticate_1.EmailVerifiedRoute, null, react_1["default"].createElement(EmailVerified_1["default"], null))
@@ -5808,9 +5818,11 @@ var Login = function Login() {
     type: "submit",
     value: "\u30ED\u30B0\u30A4\u30F3",
     disabled: isLoading
-  })), react_1["default"].createElement(react_router_dom_1.Link, {
+  })), react_1["default"].createElement("div", null, react_1["default"].createElement(react_router_dom_1.Link, {
     to: "/register"
-  }, "\u767B\u9332\u30DA\u30FC\u30B8"));
+  }, "\u767B\u9332\u30DA\u30FC\u30B8")), react_1["default"].createElement("div", null, react_1["default"].createElement(react_router_dom_1.Link, {
+    to: "/password/forgot"
+  }, "\u30D1\u30B9\u30EF\u30FC\u30C9\u3092\u5FD8\u308C\u305F")));
 };
 
 exports["default"] = Login;
@@ -6358,6 +6370,141 @@ var FollowingUser = function FollowingUser() {
 };
 
 exports["default"] = FollowingUser;
+
+/***/ }),
+
+/***/ "./resources/ts/Pages/ForgotPassword.tsx":
+/*!***********************************************!*\
+  !*** ./resources/ts/Pages/ForgotPassword.tsx ***!
+  \***********************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __assign = this && this.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+
+      for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+    }
+
+    return t;
+  };
+
+  return __assign.apply(this, arguments);
+};
+
+var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  Object.defineProperty(o, k2, {
+    enumerable: true,
+    get: function get() {
+      return m[k];
+    }
+  });
+} : function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+});
+
+var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+  Object.defineProperty(o, "default", {
+    enumerable: true,
+    value: v
+  });
+} : function (o, v) {
+  o["default"] = v;
+});
+
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  }
+
+  __setModuleDefault(result, mod);
+
+  return result;
+};
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
+
+var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var react_hook_form_1 = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.cjs.js");
+
+var ForgotPassword = function ForgotPassword() {
+  var _a;
+
+  var _b = (0, react_1.useState)(false),
+      clicked = _b[0],
+      setClicked = _b[1];
+
+  var _c = (0, react_1.useState)({
+    success: false,
+    error: ''
+  }),
+      formStatus = _c[0],
+      setFormStatus = _c[1];
+
+  var _d = (0, react_hook_form_1.useForm)({
+    mode: 'onBlur'
+  }),
+      register = _d.register,
+      handleSubmit = _d.handleSubmit,
+      errors = _d.formState.errors;
+
+  var onSubmit = function onSubmit(data) {
+    setClicked(true);
+    setFormStatus(__assign(__assign({}, formStatus), {
+      error: ''
+    }));
+    axios_1["default"].post('/api/forgot-password', data).then(function () {
+      setFormStatus(__assign(__assign({}, formStatus), {
+        success: true,
+        error: ''
+      }));
+    })["catch"](function (error) {
+      setFormStatus(__assign(__assign({}, formStatus), {
+        success: false,
+        error: error.response.data.errors.email[0]
+      }));
+    })["finally"](function () {
+      setClicked(false);
+    });
+  };
+
+  return react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("h2", null, "\u30D1\u30B9\u30EF\u30FC\u30C9\u30EA\u30BB\u30C3\u30C8"), formStatus.success && react_1["default"].createElement("p", null, "\u30D1\u30B9\u30EF\u30FC\u30C9\u30EA\u30BB\u30C3\u30C8\u7528\u306E\u30E1\u30FC\u30EB\u3092\u9001\u4FE1\u3057\u307E\u3057\u305F\u3002"), formStatus.error.length > 0 && react_1["default"].createElement("p", null, formStatus.error), react_1["default"].createElement("form", {
+    onSubmit: handleSubmit(onSubmit)
+  }, react_1["default"].createElement("div", null, ((_a = errors.email) === null || _a === void 0 ? void 0 : _a.type) === 'required' && react_1["default"].createElement("p", null, "\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), react_1["default"].createElement("label", null, "\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9", react_1["default"].createElement("input", __assign({
+    type: "email",
+    autoComplete: "off",
+    max: 255
+  }, register('email', {
+    required: true
+  }))))), react_1["default"].createElement("input", {
+    type: "submit",
+    value: "\u9001\u4FE1",
+    disabled: clicked
+  })));
+};
+
+exports["default"] = ForgotPassword;
 
 /***/ }),
 
@@ -7211,6 +7358,152 @@ var PageRender = function PageRender(_a) {
 };
 
 exports["default"] = PageRender;
+
+/***/ }),
+
+/***/ "./resources/ts/Pages/ResetPassword.tsx":
+/*!**********************************************!*\
+  !*** ./resources/ts/Pages/ResetPassword.tsx ***!
+  \**********************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __assign = this && this.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+
+      for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+    }
+
+    return t;
+  };
+
+  return __assign.apply(this, arguments);
+};
+
+var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  Object.defineProperty(o, k2, {
+    enumerable: true,
+    get: function get() {
+      return m[k];
+    }
+  });
+} : function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+});
+
+var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+  Object.defineProperty(o, "default", {
+    enumerable: true,
+    value: v
+  });
+} : function (o, v) {
+  o["default"] = v;
+});
+
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  }
+
+  __setModuleDefault(result, mod);
+
+  return result;
+};
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
+
+var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var react_hook_form_1 = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.cjs.js");
+
+var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
+
+var ResetPassword = function ResetPassword() {
+  var _a, _b, _c, _d, _e, _f;
+
+  var _g = (0, react_1.useState)(false),
+      clicked = _g[0],
+      setClicked = _g[1];
+
+  var search = (0, react_router_dom_1.useLocation)().search;
+  var query = new URLSearchParams(search);
+  var pathname = (0, react_router_dom_1.useLocation)().pathname;
+  var token = pathname.match(/[\w]+$/g);
+  var navigate = (0, react_router_dom_1.useNavigate)();
+
+  var _h = (0, react_hook_form_1.useForm)({
+    mode: 'onBlur'
+  }),
+      register = _h.register,
+      handleSubmit = _h.handleSubmit,
+      errors = _h.formState.errors,
+      getValues = _h.getValues;
+
+  var onSubmit = function onSubmit(data) {
+    setClicked(true);
+
+    var postData = __assign(__assign({}, data), {
+      email: decodeURI(query.get('email')),
+      token: token[0]
+    });
+
+    axios_1["default"].post('/api/reset-password', postData).then(function () {
+      navigate('/login');
+    })["catch"](function (error) {
+      console.error(error);
+    })["finally"](function () {
+      setClicked(false);
+    });
+  };
+
+  return react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("h2", null, "\u30D1\u30B9\u30EF\u30FC\u30C9\u30EA\u30BB\u30C3\u30C8"), react_1["default"].createElement("form", {
+    onSubmit: handleSubmit(onSubmit)
+  }, react_1["default"].createElement("div", null, ((_a = errors.password) === null || _a === void 0 ? void 0 : _a.type) === 'required' && react_1["default"].createElement("p", null, "\u30D1\u30B9\u30EF\u30FC\u30C9\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), ((_b = errors.password) === null || _b === void 0 ? void 0 : _b.type) === 'minLength' && react_1["default"].createElement("p", null, "\u30D1\u30B9\u30EF\u30FC\u30C9\u306F\uFF18\u6587\u5B57\u4EE5\u4E0A\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), ((_c = errors.password) === null || _c === void 0 ? void 0 : _c.type) === 'maxLength' && react_1["default"].createElement("p", null, "\u30D1\u30B9\u30EF\u30FC\u30C9\u306F64\u6587\u5B57\u4EE5\u4E0B\u3067\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), ((_d = errors.password) === null || _d === void 0 ? void 0 : _d.type) === 'pattern' && react_1["default"].createElement("p", null, "\u30D1\u30B9\u30EF\u30FC\u30C9\u306F\u534A\u89D2\u82F1\u5927\u6587\u5B57\u3001\u82F1\u5C0F\u6587\u5B57\u3001\u6570\u5B57\u3092\u6700\u4F4E\uFF11\u3064\u305A\u3064\u4F7F\u7528\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), react_1["default"].createElement("label", null, "\u65B0\u3057\u3044\u30D1\u30B9\u30EF\u30FC\u30C9", react_1["default"].createElement("input", __assign({
+    type: "password",
+    autoComplete: "off",
+    max: 64
+  }, register('password', {
+    required: true,
+    minLength: 8,
+    maxLength: 64,
+    pattern: /^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\d)[a-zA-Z\d]+$/
+  }))))), react_1["default"].createElement("div", null, ((_e = errors.password_confirmation) === null || _e === void 0 ? void 0 : _e.type) === 'required' && react_1["default"].createElement("p", null, "\u78BA\u8A8D\u7528\u30D1\u30B9\u30EF\u30FC\u30C9\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), ((_f = errors.password_confirmation) === null || _f === void 0 ? void 0 : _f.type) === 'validate' && react_1["default"].createElement("p", null, "\u30D1\u30B9\u30EF\u30FC\u30C9\u304C\u4E00\u81F4\u3057\u307E\u305B\u3093\u3002"), react_1["default"].createElement("label", null, "\u30D1\u30B9\u30EF\u30FC\u30C9\u78BA\u8A8D", react_1["default"].createElement("input", __assign({
+    type: "password",
+    autoComplete: "off",
+    max: 64
+  }, register('password_confirmation', {
+    required: true,
+    validate: function validate(value) {
+      return value === getValues('password');
+    }
+  }))))), react_1["default"].createElement("input", {
+    type: "submit",
+    value: "\u9001\u4FE1",
+    disabled: clicked
+  })));
+};
+
+exports["default"] = ResetPassword;
 
 /***/ }),
 

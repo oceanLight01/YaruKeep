@@ -62,7 +62,12 @@ const Login = () => {
                 </div>
                 <input type="submit" value="ログイン" disabled={isLoading} />
             </form>
-            <Link to="/register">登録ページ</Link>
+            <div>
+                <Link to="/register">登録ページ</Link>
+            </div>
+            <div>
+                <Link to="/password/forgot">パスワードを忘れた</Link>
+            </div>
         </>
     );
 };
