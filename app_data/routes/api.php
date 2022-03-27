@@ -19,6 +19,9 @@ Route::delete('/user/delete', 'UserController@destroy')->middleware('auth');
 Route::get('/reset-password/{token}', ResetPasswordController::class)
     ->name('password.reset');
 
+// メールアドレス変更時の処理
+Route::get('/email/change/{token}', 'ChangeEmailController@reset');
+
 Route::group(['middleware' => ['auth:sanctum']], function () {
     // Pusherの認可ルーティング
     Route::post('/pusher/auth', 'PushController@auth');
@@ -65,4 +68,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/notifications/unread', 'NotificationController@unread');
     Route::put('/notifications', 'NotificationController@update');
     Route::put('/notifications/read', 'NotificationController@allUpdate');
+
+    // メールアドレス変更に関するルーティング
+    Route::post('/email/change', 'ChangeEmailController@sendChangeEmailLink');
+
 });

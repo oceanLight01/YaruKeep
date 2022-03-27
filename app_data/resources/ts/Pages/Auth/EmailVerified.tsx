@@ -17,12 +17,13 @@ const EmailVerified = () => {
 
     return (
         <>
-            <p>仮登録が完了しました。</p>
             <p>
-                登録されたメールアドレス宛に本登録用メールをお送りしましたので、記載されたURLより本登録を完了してください。
+                登録されたメールアドレス宛にメールアドレス検証用リンクをお送りしました。
+                <br />
+                記載されたURLよりメールアドレスの検証を完了してください。
             </p>
             {isSend ? <p>新しいメールを送信しました。</p> : null}
-            <button onClick={sendVerifiedEmail}>本登録メールを再送信する</button>
+            <button onClick={sendVerifiedEmail}>検証メールを再送信する</button>
             <LogoutButton />
         </>
     );

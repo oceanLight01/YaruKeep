@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import UserDeleteButton from '../Components/atoms/UserDeleteButton';
 import { useAuth } from '../Components/Authenticate';
+import EmailChangeForm from '../Components/EmailChangeForm';
 import formatText from '../Components/FormatText';
 import PasswordChangeForm from '../Components/PasswordChangeForm';
 import ProfileImageForm from '../Components/ProfileImageForm';
@@ -19,7 +20,6 @@ const Settings = () => {
                     <h2>ユーザ情報</h2>
                     <p>ユーザ名:{auth?.userData?.name}</p>
                     <p>ユーザID:{auth?.userData?.screen_name}</p>
-                    <p>メールアドレス:{auth?.userData?.email}</p>
                     <p>プロフィール:{formatText(auth?.userData?.profile!)}</p>
                 </>
             )}
@@ -28,6 +28,9 @@ const Settings = () => {
             </button>
             <h2>プロフィール画像</h2>
             <ProfileImageForm />
+            <h2>メールアドレス変更</h2>
+            <p>現在のメールアドレス: {auth?.userData?.email}</p>
+            <EmailChangeForm />
             <h2>パスワード変更</h2>
             <PasswordChangeForm />
             <div>

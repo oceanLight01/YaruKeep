@@ -3438,6 +3438,150 @@ exports["default"] = EditHabitForm;
 
 /***/ }),
 
+/***/ "./resources/ts/Components/EmailChangeForm.tsx":
+/*!*****************************************************!*\
+  !*** ./resources/ts/Components/EmailChangeForm.tsx ***!
+  \*****************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __assign = this && this.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+
+      for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+    }
+
+    return t;
+  };
+
+  return __assign.apply(this, arguments);
+};
+
+var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  Object.defineProperty(o, k2, {
+    enumerable: true,
+    get: function get() {
+      return m[k];
+    }
+  });
+} : function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+});
+
+var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+  Object.defineProperty(o, "default", {
+    enumerable: true,
+    value: v
+  });
+} : function (o, v) {
+  o["default"] = v;
+});
+
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  }
+
+  __setModuleDefault(result, mod);
+
+  return result;
+};
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
+
+var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var react_hook_form_1 = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.cjs.js");
+
+var Authenticate_1 = __webpack_require__(/*! ./Authenticate */ "./resources/ts/Components/Authenticate.tsx");
+
+var EmailChangeForm = function EmailChangeForm() {
+  var _a, _b, _c;
+
+  var _d = (0, react_1.useState)(false),
+      clicked = _d[0],
+      setClicked = _d[1];
+
+  var auth = (0, Authenticate_1.useAuth)();
+
+  var _e = (0, react_1.useState)({
+    success: false,
+    error: ''
+  }),
+      formStatus = _e[0],
+      setFormStatus = _e[1];
+
+  var _f = (0, react_hook_form_1.useForm)({
+    mode: 'onBlur'
+  }),
+      register = _f.register,
+      handleSubmit = _f.handleSubmit,
+      errors = _f.formState.errors;
+
+  var onSubmit = function onSubmit(data) {
+    var _a;
+
+    setClicked(true);
+
+    var postData = __assign(__assign({}, data), {
+      user_id: (_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.id
+    });
+
+    axios_1["default"].post('/api/email/change', postData).then(function () {
+      setFormStatus(__assign(__assign({}, formStatus), {
+        success: true,
+        error: ''
+      }));
+    })["catch"](function (error) {
+      setFormStatus(__assign(__assign({}, formStatus), {
+        success: false,
+        error: error.response.data.errors.email
+      }));
+    })["finally"](function () {
+      setClicked(false);
+    });
+  };
+
+  return react_1["default"].createElement(react_1["default"].Fragment, null, formStatus.success && react_1["default"].createElement("p", null, "\u78BA\u8A8D\u7528\u30E1\u30FC\u30EB\u3092\u9001\u4FE1\u3057\u307E\u3057\u305F\u3002"), react_1["default"].createElement("form", {
+    onSubmit: handleSubmit(onSubmit)
+  }, react_1["default"].createElement("div", null, formStatus.error.length > 0 && react_1["default"].createElement("p", null, formStatus.error), ((_a = errors.email) === null || _a === void 0 ? void 0 : _a.type) === 'required' && react_1["default"].createElement("p", null, "\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), ((_b = errors.email) === null || _b === void 0 ? void 0 : _b.type) === 'maxLength' && react_1["default"].createElement("p", null, "\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9\u306F255\u6587\u5B57\u4EE5\u4E0B\u3067\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), ((_c = errors.email) === null || _c === void 0 ? void 0 : _c.type) === 'pattern' && react_1["default"].createElement("p", null, "\u6B63\u3057\u3044\u5F62\u5F0F\u306E\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), react_1["default"].createElement("label", null, "\u65B0\u3057\u3044\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9", react_1["default"].createElement("input", __assign({
+    type: "email",
+    maxLength: 255
+  }, register('email', {
+    required: true,
+    maxLength: 255,
+    pattern: /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+  }))))), react_1["default"].createElement("input", {
+    type: "submit",
+    value: "\u9001\u4FE1",
+    disabled: clicked
+  })));
+};
+
+exports["default"] = EmailChangeForm;
+
+/***/ }),
+
 /***/ "./resources/ts/Components/Footer.tsx":
 /*!********************************************!*\
   !*** ./resources/ts/Components/Footer.tsx ***!
@@ -4896,36 +5040,34 @@ var react_hook_form_1 = __webpack_require__(/*! react-hook-form */ "./node_modul
 var Authenticate_1 = __webpack_require__(/*! ./Authenticate */ "./resources/ts/Components/Authenticate.tsx");
 
 var UserSettingsForm = function UserSettingsForm(props) {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+  var _a, _b, _c, _d, _e, _f;
 
   var auth = (0, Authenticate_1.useAuth)();
 
-  var _k = (0, react_1.useState)({
-    email: [],
+  var _g = (0, react_1.useState)({
     screen_name: []
   }),
-      errorMessage = _k[0],
-      setErrorMessage = _k[1];
+      errorMessage = _g[0],
+      setErrorMessage = _g[1];
 
-  var _l = (0, react_1.useState)(false),
-      clicked = _l[0],
-      setClicked = _l[1];
+  var _h = (0, react_1.useState)(false),
+      clicked = _h[0],
+      setClicked = _h[1];
 
-  var _m = (0, react_hook_form_1.useForm)({
+  var _j = (0, react_hook_form_1.useForm)({
     mode: 'onBlur'
   }),
-      register = _m.register,
-      handleSubmit = _m.handleSubmit,
-      errors = _m.formState.errors,
-      setValue = _m.setValue;
+      register = _j.register,
+      handleSubmit = _j.handleSubmit,
+      errors = _j.formState.errors,
+      setValue = _j.setValue;
 
   (0, react_1.useEffect)(function () {
-    var _a, _b, _c, _d;
+    var _a, _b, _c;
 
     setValue('name', (_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.name);
     setValue('screen_name', (_b = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _b === void 0 ? void 0 : _b.screen_name);
-    setValue('email', (_c = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _c === void 0 ? void 0 : _c.email);
-    setValue('profile', (_d = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _d === void 0 ? void 0 : _d.profile);
+    setValue('profile', (_c = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _c === void 0 ? void 0 : _c.profile);
   }, []);
 
   var onSubmit = function onSubmit(data) {
@@ -4942,7 +5084,6 @@ var UserSettingsForm = function UserSettingsForm(props) {
         props.setShowSettingsForm(false);
       } else {
         setErrorMessage({
-          email: value[0].email ? value[0].email : [],
           screen_name: value[0].screen_name ? value[0].screen_name : []
         });
       }
@@ -4974,19 +5115,7 @@ var UserSettingsForm = function UserSettingsForm(props) {
     required: true,
     maxLength: 20,
     pattern: /^(?=.*?[a-zA-Z\d])[a-zA-Z\d]+$/
-  })))), react_1["default"].createElement("div", null, ((_f = errors.email) === null || _f === void 0 ? void 0 : _f.type) === 'required' && react_1["default"].createElement("p", null, "\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), ((_g = errors.email) === null || _g === void 0 ? void 0 : _g.type) === 'maxLength' && react_1["default"].createElement("p", null, "\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9\u306F255\u6587\u5B57\u4EE5\u4E0B\u3067\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), ((_h = errors.email) === null || _h === void 0 ? void 0 : _h.type) === 'pattern' && react_1["default"].createElement("p", null, "\u6B63\u3057\u3044\u5F62\u5F0F\u306E\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), errorMessage.email.map(function (str, index) {
-    return react_1["default"].createElement("p", {
-      key: index
-    }, str);
-  }), react_1["default"].createElement("label", null, "\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9"), react_1["default"].createElement("input", __assign({
-    type: "email",
-    maxLength: 255,
-    autoComplete: "on"
-  }, register('email', {
-    required: true,
-    maxLength: 255,
-    pattern: /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
-  })))), react_1["default"].createElement("div", null, ((_j = errors.profile) === null || _j === void 0 ? void 0 : _j.type) === 'maxLength' && react_1["default"].createElement("p", null, "\u30D7\u30ED\u30D5\u30A3\u30FC\u30EB\u306F300\u6587\u5B57\u4EE5\u4E0B\u3067\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), react_1["default"].createElement("label", null, "\u30D7\u30ED\u30D5\u30A3\u30FC\u30EB"), react_1["default"].createElement("textarea", __assign({
+  })))), react_1["default"].createElement("div", null, ((_f = errors.profile) === null || _f === void 0 ? void 0 : _f.type) === 'maxLength' && react_1["default"].createElement("p", null, "\u30D7\u30ED\u30D5\u30A3\u30FC\u30EB\u306F300\u6587\u5B57\u4EE5\u4E0B\u3067\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), react_1["default"].createElement("label", null, "\u30D7\u30ED\u30D5\u30A3\u30FC\u30EB"), react_1["default"].createElement("textarea", __assign({
     maxLength: 300
   }, register('profile', {
     maxLength: 300
@@ -5684,9 +5813,9 @@ var EmailVerified = function EmailVerified() {
     });
   };
 
-  return react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("p", null, "\u4EEE\u767B\u9332\u304C\u5B8C\u4E86\u3057\u307E\u3057\u305F\u3002"), react_1["default"].createElement("p", null, "\u767B\u9332\u3055\u308C\u305F\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9\u5B9B\u306B\u672C\u767B\u9332\u7528\u30E1\u30FC\u30EB\u3092\u304A\u9001\u308A\u3057\u307E\u3057\u305F\u306E\u3067\u3001\u8A18\u8F09\u3055\u308C\u305FURL\u3088\u308A\u672C\u767B\u9332\u3092\u5B8C\u4E86\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), isSend ? react_1["default"].createElement("p", null, "\u65B0\u3057\u3044\u30E1\u30FC\u30EB\u3092\u9001\u4FE1\u3057\u307E\u3057\u305F\u3002") : null, react_1["default"].createElement("button", {
+  return react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("p", null, "\u767B\u9332\u3055\u308C\u305F\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9\u5B9B\u306B\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9\u691C\u8A3C\u7528\u30EA\u30F3\u30AF\u3092\u304A\u9001\u308A\u3057\u307E\u3057\u305F\u3002", react_1["default"].createElement("br", null), "\u8A18\u8F09\u3055\u308C\u305FURL\u3088\u308A\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9\u306E\u691C\u8A3C\u3092\u5B8C\u4E86\u3057\u3066\u304F\u3060\u3055\u3044\u3002"), isSend ? react_1["default"].createElement("p", null, "\u65B0\u3057\u3044\u30E1\u30FC\u30EB\u3092\u9001\u4FE1\u3057\u307E\u3057\u305F\u3002") : null, react_1["default"].createElement("button", {
     onClick: sendVerifiedEmail
-  }, "\u672C\u767B\u9332\u30E1\u30FC\u30EB\u3092\u518D\u9001\u4FE1\u3059\u308B"), react_1["default"].createElement(LogoutButton_1["default"], null));
+  }, "\u691C\u8A3C\u30E1\u30FC\u30EB\u3092\u518D\u9001\u4FE1\u3059\u308B"), react_1["default"].createElement(LogoutButton_1["default"], null));
 };
 
 exports["default"] = EmailVerified;
@@ -7757,6 +7886,8 @@ var UserDeleteButton_1 = __importDefault(__webpack_require__(/*! ../Components/a
 
 var Authenticate_1 = __webpack_require__(/*! ../Components/Authenticate */ "./resources/ts/Components/Authenticate.tsx");
 
+var EmailChangeForm_1 = __importDefault(__webpack_require__(/*! ../Components/EmailChangeForm */ "./resources/ts/Components/EmailChangeForm.tsx"));
+
 var FormatText_1 = __importDefault(__webpack_require__(/*! ../Components/FormatText */ "./resources/ts/Components/FormatText.tsx"));
 
 var PasswordChangeForm_1 = __importDefault(__webpack_require__(/*! ../Components/PasswordChangeForm */ "./resources/ts/Components/PasswordChangeForm.tsx"));
@@ -7776,11 +7907,11 @@ var Settings = function Settings() {
 
   return react_1["default"].createElement(react_1["default"].Fragment, null, showSettingsForm ? react_1["default"].createElement(UserSettingsForm_1["default"], {
     setShowSettingsForm: setShowSettingsForm
-  }) : react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("h2", null, "\u30E6\u30FC\u30B6\u60C5\u5831"), react_1["default"].createElement("p", null, "\u30E6\u30FC\u30B6\u540D:", (_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.name), react_1["default"].createElement("p", null, "\u30E6\u30FC\u30B6ID:", (_b = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _b === void 0 ? void 0 : _b.screen_name), react_1["default"].createElement("p", null, "\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9:", (_c = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _c === void 0 ? void 0 : _c.email), react_1["default"].createElement("p", null, "\u30D7\u30ED\u30D5\u30A3\u30FC\u30EB:", (0, FormatText_1["default"])((_d = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _d === void 0 ? void 0 : _d.profile))), react_1["default"].createElement("button", {
+  }) : react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("h2", null, "\u30E6\u30FC\u30B6\u60C5\u5831"), react_1["default"].createElement("p", null, "\u30E6\u30FC\u30B6\u540D:", (_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.name), react_1["default"].createElement("p", null, "\u30E6\u30FC\u30B6ID:", (_b = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _b === void 0 ? void 0 : _b.screen_name), react_1["default"].createElement("p", null, "\u30D7\u30ED\u30D5\u30A3\u30FC\u30EB:", (0, FormatText_1["default"])((_c = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _c === void 0 ? void 0 : _c.profile))), react_1["default"].createElement("button", {
     onClick: function onClick() {
       return setShowSettingsForm(!showSettingsForm);
     }
-  }, showSettingsForm ? '戻る' : '編集する'), react_1["default"].createElement("h2", null, "\u30D7\u30ED\u30D5\u30A3\u30FC\u30EB\u753B\u50CF"), react_1["default"].createElement(ProfileImageForm_1["default"], null), react_1["default"].createElement("h2", null, "\u30D1\u30B9\u30EF\u30FC\u30C9\u5909\u66F4"), react_1["default"].createElement(PasswordChangeForm_1["default"], null), react_1["default"].createElement("div", null, react_1["default"].createElement("h2", null, "\u30A2\u30AB\u30A6\u30F3\u30C8\u524A\u9664"), react_1["default"].createElement("p", null, "\u30A2\u30AB\u30A6\u30F3\u30C8\u3092\u524A\u9664\u3057\u307E\u3059\u3002\u4E00\u5EA6\u524A\u9664\u3059\u308B\u3068\u3082\u3068\u306B\u623B\u305B\u307E\u305B\u3093\u3002"), react_1["default"].createElement(UserDeleteButton_1["default"], null)));
+  }, showSettingsForm ? '戻る' : '編集する'), react_1["default"].createElement("h2", null, "\u30D7\u30ED\u30D5\u30A3\u30FC\u30EB\u753B\u50CF"), react_1["default"].createElement(ProfileImageForm_1["default"], null), react_1["default"].createElement("h2", null, "\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9\u5909\u66F4"), react_1["default"].createElement("p", null, "\u73FE\u5728\u306E\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9: ", (_d = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _d === void 0 ? void 0 : _d.email), react_1["default"].createElement(EmailChangeForm_1["default"], null), react_1["default"].createElement("h2", null, "\u30D1\u30B9\u30EF\u30FC\u30C9\u5909\u66F4"), react_1["default"].createElement(PasswordChangeForm_1["default"], null), react_1["default"].createElement("div", null, react_1["default"].createElement("h2", null, "\u30A2\u30AB\u30A6\u30F3\u30C8\u524A\u9664"), react_1["default"].createElement("p", null, "\u30A2\u30AB\u30A6\u30F3\u30C8\u3092\u524A\u9664\u3057\u307E\u3059\u3002\u4E00\u5EA6\u524A\u9664\u3059\u308B\u3068\u3082\u3068\u306B\u623B\u305B\u307E\u305B\u3093\u3002"), react_1["default"].createElement(UserDeleteButton_1["default"], null)));
 };
 
 exports["default"] = Settings;

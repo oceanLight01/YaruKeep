@@ -6,11 +6,9 @@ type SettingsForm = {
     name: string;
     screen_name: string;
     profile: string;
-    email: string;
 };
 
 type ErrorMessage = {
-    email: string[];
     screen_name: string[];
 };
 
@@ -20,7 +18,7 @@ type Props = {
 
 const UserSettingsForm = (props: Props) => {
     const auth = useAuth();
-    const [errorMessage, setErrorMessage] = useState<ErrorMessage>({ email: [], screen_name: [] });
+    const [errorMessage, setErrorMessage] = useState<ErrorMessage>({ screen_name: [] });
     const [clicked, setClicked] = useState<boolean>(false);
     const {
         register,
@@ -32,7 +30,6 @@ const UserSettingsForm = (props: Props) => {
     useEffect(() => {
         setValue('name', auth?.userData?.name!);
         setValue('screen_name', auth?.userData?.screen_name!);
-        setValue('email', auth?.userData?.email!);
         setValue('profile', auth?.userData?.profile!);
     }, []);
 
@@ -50,7 +47,6 @@ const UserSettingsForm = (props: Props) => {
                     props.setShowSettingsForm(false);
                 } else {
                     setErrorMessage({
-                        email: value[0].email ? value[0].email : [],
                         screen_name: value[0].screen_name ? value[0].screen_name : [],
                     });
                 }
@@ -96,30 +92,6 @@ const UserSettingsForm = (props: Props) => {
                         required: true,
                         maxLength: 20,
                         pattern: /^(?=.*?[a-zA-Z\d])[a-zA-Z\d]+$/,
-                    })}
-                />
-            </div>
-            <div>
-                {errors.email?.type === 'required' && <p>メールアドレスを入力してください。</p>}
-                {errors.email?.type === 'maxLength' && (
-                    <p>メールアドレスは255文字以下で入力してください。</p>
-                )}
-                {errors.email?.type === 'pattern' && (
-                    <p>正しい形式のメールアドレスを入力してください。</p>
-                )}
-                {errorMessage.email.map((str, index) => {
-                    return <p key={index}>{str}</p>;
-                })}
-                <label>メールアドレス</label>
-                <input
-                    type="email"
-                    maxLength={255}
-                    autoComplete="on"
-                    {...register('email', {
-                        required: true,
-                        maxLength: 255,
-                        pattern:
-                            /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
                     })}
                 />
             </div>

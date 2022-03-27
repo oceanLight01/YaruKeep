@@ -33,7 +33,6 @@ type LoginData = {
 type EditData = {
     name: string;
     screen_name: string;
-    email: string;
     profile: string;
 };
 
