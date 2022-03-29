@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useAuth } from './Authenticate';
+import { useMessage } from './FlashMessageContext';
 
 type SettingsForm = {
     name: string;
@@ -18,6 +19,7 @@ type Props = {
 
 const UserSettingsForm = (props: Props) => {
     const auth = useAuth();
+    const flashMessage = useMessage();
     const [errorMessage, setErrorMessage] = useState<ErrorMessage>({ screen_name: [] });
     const [clicked, setClicked] = useState<boolean>(false);
     const {
@@ -45,6 +47,7 @@ const UserSettingsForm = (props: Props) => {
             .then((value) => {
                 if (value[0] === undefined) {
                     props.setShowSettingsForm(false);
+                    flashMessage?.setMessage('ユーザー情報を更新しました。');
                 } else {
                     setErrorMessage({
                         screen_name: value[0].screen_name ? value[0].screen_name : [],
@@ -52,7 +55,11 @@ const UserSettingsForm = (props: Props) => {
                 }
                 setClicked(false);
             })
-            .catch(() => {
+            .catch((error) => {
+                flashMessage?.setErrorMessage(
+                    'ユーザー情報の更新に失敗しました。',
+                    error.response.status
+                );
                 setClicked(false);
             });
     };

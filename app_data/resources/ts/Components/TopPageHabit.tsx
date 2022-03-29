@@ -1,6 +1,5 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useAuth } from './Authenticate';
 import HabitTracker from './HabitTracker';
 
 const TopPageHabit = () => {
@@ -8,8 +7,9 @@ const TopPageHabit = () => {
     const [sameCategoryHabits, setSameCategoryHabits] = useState<HabitItem[]>([]);
     const [category, setCategory] = useState({ categoryId: 0, categoryName: '' });
     const [newestDoneHabits, setNewestDoneHabits] = useState<HabitItem[]>([]);
+
     const [loading, setLoading] = useState<boolean>(true);
-    const auth = useAuth();
+    const [error, setError] = useState<boolean>(false);
 
     useEffect(() => {
         axios
@@ -30,13 +30,15 @@ const TopPageHabit = () => {
 
                 setLoading(false);
             })
-            .catch((error) => {
-                console.error(error);
+            .catch(() => {
+                setError(true);
             });
     }, []);
 
     return loading ? (
         <p>読み込み中...</p>
+    ) : error ? (
+        <p>情報の取得に失敗しました。</p>
     ) : (
         <div>
             {followUserHabits.length > 0 ? (

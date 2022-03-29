@@ -1,10 +1,12 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../Components/Authenticate';
+import { useMessage } from '../FlashMessageContext';
 
 const LogoutButton = () => {
     const navigate = useNavigate();
     const auth = useAuth();
+    const flashMessage = useMessage();
 
     const logout = () => {
         if (window.confirm('ログアウトします。よろしいですか？')) {
@@ -13,7 +15,10 @@ const LogoutButton = () => {
                     navigate('/login');
                 })
                 .catch((error) => {
-                    console.log(error);
+                    flashMessage?.setErrorMessage(
+                        'ログアウトに失敗しました。',
+                        error.response.status
+                    );
                 });
         }
     };

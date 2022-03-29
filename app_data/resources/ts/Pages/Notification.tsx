@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import NotificationItem from '../Components/NotificationItem';
+import { useMessage } from '../Components/FlashMessageContext';
 
 const Notification = () => {
+    const flashMessage = useMessage();
     const [clicked, setClicked] = useState<boolean>(false);
     const [notification, setNotification] = useState<NotificationItem[]>([]);
     const [paginate, setPaginate] = useState({
@@ -30,7 +32,10 @@ const Notification = () => {
                 });
             })
             .catch((error) => {
-                console.log(error);
+                flashMessage?.setErrorMessage(
+                    '通知情報の取得に失敗しました。',
+                    error.response.status
+                );
             })
             .finally(() => {
                 setClicked(false);

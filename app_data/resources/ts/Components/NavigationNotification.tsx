@@ -2,13 +2,16 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from './Authenticate';
+import { useMessage } from './FlashMessageContext';
 import NavNotificationItem from './NavNotificationItem';
 
 const NavigationNotification = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const navigate = useNavigate();
     const location = useLocation();
+
     const auth = useAuth();
+    const flashMessage = useMessage();
 
     const [notification, setNotification] = useState<{
         count: number;
@@ -35,7 +38,10 @@ const NavigationNotification = () => {
                 });
             })
             .catch((error) => {
-                console.error(error);
+                flashMessage?.setErrorMessage(
+                    '通知情報の取得に失敗しました。',
+                    error.response.status
+                );
             });
     };
 
@@ -56,6 +62,7 @@ const NavigationNotification = () => {
 
     const updateNotification = (id: string, url: string) => {
         setIsOpen(false);
+
         axios
             .put('/api/notifications', { id: id })
             .then((res) => {
@@ -67,7 +74,10 @@ const NavigationNotification = () => {
                 });
             })
             .catch((error) => {
-                console.error(error);
+                flashMessage?.setErrorMessage(
+                    '通知情報の更新に失敗しました。',
+                    error.response.status
+                );
             });
 
         navigate(url);
@@ -86,7 +96,10 @@ const NavigationNotification = () => {
                 });
             })
             .catch((error) => {
-                console.error(error);
+                flashMessage?.setErrorMessage(
+                    '通知情報の更新に失敗しました。',
+                    error.response.status
+                );
             });
 
         navigate('/notifications');

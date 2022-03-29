@@ -1,11 +1,11 @@
 import axios from 'axios';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../Authenticate';
+import { useMessage } from '../FlashMessageContext';
 
 const UserDeleteButton = () => {
     const auth = useAuth();
-    const navigate = useNavigate();
+    const flashMessage = useMessage();
 
     const deleteUser = () => {
         if (
@@ -17,7 +17,10 @@ const UserDeleteButton = () => {
                     auth?.logout();
                 })
                 .catch((error) => {
-                    console.error(error);
+                    flashMessage?.setErrorMessage(
+                        'アカウント削除に失敗しました。',
+                        error.response.status
+                    );
                 });
         }
     };

@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useAuth } from './Authenticate';
+import { useMessage } from './FlashMessageContext';
 
 type Diary = {
     text: string;
@@ -15,8 +16,9 @@ type Props = {
 };
 
 const EditDiaryForm = (props: Props) => {
-    const [clicked, setClicked] = useState<boolean>(false);
     const auth = useAuth();
+    const flashMessage = useMessage();
+    const [clicked, setClicked] = useState<boolean>(false);
     const {
         register,
         handleSubmit,
@@ -41,8 +43,11 @@ const EditDiaryForm = (props: Props) => {
             .put(`/api/diaries/${props.id}`, postData)
             .then((res) => {
                 props.updateDiary(res.data.data);
+                flashMessage?.setMessage('日記を編集しました。');
             })
-            .catch((error) => console.log(error))
+            .catch((error) => {
+                flashMessage?.setErrorMessage('日記の編集に失敗しました。', error.response.status);
+            })
             .finally(() => setClicked(false));
     };
 

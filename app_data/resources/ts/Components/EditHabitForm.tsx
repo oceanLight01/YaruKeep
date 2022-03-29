@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useAuth } from './Authenticate';
+import { useMessage } from './FlashMessageContext';
 
 type HabitForm = {
     title: string;
@@ -13,8 +14,9 @@ type HabitForm = {
 };
 
 const EditHabitForm = (props: HabitForm) => {
-    const [isLoading, setIsLoading] = useState<boolean>(false);
     const auth = useAuth();
+    const flashMessage = useMessage();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const {
         register,
         handleSubmit,
@@ -43,8 +45,16 @@ const EditHabitForm = (props: HabitForm) => {
 
         axios
             .put(`/api/habits/${props.habitId}`, habitData)
-            .then((res) => props.updateHabit(res.data.data))
-            .catch((error) => console.log(error))
+            .then((res) => {
+                props.updateHabit(res.data.data);
+                flashMessage?.setMessage('ハビットトラッカーを編集しました。');
+            })
+            .catch((error) => {
+                flashMessage?.setErrorMessage(
+                    'ハビットトラッカーの編集に失敗しました。',
+                    error.response.status
+                );
+            })
             .finally(() => setIsLoading(false));
     };
 

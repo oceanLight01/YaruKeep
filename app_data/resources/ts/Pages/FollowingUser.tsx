@@ -1,11 +1,14 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useMessage } from '../Components/FlashMessageContext';
 import UserItem from '../Components/UserItem';
 
 const FollowingUser = () => {
+    const flashMessage = useMessage();
     const [followingList, setFollowingList] = useState<UserItem[]>([]);
     const { screenName } = useParams<{ screenName: string }>();
+    const [isLoding, setIsLoding] = useState<boolean>(true);
 
     useEffect(() => {
         axios
@@ -14,7 +17,13 @@ const FollowingUser = () => {
                 setFollowingList(res.data.data);
             })
             .catch((error) => {
-                console.error(error);
+                flashMessage?.setErrorMessage(
+                    'フォロー中ユーザーの取得に失敗しました。',
+                    error.response.status
+                );
+            })
+            .finally(() => {
+                setIsLoding(false);
             });
     }, []);
 
@@ -30,18 +39,24 @@ const FollowingUser = () => {
         <>
             <h2>フォロー中のユーザー</h2>
             <hr />
-            <ul>
-                {followingList.map((item, index) => {
-                    return (
-                        <UserItem
-                            userItem={item}
-                            key={index}
-                            index={index}
-                            updateFollowInfo={updateFollowInfo}
-                        />
-                    );
-                })}
-            </ul>
+            {isLoding ? (
+                <p>読み込み中...</p>
+            ) : followingList.length > 0 ? (
+                <ul>
+                    {followingList.map((item, index) => {
+                        return (
+                            <UserItem
+                                userItem={item}
+                                key={index}
+                                index={index}
+                                updateFollowInfo={updateFollowInfo}
+                            />
+                        );
+                    })}
+                </ul>
+            ) : (
+                <p>フォロー中のユーザーはいません。</p>
+            )}
         </>
     );
 };

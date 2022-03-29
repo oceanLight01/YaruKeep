@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../Components/Authenticate';
+import { useMessage } from '../../Components/FlashMessageContext';
 
 type RegisterForm = {
     name: string;
@@ -18,6 +19,7 @@ type ErrorMessage = {
 
 const Register = () => {
     const auth = useAuth();
+    const flashMessage = useMessage();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [errorMessage, setErrorMessage] = useState<ErrorMessage>({ email: [], screen_name: [] });
     const {
@@ -36,10 +38,15 @@ const Register = () => {
                 navigate('/home');
             })
             .catch((error) => {
-                setErrorMessage({
-                    email: error.email ? error.email : [],
-                    screen_name: error.screen_name ? error.screen_name : [],
-                });
+                const data = error.response.data.errors;
+                if (error.response.status >= 500) {
+                    flashMessage?.setErrorMessage('', error.response.status);
+                } else {
+                    setErrorMessage({
+                        email: data.email ? data.email : [],
+                        screen_name: data.screen_name ? data.screen_name : [],
+                    });
+                }
             })
             .finally(() => {
                 setIsLoading(false);

@@ -3,6 +3,7 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../../Components/Authenticate';
+import { useMessage } from '../../Components/FlashMessageContext';
 
 type LoginForm = {
     email: string;
@@ -11,6 +12,8 @@ type LoginForm = {
 };
 
 const Login = () => {
+    const auth = useAuth();
+    const flashMessage = useMessage();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const {
         register,
@@ -18,7 +21,6 @@ const Login = () => {
         formState: { errors },
     } = useForm<LoginForm>({ mode: 'onBlur' });
     const navigate = useNavigate();
-    const auth = useAuth();
 
     const onSubmit: SubmitHandler<LoginForm> = (data) => {
         setIsLoading(true);
@@ -31,13 +33,17 @@ const Login = () => {
                         navigate('/home');
                     })
                     .catch((error) => {
-                        console.error(error);
+                        flashMessage?.setErrorMessage(
+                            'ログインに失敗しました。メールアドレスとパスワードが正しいかもう一度お確かめください。',
+                            error.response.status
+                        );
+                    })
+                    .finally(() => {
+                        setIsLoading(false);
                     });
             })
             .catch((error) => {
-                console.error(error);
-            })
-            .finally(() => {
+                flashMessage?.setErrorMessage('認証に失敗しました。', error.response.status);
                 setIsLoading(false);
             });
     };

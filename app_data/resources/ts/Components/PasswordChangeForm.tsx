@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useAuth } from './Authenticate';
+import { useMessage } from './FlashMessageContext';
 
 type PasswordChangeForm = {
     current_password: string;
@@ -10,8 +11,8 @@ type PasswordChangeForm = {
 
 const PasswordChangeForm = () => {
     const auth = useAuth();
+    const flashMessage = useMessage();
     const [formStatus, setFormStatus] = useState({
-        success: false,
         errors: {
             curren_password: '',
             password: '',
@@ -35,9 +36,9 @@ const PasswordChangeForm = () => {
 
         auth?.changePassword(postData)
             .then(() => {
+                flashMessage?.setMessage('パスワードを変更しました。');
                 setFormStatus({
                     ...formStatus,
-                    success: true,
                     errors: {
                         curren_password: '',
                         password: '',
@@ -46,24 +47,26 @@ const PasswordChangeForm = () => {
                 reset();
             })
             .catch((error) => {
-                const errorMessage = error.response.data.errors;
-                setFormStatus({
-                    ...formStatus,
-                    success: false,
-                    errors: {
-                        curren_password: errorMessage.current_password
-                            ? errorMessage.current_password[0]
-                            : '',
-                        password: errorMessage.password ? errorMessage.password[0] : '',
-                    },
-                });
+                if (error.response.status >= 500) {
+                    flashMessage?.setErrorMessage('', error.response.status);
+                } else {
+                    const errorMessage = error.response.data.errors;
+                    setFormStatus({
+                        ...formStatus,
+                        errors: {
+                            curren_password: errorMessage.current_password
+                                ? errorMessage.current_password[0]
+                                : '',
+                            password: errorMessage.password ? errorMessage.password[0] : '',
+                        },
+                    });
+                }
             });
     };
 
     return (
         <>
             <div>
-                {formStatus.success && <p>パスワードの変更が完了しました。</p>}
                 {formStatus.errors.curren_password.length > 0 && (
                     <p>{formStatus.errors.curren_password}</p>
                 )}

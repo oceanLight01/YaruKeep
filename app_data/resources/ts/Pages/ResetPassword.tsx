@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useMessage } from '../Components/FlashMessageContext';
 
 type ResetPasswordForm = {
     password: string;
@@ -9,7 +10,9 @@ type ResetPasswordForm = {
 };
 
 const ResetPassword = () => {
+    const flashMessage = useMessage();
     const [clicked, setClicked] = useState<boolean>(false);
+
     const search = useLocation().search;
     const query = new URLSearchParams(search);
     const pathname = useLocation().pathname;
@@ -35,10 +38,14 @@ const ResetPassword = () => {
         axios
             .post('/api/reset-password', postData)
             .then(() => {
+                flashMessage?.setMessage('パスワードをリセットしました。');
                 navigate('/login');
             })
             .catch((error) => {
-                console.error(error);
+                flashMessage?.setErrorMessage(
+                    'パスワードのリセットに失敗しました。',
+                    error.response.status
+                );
             })
             .finally(() => {
                 setClicked(false);

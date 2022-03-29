@@ -19,7 +19,6 @@ import Footer from '../Components/Footer';
 import User from './User';
 import HabitPost from './HabitPost';
 import HabitStatus from './HabitStatus';
-import Diary from './Diary';
 import Settings from './Settings';
 import FollowingUser from './FollowingUser';
 import FollowedUser from './FollowedUser';
@@ -27,139 +26,143 @@ import Search from './Search';
 import Notification from './Notification';
 import ForgotPassword from './ForgotPassword';
 import ResetPassword from './ResetPassword';
+import ProvideMessage, { FlashMessage } from '../Components/FlashMessageContext';
 
 const App = () => {
     return (
         <ProvideAuth>
-            <Loading>
-                <BrowserRouter>
-                    <Header />
-                    <Navigation />
-                    <Routes>
-                        <Route
-                            path="/"
-                            element={
-                                <PublicRoute>
-                                    <Top />
-                                </PublicRoute>
-                            }
-                        />
-                        <Route
-                            path="/login"
-                            element={
-                                <PublicRoute>
-                                    <Login />
-                                </PublicRoute>
-                            }
-                        />
-                        <Route
-                            path="/register"
-                            element={
-                                <PublicRoute>
-                                    <Register />
-                                </PublicRoute>
-                            }
-                        />
-                        <Route
-                            path="/password/forgot"
-                            element={
-                                <PublicRoute>
-                                    <ForgotPassword />
-                                </PublicRoute>
-                            }
-                        />
-                        <Route
-                            path="/password/reset/:token"
-                            element={
-                                <PublicRoute>
-                                    <ResetPassword />
-                                </PublicRoute>
-                            }
-                        />
-                        <Route
-                            path="/verified"
-                            element={
-                                <EmailVerifiedRoute>
-                                    <EmailVerified />
-                                </EmailVerifiedRoute>
-                            }
-                        />
-                        <Route
-                            path="/home"
-                            element={
-                                <PrivateRoute>
-                                    <Home />
-                                </PrivateRoute>
-                            }
-                        />
-                        <Route
-                            path="/user/:screenName"
-                            element={
-                                <PrivateRoute>
-                                    <User />
-                                </PrivateRoute>
-                            }
-                        />
-                        <Route
-                            path="/post/habit"
-                            element={
-                                <PrivateRoute>
-                                    <HabitPost />
-                                </PrivateRoute>
-                            }
-                        />
-                        <Route
-                            path="/user/:screenName/habit/:id/*"
-                            element={
-                                <PrivateRoute>
-                                    <HabitStatus />
-                                </PrivateRoute>
-                            }
-                        />
-                        <Route
-                            path="/user/:screenName/following"
-                            element={
-                                <PrivateRoute>
-                                    <FollowingUser />
-                                </PrivateRoute>
-                            }
-                        />
-                        <Route
-                            path="/user/:screenName/followed"
-                            element={
-                                <PrivateRoute>
-                                    <FollowedUser />
-                                </PrivateRoute>
-                            }
-                        />
-                        <Route
-                            path="/search"
-                            element={
-                                <PrivateRoute>
-                                    <Search />
-                                </PrivateRoute>
-                            }
-                        />
-                        <Route
-                            path="/settings"
-                            element={
-                                <PrivateRoute>
-                                    <Settings />
-                                </PrivateRoute>
-                            }
-                        />
-                        <Route
-                            path="/notifications"
-                            element={
-                                <PrivateRoute>
-                                    <Notification />
-                                </PrivateRoute>
-                            }
-                        />
-                    </Routes>
-                    <Footer />
-                </BrowserRouter>
-            </Loading>
+            <ProvideMessage>
+                <Loading>
+                    <BrowserRouter>
+                        <Header />
+                        <Navigation />
+                        <FlashMessage />
+                        <Routes>
+                            <Route
+                                path="/"
+                                element={
+                                    <PublicRoute>
+                                        <Top />
+                                    </PublicRoute>
+                                }
+                            />
+                            <Route
+                                path="/login"
+                                element={
+                                    <PublicRoute>
+                                        <Login />
+                                    </PublicRoute>
+                                }
+                            />
+                            <Route
+                                path="/register"
+                                element={
+                                    <PublicRoute>
+                                        <Register />
+                                    </PublicRoute>
+                                }
+                            />
+                            <Route
+                                path="/password/forgot"
+                                element={
+                                    <PublicRoute>
+                                        <ForgotPassword />
+                                    </PublicRoute>
+                                }
+                            />
+                            <Route
+                                path="/password/reset/:token"
+                                element={
+                                    <PublicRoute>
+                                        <ResetPassword />
+                                    </PublicRoute>
+                                }
+                            />
+                            <Route
+                                path="/verified"
+                                element={
+                                    <EmailVerifiedRoute>
+                                        <EmailVerified />
+                                    </EmailVerifiedRoute>
+                                }
+                            />
+                            <Route
+                                path="/home"
+                                element={
+                                    <PrivateRoute>
+                                        <Home />
+                                    </PrivateRoute>
+                                }
+                            />
+                            <Route
+                                path="/user/:screenName"
+                                element={
+                                    <PrivateRoute>
+                                        <User />
+                                    </PrivateRoute>
+                                }
+                            />
+                            <Route
+                                path="/post/habit"
+                                element={
+                                    <PrivateRoute>
+                                        <HabitPost />
+                                    </PrivateRoute>
+                                }
+                            />
+                            <Route
+                                path="/user/:screenName/habit/:id/*"
+                                element={
+                                    <PrivateRoute>
+                                        <HabitStatus />
+                                    </PrivateRoute>
+                                }
+                            />
+                            <Route
+                                path="/user/:screenName/following"
+                                element={
+                                    <PrivateRoute>
+                                        <FollowingUser />
+                                    </PrivateRoute>
+                                }
+                            />
+                            <Route
+                                path="/user/:screenName/followed"
+                                element={
+                                    <PrivateRoute>
+                                        <FollowedUser />
+                                    </PrivateRoute>
+                                }
+                            />
+                            <Route
+                                path="/search"
+                                element={
+                                    <PrivateRoute>
+                                        <Search />
+                                    </PrivateRoute>
+                                }
+                            />
+                            <Route
+                                path="/settings"
+                                element={
+                                    <PrivateRoute>
+                                        <Settings />
+                                    </PrivateRoute>
+                                }
+                            />
+                            <Route
+                                path="/notifications"
+                                element={
+                                    <PrivateRoute>
+                                        <Notification />
+                                    </PrivateRoute>
+                                }
+                            />
+                        </Routes>
+                        <Footer />
+                    </BrowserRouter>
+                </Loading>
+            </ProvideMessage>
         </ProvideAuth>
     );
 };

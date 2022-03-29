@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { useAuth } from '../Components/Authenticate';
+import { useMessage } from '../Components/FlashMessageContext';
 import HabitTracker from '../Components/HabitTracker';
 import Paginate from '../Components/Paginate';
 import SearchForm from '../Components/SearchForm';
@@ -17,6 +18,7 @@ const Search = () => {
     const [searchData, setSearchData] = useState<SearchFormData>({ keyword: '', categories: [] });
 
     const auth = useAuth();
+    const flashMessage = useMessage();
 
     const [paginateData, setPaginateData] = useState({
         perPage: 1,
@@ -58,7 +60,7 @@ const Search = () => {
                 });
             })
             .catch((error) => {
-                console.error(error);
+                flashMessage?.setErrorMessage('検索に失敗しました。', error.response.status);
             })
             .finally(() => {
                 setSearching(false);
@@ -69,6 +71,7 @@ const Search = () => {
         axios
             .post('/api/habits/done', { userId: auth?.userData?.id, id: habitId })
             .then((res) => {
+                flashMessage?.setMessage('今日の目標を達成しました🎉 お疲れ様です!');
                 const data = res.data.data;
                 if (index !== undefined) {
                     setSearchResult(
@@ -79,7 +82,7 @@ const Search = () => {
                 }
             })
             .catch((error) => {
-                console.error(error);
+                flashMessage?.setErrorMessage('更新に失敗しました。', error.response.status);
             });
     };
 

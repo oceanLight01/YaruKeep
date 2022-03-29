@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { useMessage } from './FlashMessageContext';
 
 type Props = {
     id?: number;
@@ -17,6 +18,7 @@ type CommentForm = {
 };
 
 const CommentForm = (props: Props) => {
+    const flashMessage = useMessage();
     const [clicked, setClicked] = useState<boolean>(false);
     const commentType = props.habitComment ? 'habit' : 'diary';
     const {
@@ -41,11 +43,14 @@ const CommentForm = (props: Props) => {
             .then((res) => {
                 props.updateItem(res.data.data);
 
+                flashMessage?.setMessage('コメントを投稿しました。');
                 setValue('comment', '');
             })
             .catch((error) => {
-                console.error(error);
-                setClicked(false);
+                flashMessage?.setErrorMessage(
+                    'コメントの投稿に失敗しました。',
+                    error.response.status
+                );
             })
             .finally(() => {
                 setClicked(false);

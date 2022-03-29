@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useAuth } from '../Components/Authenticate';
+import { useMessage } from '../Components/FlashMessageContext';
 
 type HabitForm = {
     title: string;
@@ -12,6 +13,7 @@ type HabitForm = {
 
 const HabitPost = () => {
     const auth = useAuth();
+    const flashMessage = useMessage();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const {
         register,
@@ -34,9 +36,12 @@ const HabitPost = () => {
         axios
             .post('/api/habits', habitData)
             .then(() => {
+                flashMessage?.setMessage('ハビットトラッカーを作成しました。');
                 reset();
             })
-            .catch((error) => console.log(error))
+            .catch(() => {
+                flashMessage?.setErrorMessage('ハビットトラッカーの作成に失敗しました。');
+            })
             .finally(() => setIsLoading(false));
     };
 

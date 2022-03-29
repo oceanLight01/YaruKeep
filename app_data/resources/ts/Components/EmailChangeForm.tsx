@@ -2,15 +2,17 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useAuth } from './Authenticate';
+import { useMessage } from './FlashMessageContext';
 
 type EmailChangeForm = {
     email: string;
 };
 
 const EmailChangeForm = () => {
-    const [clicked, setClicked] = useState<boolean>(false);
     const auth = useAuth();
-    const [formStatus, setFormStatus] = useState({ success: false, error: '' });
+    const flashMessage = useMessage();
+    const [clicked, setClicked] = useState<boolean>(false);
+    const [formStatus, setFormStatus] = useState({ error: '' });
 
     const {
         register,
@@ -29,18 +31,17 @@ const EmailChangeForm = () => {
         axios
             .post('/api/email/change', postData)
             .then(() => {
-                setFormStatus({
-                    ...formStatus,
-                    success: true,
-                    error: '',
-                });
+                flashMessage?.setMessage('確認用メッセージを送信しました。');
             })
             .catch((error) => {
-                setFormStatus({
-                    ...formStatus,
-                    success: false,
-                    error: error.response.data.errors.email,
-                });
+                if (error.response.status >= 500) {
+                    flashMessage?.setErrorMessage('', error.response.status);
+                } else {
+                    setFormStatus({
+                        ...formStatus,
+                        error: error.response.data.errors.email,
+                    });
+                }
             })
             .finally(() => {
                 setClicked(false);
@@ -49,7 +50,6 @@ const EmailChangeForm = () => {
 
     return (
         <>
-            {formStatus.success && <p>確認用メールを送信しました。</p>}
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div>
                     {formStatus.error.length > 0 && <p>{formStatus.error}</p>}

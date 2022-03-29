@@ -86,9 +86,8 @@ const useProvideAuth = () => {
             .then((res) => {
                 setUserData(res.data.data.user);
             })
-            .catch((error) => {
+            .catch(() => {
                 setUserData(null);
-                console.error(error);
             })
             .finally(() => {
                 setIsRender(true);
@@ -103,7 +102,7 @@ const useProvideAuth = () => {
                 getUser();
             })
             .catch((error) => {
-                return Promise.reject(error.response.data.errors);
+                return Promise.reject(error);
             });
     };
 
@@ -117,7 +116,7 @@ const useProvideAuth = () => {
             })
             .catch((error) => {
                 setUserData(null);
-                console.error(error);
+                return Promise.reject(error);
             });
     };
 
@@ -128,7 +127,7 @@ const useProvideAuth = () => {
                 setUserData(null);
             })
             .catch((error) => {
-                console.error(error);
+                Promise.reject(error);
             });
     };
 
@@ -148,7 +147,7 @@ const useProvideAuth = () => {
                 setUserData(res.data.data.user);
             })
             .catch((error) => {
-                console.error(error);
+                Promise.reject(error);
             });
 
         return Promise.all([update, getUser]);

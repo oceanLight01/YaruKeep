@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { useAuth } from '../Authenticate';
+import { useMessage } from '../FlashMessageContext';
 
 type Props = {
     following_id: number;
@@ -12,6 +13,7 @@ type Props = {
 
 const FollowButton = (props: Props) => {
     const auth = useAuth();
+    const flashMessage = useMessage();
     const [clicked, setClicked] = useState<boolean>(false);
 
     const followUser = () => {
@@ -32,7 +34,7 @@ const FollowButton = (props: Props) => {
                 }
             })
             .catch((error) => {
-                console.error(error);
+                flashMessage?.setErrorMessage('フォローに失敗しました。', error.response.status);
             })
             .finally(() => {
                 setClicked(false);
@@ -57,7 +59,10 @@ const FollowButton = (props: Props) => {
                 }
             })
             .catch((error) => {
-                console.error(error);
+                flashMessage?.setErrorMessage(
+                    'フォロー解除に失敗しました。',
+                    error.response.status
+                );
             })
             .finally(() => {
                 setClicked(false);

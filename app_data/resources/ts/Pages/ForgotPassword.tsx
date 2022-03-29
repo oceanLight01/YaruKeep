@@ -1,14 +1,16 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { useMessage } from '../Components/FlashMessageContext';
 
 type ForgotPasswordForm = {
     email: string;
 };
 
 const ForgotPassword = () => {
+    const flashMessage = useMessage();
     const [clicked, setClicked] = useState<boolean>(false);
-    const [formStatus, setFormStatus] = useState({ success: false, error: '' });
+    const [formStatus, setFormStatus] = useState({ error: '' });
     const {
         register,
         handleSubmit,
@@ -25,18 +27,21 @@ const ForgotPassword = () => {
         axios
             .post('/api/forgot-password', data)
             .then(() => {
+                flashMessage?.setMessage('パスワードリセット用のメールを送信しました。');
                 setFormStatus({
                     ...formStatus,
-                    success: true,
                     error: '',
                 });
             })
             .catch((error) => {
-                setFormStatus({
-                    ...formStatus,
-                    success: false,
-                    error: error.response.data.errors.email[0],
-                });
+                if (error.response.status >= 500) {
+                    flashMessage?.setErrorMessage('', error.response.status);
+                } else {
+                    setFormStatus({
+                        ...formStatus,
+                        error: error.response.data.errors.email[0],
+                    });
+                }
             })
             .finally(() => {
                 setClicked(false);
@@ -46,7 +51,6 @@ const ForgotPassword = () => {
     return (
         <>
             <h2>パスワードリセット</h2>
-            {formStatus.success && <p>パスワードリセット用のメールを送信しました。</p>}
             {formStatus.error.length > 0 && <p>{formStatus.error}</p>}
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div>

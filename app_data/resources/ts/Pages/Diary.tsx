@@ -7,6 +7,7 @@ import { useAuth } from '../Components/Authenticate';
 import CommentForm from '../Components/CommentForm';
 import commentList from '../Components/commentList';
 import EditDiaryForm from '../Components/EditDiaryForm';
+import { useMessage } from '../Components/FlashMessageContext';
 import formatText from '../Components/FormatText';
 import LoginUserContent from '../Components/LoginUserContent';
 import PageRender from './PageRender';
@@ -35,6 +36,7 @@ const Diary = () => {
     const [editing, setEditing] = useState<boolean>(false);
 
     const auth = useAuth();
+    const flashMessage = useMessage();
 
     useEffect(() => {
         setDiary({ ...initialData });
@@ -60,10 +62,14 @@ const Diary = () => {
             axios
                 .delete(`/api/diaries/${diaryId}`)
                 .then(() => {
+                    flashMessage?.setMessage('日記を削除しました。');
                     navigate(`/user/${auth?.userData?.screen_name}/habit/${diary.habit_id}`);
                 })
                 .catch((error) => {
-                    console.error(error);
+                    flashMessage?.setErrorMessage(
+                        '日記の削除に失敗しました。',
+                        error.response.status
+                    );
                 });
         }
     };

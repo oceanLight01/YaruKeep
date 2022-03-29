@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useLocation, useParams } from 'react-router-dom';
 import FollowButton from '../Components/atoms/FollowButton';
 import { useAuth } from '../Components/Authenticate';
+import { useMessage } from '../Components/FlashMessageContext';
 import formatText from '../Components/FormatText';
 import HabitTracker from '../Components/HabitTracker';
 import Paginate from '../Components/Paginate';
@@ -29,7 +30,9 @@ const User = () => {
     const [habits, setHabits] = useState<HabitItem[] | []>([]);
     const [statusCode, setStatusCode] = useState<number>(0);
     const locationPath = useLocation().pathname;
+
     const auth = useAuth();
+    const flashMessage = useMessage();
 
     const [paginateData, setPaginateData] = useState({
         perPage: 1,
@@ -47,7 +50,6 @@ const User = () => {
             })
             .catch((error) => {
                 setStatusCode(error.response.status);
-                console.error(error);
             });
     };
 
@@ -55,6 +57,7 @@ const User = () => {
         axios
             .post('/api/habits/done', { userId: auth?.userData?.id, id: habitId })
             .then((res) => {
+                flashMessage?.setMessage('今日の目標を達成しました🎉 お疲れ様です!');
                 const data = res.data.data;
                 if (index !== undefined) {
                     setHabits(
@@ -65,7 +68,7 @@ const User = () => {
                 }
             })
             .catch((error) => {
-                console.error(error);
+                flashMessage?.setErrorMessage('更新に失敗しました。', error.response.status);
             });
     };
 
@@ -85,7 +88,6 @@ const User = () => {
             })
             .catch((error) => {
                 setStatusCode(error.response.status);
-                console.error(error);
             });
     };
 

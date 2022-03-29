@@ -10,6 +10,7 @@ import DistributionCalendar from '../Components/ContributionCalendar';
 import DiaryForm from '../Components/DiaryForm';
 import DiaryList from '../Components/DiaryList';
 import EditHabitForm from '../Components/EditHabitForm';
+import { useMessage } from '../Components/FlashMessageContext';
 import formatText from '../Components/FormatText';
 import LoginUserContent from '../Components/LoginUserContent';
 import Paginate from '../Components/Paginate';
@@ -18,6 +19,7 @@ import PageRender from './PageRender';
 
 const HabitStatus = () => {
     const auth = useAuth();
+    const flashMessage = useMessage();
 
     const [HabitItem, setHabitItem] = useState<HabitItem>({
         id: 0,
@@ -73,10 +75,11 @@ const HabitStatus = () => {
         axios
             .post('/api/habits/done', { userId: auth?.userData?.id, id: habitId })
             .then((res) => {
+                flashMessage?.setMessage('今日の目標を達成しました🎉 お疲れ様です!');
                 setHabitItem(res.data.data);
             })
             .catch((error) => {
-                console.error(error);
+                flashMessage?.setErrorMessage('更新に失敗しました。', error.response.status);
             });
     };
 
@@ -91,10 +94,14 @@ const HabitStatus = () => {
             axios
                 .delete(`/api/habits/${habitId}`)
                 .then(() => {
+                    flashMessage?.setMessage('ハビットトラッカーを削除しました。');
                     navigate(`/user/${auth?.userData?.screen_name}`);
                 })
                 .catch((error) => {
-                    console.error(error);
+                    flashMessage?.setErrorMessage(
+                        'ハビットトラッカーの削除に失敗しました。',
+                        error.response.status
+                    );
                 });
         }
     };
@@ -117,7 +124,7 @@ const HabitStatus = () => {
                 }
             })
             .catch((error) => {
-                console.error(error);
+                flashMessage?.setErrorMessage('日記の取得に失敗しました。', error.response.status);
             });
     };
 

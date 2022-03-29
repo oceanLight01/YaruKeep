@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { useMessage } from './FlashMessageContext';
 
 type Diary = {
     text: string;
@@ -12,6 +13,7 @@ type Props = {
 };
 
 const DiaryForm = (props: Props) => {
+    const flashMessage = useMessage();
     const [clicked, setClicked] = useState<boolean>(false);
     const {
         register,
@@ -31,9 +33,12 @@ const DiaryForm = (props: Props) => {
             .post('/api/diaries', postData)
             .then((res) => {
                 props.updateHabit(res.data.data);
+                flashMessage?.setMessage('日記を投稿しました。');
             })
             .catch((error) => {
-                console.error(error);
+                flashMessage?.setErrorMessage('日記の投稿に失敗しました。', error.response.status);
+            })
+            .finally(() => {
                 setClicked(false);
             });
     };
