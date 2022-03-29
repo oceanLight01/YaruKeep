@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, Route, Routes, useNavigate, useParams } from 'react-router-dom';
 import HabitDeleteButton from '../Components/atoms/HabitDeleteButton';
 import HabitDoneButton from '../Components/atoms/HabitDoneButton';
 import { useAuth } from '../Components/Authenticate';
@@ -11,11 +11,14 @@ import DiaryForm from '../Components/DiaryForm';
 import DiaryList from '../Components/DiaryList';
 import EditHabitForm from '../Components/EditHabitForm';
 import formatText from '../Components/FormatText';
+import LoginUserContent from '../Components/LoginUserContent';
 import Paginate from '../Components/Paginate';
+import Diary from './Diary';
 import PageRender from './PageRender';
 
 const HabitStatus = () => {
     const auth = useAuth();
+
     const [HabitItem, setHabitItem] = useState<HabitItem>({
         id: 0,
         title: '',
@@ -37,19 +40,20 @@ const HabitStatus = () => {
         created_at: '',
         updated_at: '',
     });
-    const [statusCode, setStatusCode] = useState<number>(0);
-    const [editing, setEditing] = useState<boolean>(false);
-    const [tab, setTab] = useState<'diary' | 'comment'>('diary');
-    const params = useParams<{ screenName: string; id: string }>();
-    const isLoginUser = auth?.userData?.id === HabitItem.user.id;
-    const navigate = useNavigate();
     const [diaries, setDiaries] = useState<DiaryItem[]>([]);
-
     const [paginateData, setPaginateData] = useState({
         perPage: 1,
         totalItem: 1,
         currentPage: 1,
     });
+
+    const [statusCode, setStatusCode] = useState<number>(0);
+    const [editing, setEditing] = useState<boolean>(false);
+    const [tab, setTab] = useState<'diary' | 'comment'>('diary');
+
+    const params = useParams<{ screenName: string; id: string }>();
+    const navigate = useNavigate();
+    const userId = HabitItem.user.id;
 
     useEffect(() => {
         axios
@@ -121,56 +125,14 @@ const HabitStatus = () => {
         getDiary(params.id, page);
     };
 
-    return (
-        <PageRender status={statusCode}>
+    const TabContents = () => {
+        return (
             <>
-                {!editing ? (
-                    <div>
-                        <h2>{HabitItem.title}</h2>
-                        <p>{formatText(HabitItem.description)}</p>
-                        <p>カテゴリ:{HabitItem.category_name}</p>
-                        <p>総達成日数:{HabitItem.done_days_count}日</p>
-                        <p>最大連続達成日数:{HabitItem.max_done_day}日</p>
-                        <p>
-                            <Link to={`/user/${HabitItem.user.screen_name}`}>
-                                {HabitItem.user.name}
-                            </Link>
-                        </p>
-                        <p>作成日:{HabitItem.created_at}</p>
-                        <div>
-                            <DistributionCalendar values={HabitItem.done_days_list} />
-                        </div>
-                        {isLoginUser ? (
-                            <>
-                                <HabitDoneButton
-                                    doneHabit={doneHabit}
-                                    id={HabitItem.id}
-                                    isDone={HabitItem.is_done}
-                                />
-                                <HabitDeleteButton id={HabitItem.id} deleteHabit={deleteHabit} />
-                                {HabitItem.can_post_diary ? (
-                                    <DiaryForm habitId={HabitItem.id} updateHabit={updateHabit} />
-                                ) : null}
-                            </>
-                        ) : null}
-                    </div>
-                ) : isLoginUser ? (
-                    <EditHabitForm
-                        {...{
-                            title: HabitItem.title,
-                            description: HabitItem.description ? HabitItem.description : '',
-                            categoryId: HabitItem.category_id,
-                            isPrivate: HabitItem.is_private ? 'true' : 'false',
-                            habitId: HabitItem.id,
-                            updateHabit: updateHabit,
-                        }}
-                    />
-                ) : null}
-                {isLoginUser ? (
-                    <button onClick={() => setEditing(!editing)}>
-                        {editing ? '戻る' : '編集する'}
-                    </button>
-                ) : null}
+                {HabitItem.can_post_diary && (
+                    <LoginUserContent userId={userId}>
+                        <DiaryForm habitId={HabitItem.id} updateHabit={updateHabit} />
+                    </LoginUserContent>
+                )}
                 <CommentForm
                     {...{
                         userId: auth?.userData?.id!,
@@ -210,6 +172,65 @@ const HabitStatus = () => {
                         })}
                     </ul>
                 )}
+            </>
+        );
+    };
+
+    return (
+        <PageRender status={statusCode}>
+            <>
+                {!editing ? (
+                    <div>
+                        <h2>{HabitItem.title}</h2>
+                        <p>{formatText(HabitItem.description)}</p>
+                        <p>カテゴリ:{HabitItem.category_name}</p>
+                        <p>総達成日数:{HabitItem.done_days_count}日</p>
+                        <p>最大連続達成日数:{HabitItem.max_done_day}日</p>
+                        <p>
+                            <Link to={`/user/${HabitItem.user.screen_name}`}>
+                                {HabitItem.user.name}
+                            </Link>
+                        </p>
+                        <p>作成日:{HabitItem.created_at}</p>
+                        <div>
+                            <DistributionCalendar values={HabitItem.done_days_list} />
+                        </div>
+                        <LoginUserContent userId={userId}>
+                            <>
+                                <HabitDoneButton
+                                    doneHabit={doneHabit}
+                                    id={HabitItem.id}
+                                    isDone={HabitItem.is_done}
+                                />
+                                <HabitDeleteButton id={HabitItem.id} deleteHabit={deleteHabit} />
+                            </>
+                        </LoginUserContent>
+                    </div>
+                ) : (
+                    <LoginUserContent userId={userId}>
+                        <EditHabitForm
+                            {...{
+                                title: HabitItem.title,
+                                description: HabitItem.description ? HabitItem.description : '',
+                                categoryId: HabitItem.category_id,
+                                isPrivate: HabitItem.is_private ? 'true' : 'false',
+                                habitId: HabitItem.id,
+                                updateHabit: updateHabit,
+                            }}
+                        />
+                    </LoginUserContent>
+                )}
+
+                <LoginUserContent userId={HabitItem.user.id}>
+                    <button onClick={() => setEditing(!editing)}>
+                        {editing ? '戻る' : '編集する'}
+                    </button>
+                </LoginUserContent>
+                <hr />
+                <Routes>
+                    <Route path="" element={<TabContents />} />
+                    <Route path="diary/:did" element={<Diary />} />
+                </Routes>
             </>
         </PageRender>
     );

@@ -3788,6 +3788,34 @@ exports["default"] = Loading;
 
 /***/ }),
 
+/***/ "./resources/ts/Components/LoginUserContent.tsx":
+/*!******************************************************!*\
+  !*** ./resources/ts/Components/LoginUserContent.tsx ***!
+  \******************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+
+var Authenticate_1 = __webpack_require__(/*! ./Authenticate */ "./resources/ts/Components/Authenticate.tsx");
+
+var LoginUserContent = function LoginUserContent(_a) {
+  var _b;
+
+  var children = _a.children,
+      userId = _a.userId;
+  var auth = (0, Authenticate_1.useAuth)();
+  return ((_b = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _b === void 0 ? void 0 : _b.id) === userId ? children : null;
+};
+
+exports["default"] = LoginUserContent;
+
+/***/ }),
+
 /***/ "./resources/ts/Components/NavNotificationItem.tsx":
 /*!*********************************************************!*\
   !*** ./resources/ts/Components/NavNotificationItem.tsx ***!
@@ -5665,8 +5693,6 @@ var HabitPost_1 = __importDefault(__webpack_require__(/*! ./HabitPost */ "./reso
 
 var HabitStatus_1 = __importDefault(__webpack_require__(/*! ./HabitStatus */ "./resources/ts/Pages/HabitStatus.tsx"));
 
-var Diary_1 = __importDefault(__webpack_require__(/*! ./Diary */ "./resources/ts/Pages/Diary.tsx"));
-
 var Settings_1 = __importDefault(__webpack_require__(/*! ./Settings */ "./resources/ts/Pages/Settings.tsx"));
 
 var FollowingUser_1 = __importDefault(__webpack_require__(/*! ./FollowingUser */ "./resources/ts/Pages/FollowingUser.tsx"));
@@ -5710,11 +5736,8 @@ var App = function App() {
     path: "/post/habit",
     element: react_1["default"].createElement(Authenticate_1.PrivateRoute, null, react_1["default"].createElement(HabitPost_1["default"], null))
   }), react_1["default"].createElement(react_router_dom_1.Route, {
-    path: "/user/:screenName/habit/:id",
+    path: "/user/:screenName/habit/:id/*",
     element: react_1["default"].createElement(Authenticate_1.PrivateRoute, null, react_1["default"].createElement(HabitStatus_1["default"], null))
-  }), react_1["default"].createElement(react_router_dom_1.Route, {
-    path: "/user/:screenName/habit/:id/diary/:did",
-    element: react_1["default"].createElement(Authenticate_1.PrivateRoute, null, react_1["default"].createElement(Diary_1["default"], null))
   }), react_1["default"].createElement(react_router_dom_1.Route, {
     path: "/user/:screenName/following",
     element: react_1["default"].createElement(Authenticate_1.PrivateRoute, null, react_1["default"].createElement(FollowingUser_1["default"], null))
@@ -6208,6 +6231,8 @@ var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/reac
 
 var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
 
+var react_router_dom_2 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
+
 var DiaryDeleteButton_1 = __importDefault(__webpack_require__(/*! ../Components/atoms/DiaryDeleteButton */ "./resources/ts/Components/atoms/DiaryDeleteButton.tsx"));
 
 var Authenticate_1 = __webpack_require__(/*! ../Components/Authenticate */ "./resources/ts/Components/Authenticate.tsx");
@@ -6220,14 +6245,14 @@ var EditDiaryForm_1 = __importDefault(__webpack_require__(/*! ../Components/Edit
 
 var FormatText_1 = __importDefault(__webpack_require__(/*! ../Components/FormatText */ "./resources/ts/Components/FormatText.tsx"));
 
+var LoginUserContent_1 = __importDefault(__webpack_require__(/*! ../Components/LoginUserContent */ "./resources/ts/Components/LoginUserContent.tsx"));
+
 var PageRender_1 = __importDefault(__webpack_require__(/*! ./PageRender */ "./resources/ts/Pages/PageRender.tsx"));
 
 var Diary = function Diary() {
-  var _a, _b;
+  var _a;
 
-  var params = (0, react_router_dom_1.useParams)();
-
-  var _c = (0, react_1.useState)({
+  var initialData = {
     id: 0,
     habit_id: 0,
     text: '',
@@ -6238,29 +6263,34 @@ var Diary = function Diary() {
     },
     comments: [],
     created_at: ''
-  }),
-      diary = _c[0],
-      setDiary = _c[1];
+  };
+  var params = (0, react_router_dom_2.useParams)();
+  var locationPath = (0, react_router_dom_2.useLocation)().pathname;
+  var habitPath = locationPath.match(/\/user\/[\w]+\/habit\/[\d]+/);
+  var navigate = (0, react_router_dom_2.useNavigate)();
 
-  var _d = (0, react_1.useState)(0),
-      statusCode = _d[0],
-      setStatusCode = _d[1];
+  var _b = (0, react_1.useState)(__assign({}, initialData)),
+      diary = _b[0],
+      setDiary = _b[1];
 
-  var _e = (0, react_1.useState)(false),
-      editing = _e[0],
-      setEditing = _e[1];
+  var _c = (0, react_1.useState)(0),
+      statusCode = _c[0],
+      setStatusCode = _c[1];
 
-  var navigate = (0, react_router_dom_1.useNavigate)();
+  var _d = (0, react_1.useState)(false),
+      editing = _d[0],
+      setEditing = _d[1];
+
   var auth = (0, Authenticate_1.useAuth)();
-  var isUser = ((_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.id) === diary.user.id;
   (0, react_1.useEffect)(function () {
+    setDiary(__assign({}, initialData));
     axios_1["default"].get("/api/habits/".concat(params.id, "/diaries/").concat(params.did)).then(function (res) {
       setDiary(res.data.data);
       setStatusCode(res.data.status);
     })["catch"](function (error) {
       setStatusCode(error.response.status);
     });
-  }, []);
+  }, [locationPath]);
 
   var updateDiary = function updateDiary(diaryItem) {
     setDiary(diaryItem);
@@ -6281,20 +6311,26 @@ var Diary = function Diary() {
 
   return react_1["default"].createElement(PageRender_1["default"], {
     status: statusCode
-  }, react_1["default"].createElement(react_1["default"].Fragment, null, !editing ? react_1["default"].createElement("div", null, react_1["default"].createElement("p", null, (0, FormatText_1["default"])(diary.text)), react_1["default"].createElement("p", null, diary.created_at), isUser && react_1["default"].createElement(DiaryDeleteButton_1["default"], {
+  }, react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement(react_router_dom_1.Link, {
+    to: "".concat(habitPath[0])
+  }, "\u623B\u308B"), !editing ? react_1["default"].createElement("div", null, react_1["default"].createElement("p", null, (0, FormatText_1["default"])(diary.text)), react_1["default"].createElement("p", null, diary.created_at), react_1["default"].createElement(LoginUserContent_1["default"], {
+    userId: diary.user.id
+  }, react_1["default"].createElement(DiaryDeleteButton_1["default"], {
     diaryId: diary.id,
     deleteDiary: deleteDiary
-  })) : react_1["default"].createElement("div", null, react_1["default"].createElement(EditDiaryForm_1["default"], __assign({}, {
+  }))) : react_1["default"].createElement("div", null, react_1["default"].createElement(EditDiaryForm_1["default"], __assign({}, {
     id: diary.id,
     text: diary.text,
     habitId: diary.habit_id,
     updateDiary: updateDiary
-  }))), isUser && react_1["default"].createElement("button", {
+  }))), react_1["default"].createElement(LoginUserContent_1["default"], {
+    userId: diary.user.id
+  }, react_1["default"].createElement("button", {
     onClick: function onClick() {
       return setEditing(!editing);
     }
-  }, editing ? '戻る' : '編集する'), react_1["default"].createElement(CommentForm_1["default"], __assign({}, {
-    userId: (_b = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _b === void 0 ? void 0 : _b.id,
+  }, editing ? '戻る' : '編集する')), react_1["default"].createElement(CommentForm_1["default"], __assign({}, {
+    userId: (_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.id,
     itemId: diary.id,
     parentId: null,
     updateItem: updateDiary
@@ -7062,16 +7098,18 @@ var EditHabitForm_1 = __importDefault(__webpack_require__(/*! ../Components/Edit
 
 var FormatText_1 = __importDefault(__webpack_require__(/*! ../Components/FormatText */ "./resources/ts/Components/FormatText.tsx"));
 
+var LoginUserContent_1 = __importDefault(__webpack_require__(/*! ../Components/LoginUserContent */ "./resources/ts/Components/LoginUserContent.tsx"));
+
 var Paginate_1 = __importDefault(__webpack_require__(/*! ../Components/Paginate */ "./resources/ts/Components/Paginate.tsx"));
+
+var Diary_1 = __importDefault(__webpack_require__(/*! ./Diary */ "./resources/ts/Pages/Diary.tsx"));
 
 var PageRender_1 = __importDefault(__webpack_require__(/*! ./PageRender */ "./resources/ts/Pages/PageRender.tsx"));
 
 var HabitStatus = function HabitStatus() {
-  var _a, _b;
-
   var auth = (0, Authenticate_1.useAuth)();
 
-  var _c = (0, react_1.useState)({
+  var _a = (0, react_1.useState)({
     id: 0,
     title: '',
     description: '',
@@ -7092,8 +7130,20 @@ var HabitStatus = function HabitStatus() {
     created_at: '',
     updated_at: ''
   }),
-      HabitItem = _c[0],
-      setHabitItem = _c[1];
+      HabitItem = _a[0],
+      setHabitItem = _a[1];
+
+  var _b = (0, react_1.useState)([]),
+      diaries = _b[0],
+      setDiaries = _b[1];
+
+  var _c = (0, react_1.useState)({
+    perPage: 1,
+    totalItem: 1,
+    currentPage: 1
+  }),
+      paginateData = _c[0],
+      setPaginateData = _c[1];
 
   var _d = (0, react_1.useState)(0),
       statusCode = _d[0],
@@ -7108,21 +7158,8 @@ var HabitStatus = function HabitStatus() {
       setTab = _f[1];
 
   var params = (0, react_router_dom_1.useParams)();
-  var isLoginUser = ((_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.id) === HabitItem.user.id;
   var navigate = (0, react_router_dom_1.useNavigate)();
-
-  var _g = (0, react_1.useState)([]),
-      diaries = _g[0],
-      setDiaries = _g[1];
-
-  var _h = (0, react_1.useState)({
-    perPage: 1,
-    totalItem: 1,
-    currentPage: 1
-  }),
-      paginateData = _h[0],
-      setPaginateData = _h[1];
-
+  var userId = HabitItem.user.id;
   (0, react_1.useEffect)(function () {
     axios_1["default"].get("/api/user/".concat(params.screenName, "/habits/").concat(params.id)).then(function (res) {
       setHabitItem(res.data.data);
@@ -7212,58 +7249,78 @@ var HabitStatus = function HabitStatus() {
     getDiary(params.id, page);
   };
 
+  var TabContents = function TabContents() {
+    var _a;
+
+    return react_1["default"].createElement(react_1["default"].Fragment, null, HabitItem.can_post_diary && react_1["default"].createElement(LoginUserContent_1["default"], {
+      userId: userId
+    }, react_1["default"].createElement(DiaryForm_1["default"], {
+      habitId: HabitItem.id,
+      updateHabit: updateHabit
+    })), react_1["default"].createElement(CommentForm_1["default"], __assign({}, {
+      userId: (_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.id,
+      itemId: HabitItem.id,
+      parentId: null,
+      commentType: 'habit',
+      updateItem: updateHabit
+    }, {
+      habitComment: true
+    })), react_1["default"].createElement("button", {
+      onClick: function onClick() {
+        return setTab(tab === 'diary' ? 'comment' : 'diary');
+      }
+    }, tab === 'diary' ? 'コメント' : '日記'), tab === 'diary' ? react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement(DiaryList_1["default"], {
+      diaries: diaries
+    }), diaries.length > 0 ? react_1["default"].createElement(Paginate_1["default"], {
+      perPage: paginateData.perPage,
+      itemCount: paginateData.totalItem,
+      getData: paginateDiary
+    }) : react_1["default"].createElement("p", null, "\u65E5\u8A18\u306F\u3042\u308A\u307E\u305B\u3093\u3002")) : react_1["default"].createElement("ul", null, HabitItem.comments.map(function (item, index) {
+      return (0, commentList_1["default"])({
+        item: item,
+        updateItem: updateHabit,
+        commentType: 'habit',
+        index: index
+      });
+    })));
+  };
+
   return react_1["default"].createElement(PageRender_1["default"], {
     status: statusCode
   }, react_1["default"].createElement(react_1["default"].Fragment, null, !editing ? react_1["default"].createElement("div", null, react_1["default"].createElement("h2", null, HabitItem.title), react_1["default"].createElement("p", null, (0, FormatText_1["default"])(HabitItem.description)), react_1["default"].createElement("p", null, "\u30AB\u30C6\u30B4\u30EA:", HabitItem.category_name), react_1["default"].createElement("p", null, "\u7DCF\u9054\u6210\u65E5\u6570:", HabitItem.done_days_count, "\u65E5"), react_1["default"].createElement("p", null, "\u6700\u5927\u9023\u7D9A\u9054\u6210\u65E5\u6570:", HabitItem.max_done_day, "\u65E5"), react_1["default"].createElement("p", null, react_1["default"].createElement(react_router_dom_1.Link, {
     to: "/user/".concat(HabitItem.user.screen_name)
   }, HabitItem.user.name)), react_1["default"].createElement("p", null, "\u4F5C\u6210\u65E5:", HabitItem.created_at), react_1["default"].createElement("div", null, react_1["default"].createElement(ContributionCalendar_1["default"], {
     values: HabitItem.done_days_list
-  })), isLoginUser ? react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement(HabitDoneButton_1["default"], {
+  })), react_1["default"].createElement(LoginUserContent_1["default"], {
+    userId: userId
+  }, react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement(HabitDoneButton_1["default"], {
     doneHabit: doneHabit,
     id: HabitItem.id,
     isDone: HabitItem.is_done
   }), react_1["default"].createElement(HabitDeleteButton_1["default"], {
     id: HabitItem.id,
     deleteHabit: deleteHabit
-  }), HabitItem.can_post_diary ? react_1["default"].createElement(DiaryForm_1["default"], {
-    habitId: HabitItem.id,
-    updateHabit: updateHabit
-  }) : null) : null) : isLoginUser ? react_1["default"].createElement(EditHabitForm_1["default"], __assign({}, {
+  })))) : react_1["default"].createElement(LoginUserContent_1["default"], {
+    userId: userId
+  }, react_1["default"].createElement(EditHabitForm_1["default"], __assign({}, {
     title: HabitItem.title,
     description: HabitItem.description ? HabitItem.description : '',
     categoryId: HabitItem.category_id,
     isPrivate: HabitItem.is_private ? 'true' : 'false',
     habitId: HabitItem.id,
     updateHabit: updateHabit
-  })) : null, isLoginUser ? react_1["default"].createElement("button", {
+  }))), react_1["default"].createElement(LoginUserContent_1["default"], {
+    userId: HabitItem.user.id
+  }, react_1["default"].createElement("button", {
     onClick: function onClick() {
       return setEditing(!editing);
     }
-  }, editing ? '戻る' : '編集する') : null, react_1["default"].createElement(CommentForm_1["default"], __assign({}, {
-    userId: (_b = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _b === void 0 ? void 0 : _b.id,
-    itemId: HabitItem.id,
-    parentId: null,
-    commentType: 'habit',
-    updateItem: updateHabit
-  }, {
-    habitComment: true
-  })), react_1["default"].createElement("button", {
-    onClick: function onClick() {
-      return setTab(tab === 'diary' ? 'comment' : 'diary');
-    }
-  }, tab === 'diary' ? 'コメント' : '日記'), tab === 'diary' ? react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement(DiaryList_1["default"], {
-    diaries: diaries
-  }), diaries.length > 0 ? react_1["default"].createElement(Paginate_1["default"], {
-    perPage: paginateData.perPage,
-    itemCount: paginateData.totalItem,
-    getData: paginateDiary
-  }) : react_1["default"].createElement("p", null, "\u65E5\u8A18\u306F\u3042\u308A\u307E\u305B\u3093\u3002")) : react_1["default"].createElement("ul", null, HabitItem.comments.map(function (item, index) {
-    return (0, commentList_1["default"])({
-      item: item,
-      updateItem: updateHabit,
-      commentType: 'habit',
-      index: index
-    });
+  }, editing ? '戻る' : '編集する')), react_1["default"].createElement("hr", null), react_1["default"].createElement(react_router_dom_1.Routes, null, react_1["default"].createElement(react_router_dom_1.Route, {
+    path: "",
+    element: react_1["default"].createElement(TabContents, null)
+  }), react_1["default"].createElement(react_router_dom_1.Route, {
+    path: "diary/:did",
+    element: react_1["default"].createElement(Diary_1["default"], null)
   }))));
 };
 

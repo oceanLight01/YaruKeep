@@ -109,18 +109,10 @@ const App = () => {
                             }
                         />
                         <Route
-                            path="/user/:screenName/habit/:id"
+                            path="/user/:screenName/habit/:id/*"
                             element={
                                 <PrivateRoute>
                                     <HabitStatus />
-                                </PrivateRoute>
-                            }
-                        />
-                        <Route
-                            path="/user/:screenName/habit/:id/diary/:did"
-                            element={
-                                <PrivateRoute>
-                                    <Diary />
                                 </PrivateRoute>
                             }
                         />
