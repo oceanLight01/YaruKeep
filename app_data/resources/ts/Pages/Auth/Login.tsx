@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -22,6 +22,13 @@ const Login = () => {
     } = useForm<LoginForm>({ mode: 'onBlur' });
     const navigate = useNavigate();
 
+    let unmounted = false;
+    useEffect(() => {
+        return () => {
+            unmounted = true;
+        };
+    }, []);
+
     const onSubmit: SubmitHandler<LoginForm> = (data) => {
         setIsLoading(true);
 
@@ -33,18 +40,24 @@ const Login = () => {
                         navigate('/home');
                     })
                     .catch((error) => {
-                        flashMessage?.setErrorMessage(
-                            'ログインに失敗しました。メールアドレスとパスワードが正しいかもう一度お確かめください。',
-                            error.response.status
-                        );
+                        if (!unmounted) {
+                            flashMessage?.setErrorMessage(
+                                'ログインに失敗しました。メールアドレスとパスワードが正しいかもう一度お確かめください。',
+                                error.response.status
+                            );
+                        }
                     })
                     .finally(() => {
-                        setIsLoading(false);
+                        if (!unmounted) {
+                            setIsLoading(false);
+                        }
                     });
             })
             .catch((error) => {
-                flashMessage?.setErrorMessage('認証に失敗しました。', error.response.status);
-                setIsLoading(false);
+                if (!unmounted) {
+                    flashMessage?.setErrorMessage('認証に失敗しました。', error.response.status);
+                    setIsLoading(false);
+                }
             });
     };
 

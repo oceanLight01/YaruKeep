@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../Authenticate';
 import { useMessage } from '../FlashMessageContext';
 
@@ -15,6 +15,13 @@ const FollowButton = (props: Props) => {
     const auth = useAuth();
     const flashMessage = useMessage();
     const [clicked, setClicked] = useState<boolean>(false);
+
+    let unmounted = false;
+    useEffect(() => {
+        return () => {
+            unmounted = true;
+        };
+    }, []);
 
     const followUser = () => {
         setClicked(true);
@@ -34,10 +41,17 @@ const FollowButton = (props: Props) => {
                 }
             })
             .catch((error) => {
-                flashMessage?.setErrorMessage('フォローに失敗しました。', error.response.status);
+                if (!unmounted) {
+                    flashMessage?.setErrorMessage(
+                        'フォローに失敗しました。',
+                        error.response.status
+                    );
+                }
             })
             .finally(() => {
-                setClicked(false);
+                if (!unmounted) {
+                    setClicked(false);
+                }
             });
     };
 
@@ -59,13 +73,17 @@ const FollowButton = (props: Props) => {
                 }
             })
             .catch((error) => {
-                flashMessage?.setErrorMessage(
-                    'フォロー解除に失敗しました。',
-                    error.response.status
-                );
+                if (!unmounted) {
+                    flashMessage?.setErrorMessage(
+                        'フォロー解除に失敗しました。',
+                        error.response.status
+                    );
+                }
             })
             .finally(() => {
-                setClicked(false);
+                if (!unmounted) {
+                    setClicked(false);
+                }
             });
     };
 

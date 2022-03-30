@@ -11,6 +11,7 @@ const Notification = () => {
         nextCursor: '',
         hasNext: false,
     });
+    let unmounted = false;
 
     const getNotificationData = (nextCursor?: string) => {
         setClicked(true);
@@ -23,27 +24,37 @@ const Notification = () => {
         axios
             .get(`/api/notifications${cursor}`)
             .then((res) => {
-                const data = res.data;
-                setNotification([...notification, ...data.notification]);
-                setPaginate({
-                    ...paginate,
-                    nextCursor: data.next_cursor,
-                    hasNext: data.has_next,
-                });
+                if (!unmounted) {
+                    const data = res.data;
+                    setNotification([...notification, ...data.notification]);
+                    setPaginate({
+                        ...paginate,
+                        nextCursor: data.next_cursor,
+                        hasNext: data.has_next,
+                    });
+                }
             })
             .catch((error) => {
-                flashMessage?.setErrorMessage(
-                    '通知情報の取得に失敗しました。',
-                    error.response.status
-                );
+                if (!unmounted) {
+                    flashMessage?.setErrorMessage(
+                        '通知情報の取得に失敗しました。',
+                        error.response.status
+                    );
+                }
             })
             .finally(() => {
-                setClicked(false);
+                if (!unmounted) {
+                    setClicked(false);
+                }
             });
     };
 
     useEffect(() => {
         getNotificationData();
+
+        return () => {
+            unmounted = true;
+        };
     }, []);
 
     return (

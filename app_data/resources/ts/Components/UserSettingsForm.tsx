@@ -29,10 +29,17 @@ const UserSettingsForm = (props: Props) => {
         setValue,
     } = useForm<SettingsForm>({ mode: 'onBlur' });
 
+    let unmounted = false;
     useEffect(() => {
-        setValue('name', auth?.userData?.name!);
-        setValue('screen_name', auth?.userData?.screen_name!);
-        setValue('profile', auth?.userData?.profile!);
+        if (!unmounted) {
+            setValue('name', auth?.userData?.name!);
+            setValue('screen_name', auth?.userData?.screen_name!);
+            setValue('profile', auth?.userData?.profile!);
+        }
+
+        return () => {
+            unmounted = true;
+        };
     }, []);
 
     const onSubmit: SubmitHandler<SettingsForm> = (data) => {
@@ -45,22 +52,29 @@ const UserSettingsForm = (props: Props) => {
 
         auth?.edit(editData)
             .then((value) => {
-                if (value[0] === undefined) {
-                    props.setShowSettingsForm(false);
-                    flashMessage?.setMessage('ユーザー情報を更新しました。');
-                } else {
-                    setErrorMessage({
-                        screen_name: value[0].screen_name ? value[0].screen_name : [],
-                    });
+                if (!unmounted) {
+                    if (value[0] === undefined) {
+                        props.setShowSettingsForm(false);
+                        flashMessage?.setMessage('ユーザー情報を更新しました。');
+                    } else {
+                        setErrorMessage({
+                            screen_name: value[0].screen_name ? value[0].screen_name : [],
+                        });
+                    }
                 }
-                setClicked(false);
             })
             .catch((error) => {
-                flashMessage?.setErrorMessage(
-                    'ユーザー情報の更新に失敗しました。',
-                    error.response.status
-                );
-                setClicked(false);
+                if (!unmounted) {
+                    flashMessage?.setErrorMessage(
+                        'ユーザー情報の更新に失敗しました。',
+                        error.response.status
+                    );
+                }
+            })
+            .finally(() => {
+                if (!unmounted) {
+                    setClicked(false);
+                }
             });
     };
 

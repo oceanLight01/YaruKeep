@@ -9,22 +9,33 @@ const FollowingUser = () => {
     const [followingList, setFollowingList] = useState<UserItem[]>([]);
     const { screenName } = useParams<{ screenName: string }>();
     const [isLoding, setIsLoding] = useState<boolean>(true);
+    let unmounted = false;
 
     useEffect(() => {
         axios
             .get(`/api/following/${screenName}`)
             .then((res) => {
-                setFollowingList(res.data.data);
+                if (!unmounted) {
+                    setFollowingList(res.data.data);
+                }
             })
             .catch((error) => {
-                flashMessage?.setErrorMessage(
-                    'フォロー中ユーザーの取得に失敗しました。',
-                    error.response.status
-                );
+                if (!unmounted) {
+                    flashMessage?.setErrorMessage(
+                        'フォロー中ユーザーの取得に失敗しました。',
+                        error.response.status
+                    );
+                }
             })
             .finally(() => {
-                setIsLoding(false);
+                if (!unmounted) {
+                    setIsLoding(false);
+                }
             });
+
+        return () => {
+            unmounted = true;
+        };
     }, []);
 
     const updateFollowInfo = (userItem: UserItem, index: number) => {

@@ -37,6 +37,7 @@ const Diary = () => {
 
     const auth = useAuth();
     const flashMessage = useMessage();
+    let unmounted = false;
 
     useEffect(() => {
         setDiary({ ...initialData });
@@ -44,12 +45,20 @@ const Diary = () => {
         axios
             .get(`/api/habits/${params.id}/diaries/${params.did}`)
             .then((res) => {
-                setDiary(res.data.data);
-                setStatusCode(res.data.status);
+                if (!unmounted) {
+                    setDiary(res.data.data);
+                    setStatusCode(res.data.status);
+                }
             })
             .catch((error) => {
-                setStatusCode(error.response.status);
+                if (!unmounted) {
+                    setStatusCode(error.response.status);
+                }
             });
+
+        return () => {
+            unmounted = true;
+        };
     }, [locationPath]);
 
     const updateDiary = (diaryItem: DiaryItem) => {
@@ -62,14 +71,18 @@ const Diary = () => {
             axios
                 .delete(`/api/diaries/${diaryId}`)
                 .then(() => {
-                    flashMessage?.setMessage('日記を削除しました。');
-                    navigate(`/user/${auth?.userData?.screen_name}/habit/${diary.habit_id}`);
+                    if (!unmounted) {
+                        flashMessage?.setMessage('日記を削除しました。');
+                        navigate(`/user/${auth?.userData?.screen_name}/habit/${diary.habit_id}`);
+                    }
                 })
                 .catch((error) => {
-                    flashMessage?.setErrorMessage(
-                        '日記の削除に失敗しました。',
-                        error.response.status
-                    );
+                    if (!unmounted) {
+                        flashMessage?.setErrorMessage(
+                            '日記の削除に失敗しました。',
+                            error.response.status
+                        );
+                    }
                 });
         }
     };

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../Components/Authenticate';
 import { useMessage } from '../Components/FlashMessageContext';
 import HabitTracker from '../Components/HabitTracker';
@@ -19,12 +19,19 @@ const Search = () => {
 
     const auth = useAuth();
     const flashMessage = useMessage();
+    let unmounted = false;
 
     const [paginateData, setPaginateData] = useState({
         perPage: 1,
         totalItem: 1,
         currentPage: 1,
     });
+
+    useEffect(() => {
+        return () => {
+            unmounted = true;
+        };
+    }, []);
 
     const setSearchInfo = (data: SearchForm) => {
         setSearchData(data);
@@ -44,26 +51,32 @@ const Search = () => {
         axios
             .post('/api/search', searchInfo)
             .then((res) => {
-                const data = res.data.habits;
-                if (data !== undefined) {
-                    setSearchResult(data);
-                } else {
-                    setNoContent(true);
-                }
+                if (!unmounted) {
+                    const data = res.data.habits;
+                    if (data !== undefined) {
+                        setSearchResult(data);
+                    } else {
+                        setNoContent(true);
+                    }
 
-                const paginate = res.data.meta;
-                setPaginateData({
-                    ...paginateData,
-                    perPage: paginate.per_page,
-                    totalItem: paginate.total,
-                    currentPage: paginate.current_page,
-                });
+                    const paginate = res.data.meta;
+                    setPaginateData({
+                        ...paginateData,
+                        perPage: paginate.per_page,
+                        totalItem: paginate.total,
+                        currentPage: paginate.current_page,
+                    });
+                }
             })
             .catch((error) => {
-                flashMessage?.setErrorMessage('検索に失敗しました。', error.response.status);
+                if (!unmounted) {
+                    flashMessage?.setErrorMessage('検索に失敗しました。', error.response.status);
+                }
             })
             .finally(() => {
-                setSearching(false);
+                if (!unmounted) {
+                    setSearching(false);
+                }
             });
     };
 
@@ -72,17 +85,21 @@ const Search = () => {
             .post('/api/habits/done', { userId: auth?.userData?.id, id: habitId })
             .then((res) => {
                 flashMessage?.setMessage('今日の目標を達成しました🎉 お疲れ様です!');
-                const data = res.data.data;
-                if (index !== undefined) {
-                    setSearchResult(
-                        searchResult.map((habit, key) => {
-                            return key === index ? data : habit;
-                        })
-                    );
+                if (!unmounted) {
+                    const data = res.data.data;
+                    if (index !== undefined) {
+                        setSearchResult(
+                            searchResult.map((habit, key) => {
+                                return key === index ? data : habit;
+                            })
+                        );
+                    }
                 }
             })
             .catch((error) => {
-                flashMessage?.setErrorMessage('更新に失敗しました。', error.response.status);
+                if (!unmounted) {
+                    flashMessage?.setErrorMessage('更新に失敗しました。', error.response.status);
+                }
             });
     };
 

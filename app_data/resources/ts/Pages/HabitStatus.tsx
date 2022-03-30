@@ -57,36 +57,52 @@ const HabitStatus = () => {
     const navigate = useNavigate();
     const userId = HabitItem.user.id;
 
+    let unmounted = false;
+
     useEffect(() => {
         axios
             .get(`/api/user/${params.screenName}/habits/${params.id}`)
             .then((res) => {
-                setHabitItem(res.data.data);
-                setStatusCode(res.data.status);
+                if (!unmounted) {
+                    setHabitItem(res.data.data);
+                    setStatusCode(res.data.status);
+                }
             })
             .catch((error) => {
-                setStatusCode(error.response.status);
+                if (!unmounted) {
+                    setStatusCode(error.response.status);
+                }
             });
 
         getDiary(params.id, paginateData.currentPage);
+
+        return () => {
+            unmounted = true;
+        };
     }, []);
 
     const doneHabit = (habitId: number) => {
         axios
             .post('/api/habits/done', { userId: auth?.userData?.id, id: habitId })
             .then((res) => {
-                flashMessage?.setMessage('今日の目標を達成しました🎉 お疲れ様です!');
-                setHabitItem(res.data.data);
+                if (!unmounted) {
+                    flashMessage?.setMessage('今日の目標を達成しました🎉 お疲れ様です!');
+                    setHabitItem(res.data.data);
+                }
             })
             .catch((error) => {
-                flashMessage?.setErrorMessage('更新に失敗しました。', error.response.status);
+                if (!unmounted) {
+                    flashMessage?.setErrorMessage('更新に失敗しました。', error.response.status);
+                }
             });
     };
 
     const updateHabit = async (habitItem: HabitItem) => {
         await getDiary(params.id, paginateData.currentPage);
-        setHabitItem(habitItem);
-        setEditing(false);
+        if (!unmounted) {
+            setHabitItem(habitItem);
+            setEditing(false);
+        }
     };
 
     const deleteHabit = (habitId: number) => {
@@ -94,14 +110,18 @@ const HabitStatus = () => {
             axios
                 .delete(`/api/habits/${habitId}`)
                 .then(() => {
-                    flashMessage?.setMessage('ハビットトラッカーを削除しました。');
-                    navigate(`/user/${auth?.userData?.screen_name}`);
+                    if (!unmounted) {
+                        flashMessage?.setMessage('ハビットトラッカーを削除しました。');
+                        navigate(`/user/${auth?.userData?.screen_name}`);
+                    }
                 })
                 .catch((error) => {
-                    flashMessage?.setErrorMessage(
-                        'ハビットトラッカーの削除に失敗しました。',
-                        error.response.status
-                    );
+                    if (!unmounted) {
+                        flashMessage?.setErrorMessage(
+                            'ハビットトラッカーの削除に失敗しました。',
+                            error.response.status
+                        );
+                    }
                 });
         }
     };
@@ -110,21 +130,28 @@ const HabitStatus = () => {
         return axios
             .get(`/api/habits/${id}/diaries?page=${page}`)
             .then((res) => {
-                const data = res.data.data;
-                if (data.length > 0) {
-                    setDiaries(data);
+                if (!unmounted) {
+                    const data = res.data.data;
+                    if (data) {
+                        setDiaries(data);
 
-                    const paginate = res.data.meta;
-                    setPaginateData({
-                        ...paginateData,
-                        perPage: paginate.per_page,
-                        totalItem: paginate.total,
-                        currentPage: paginate.current_page,
-                    });
+                        const paginate = res.data.meta;
+                        setPaginateData({
+                            ...paginateData,
+                            perPage: paginate.per_page,
+                            totalItem: paginate.total,
+                            currentPage: paginate.current_page,
+                        });
+                    }
                 }
             })
             .catch((error) => {
-                flashMessage?.setErrorMessage('日記の取得に失敗しました。', error.response.status);
+                if (!unmounted) {
+                    flashMessage?.setErrorMessage(
+                        '日記の取得に失敗しました。',
+                        error.response.status
+                    );
+                }
             });
     };
 

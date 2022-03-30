@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../Components/Authenticate';
@@ -30,6 +30,13 @@ const Register = () => {
     } = useForm<RegisterForm>({ mode: 'onBlur' });
     const navigate = useNavigate();
 
+    let unmounted = false;
+    useEffect(() => {
+        return () => {
+            unmounted = true;
+        };
+    }, []);
+
     const onSubmit: SubmitHandler<RegisterForm> = (data) => {
         setIsLoading(true);
 
@@ -49,7 +56,9 @@ const Register = () => {
                 }
             })
             .finally(() => {
-                setIsLoading(false);
+                if (!unmounted) {
+                    setIsLoading(false);
+                }
             });
     };
 

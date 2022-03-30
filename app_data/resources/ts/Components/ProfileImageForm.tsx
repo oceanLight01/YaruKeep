@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from './Authenticate';
 import { useMessage } from './FlashMessageContext';
 
@@ -10,6 +10,13 @@ const ProfileImageForm = () => {
 
     const auth = useAuth();
     const flashMessage = useMessage();
+
+    let unmounted = false;
+    useEffect(() => {
+        return () => {
+            unmounted = true;
+        };
+    }, []);
 
     const getImage = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files) return;
@@ -36,14 +43,18 @@ const ProfileImageForm = () => {
         await axios
             .post('/api/user/image', data, { headers })
             .then(() => {
-                setPreview('');
-                flashMessage?.setMessage('プロフィール画像を変更しました。');
+                if (!unmounted) {
+                    setPreview('');
+                    flashMessage?.setMessage('プロフィール画像を変更しました。');
+                }
             })
             .catch((error) => {
-                flashMessage?.setErrorMessage(
-                    'プロフィール画像の変更に失敗しました。',
-                    error.response.status
-                );
+                if (!unmounted) {
+                    flashMessage?.setErrorMessage(
+                        'プロフィール画像の変更に失敗しました。',
+                        error.response.status
+                    );
+                }
             });
 
         auth?.getUser();

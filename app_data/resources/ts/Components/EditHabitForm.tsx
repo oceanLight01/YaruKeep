@@ -24,11 +24,16 @@ const EditHabitForm = (props: HabitForm) => {
         setValue,
     } = useForm<HabitForm>({ mode: 'onBlur' });
 
+    let unmounted = false;
     useEffect(() => {
         setValue('title', props.title);
         setValue('description', props.description);
         setValue('categoryId', props.categoryId);
         setValue('isPrivate', props.isPrivate);
+
+        return () => {
+            unmounted = true;
+        };
     }, []);
 
     const onSubmit: SubmitHandler<HabitForm> = (data) => {
@@ -46,16 +51,24 @@ const EditHabitForm = (props: HabitForm) => {
         axios
             .put(`/api/habits/${props.habitId}`, habitData)
             .then((res) => {
-                props.updateHabit(res.data.data);
-                flashMessage?.setMessage('ハビットトラッカーを編集しました。');
+                if (!unmounted) {
+                    props.updateHabit(res.data.data);
+                    flashMessage?.setMessage('ハビットトラッカーを編集しました。');
+                }
             })
             .catch((error) => {
-                flashMessage?.setErrorMessage(
-                    'ハビットトラッカーの編集に失敗しました。',
-                    error.response.status
-                );
+                if (!unmounted) {
+                    flashMessage?.setErrorMessage(
+                        'ハビットトラッカーの編集に失敗しました。',
+                        error.response.status
+                    );
+                }
             })
-            .finally(() => setIsLoading(false));
+            .finally(() => {
+                if (!unmounted) {
+                    setIsLoading(false);
+                }
+            });
     };
 
     return (

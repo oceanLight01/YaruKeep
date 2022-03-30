@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useAuth } from './Authenticate';
 import { useMessage } from './FlashMessageContext';
@@ -20,6 +20,13 @@ const EmailChangeForm = () => {
         formState: { errors },
     } = useForm<EmailChangeForm>({ mode: 'onBlur' });
 
+    let unmounted = false;
+    useEffect(() => {
+        return () => {
+            unmounted = true;
+        };
+    }, []);
+
     const onSubmit: SubmitHandler<EmailChangeForm> = (data) => {
         setClicked(true);
 
@@ -31,20 +38,26 @@ const EmailChangeForm = () => {
         axios
             .post('/api/email/change', postData)
             .then(() => {
-                flashMessage?.setMessage('確認用メッセージを送信しました。');
+                if (!unmounted) {
+                    flashMessage?.setMessage('確認用メッセージを送信しました。');
+                }
             })
             .catch((error) => {
-                if (error.response.status >= 500) {
-                    flashMessage?.setErrorMessage('', error.response.status);
-                } else {
-                    setFormStatus({
-                        ...formStatus,
-                        error: error.response.data.errors.email,
-                    });
+                if (!unmounted) {
+                    if (error.response.status >= 500) {
+                        flashMessage?.setErrorMessage('', error.response.status);
+                    } else {
+                        setFormStatus({
+                            ...formStatus,
+                            error: error.response.data.errors.email,
+                        });
+                    }
                 }
             })
             .finally(() => {
-                setClicked(false);
+                if (!unmounted) {
+                    setClicked(false);
+                }
             });
     };
 

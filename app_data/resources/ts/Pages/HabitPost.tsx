@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useAuth } from '../Components/Authenticate';
 import { useMessage } from '../Components/FlashMessageContext';
@@ -22,6 +22,13 @@ const HabitPost = () => {
         reset,
     } = useForm<HabitForm>({ mode: 'onBlur' });
 
+    let unmounted = false;
+    useEffect(() => {
+        return () => {
+            unmounted = true;
+        };
+    }, []);
+
     const onSubmit: SubmitHandler<HabitForm> = (data) => {
         setIsLoading(true);
 
@@ -36,13 +43,24 @@ const HabitPost = () => {
         axios
             .post('/api/habits', habitData)
             .then(() => {
-                flashMessage?.setMessage('ハビットトラッカーを作成しました。');
-                reset();
+                if (!unmounted) {
+                    flashMessage?.setMessage('ハビットトラッカーを作成しました。');
+                    reset();
+                }
             })
-            .catch(() => {
-                flashMessage?.setErrorMessage('ハビットトラッカーの作成に失敗しました。');
+            .catch((error) => {
+                if (!unmounted) {
+                    flashMessage?.setErrorMessage(
+                        'ハビットトラッカーの作成に失敗しました。',
+                        error.response.status
+                    );
+                }
             })
-            .finally(() => setIsLoading(false));
+            .finally(() => {
+                if (!unmounted) {
+                    setIsLoading(false);
+                }
+            });
     };
 
     return (

@@ -26,8 +26,13 @@ const EditDiaryForm = (props: Props) => {
         setValue,
     } = useForm<Diary>();
 
+    let unmounted = false;
     useEffect(() => {
         setValue('text', props.text);
+
+        return () => {
+            unmounted = true;
+        };
     }, []);
 
     const onSubmit: SubmitHandler<Diary> = (data) => {
@@ -42,13 +47,24 @@ const EditDiaryForm = (props: Props) => {
         axios
             .put(`/api/diaries/${props.id}`, postData)
             .then((res) => {
-                props.updateDiary(res.data.data);
-                flashMessage?.setMessage('日記を編集しました。');
+                if (!unmounted) {
+                    props.updateDiary(res.data.data);
+                    flashMessage?.setMessage('日記を編集しました。');
+                }
             })
             .catch((error) => {
-                flashMessage?.setErrorMessage('日記の編集に失敗しました。', error.response.status);
+                if (!unmounted) {
+                    flashMessage?.setErrorMessage(
+                        '日記の編集に失敗しました。',
+                        error.response.status
+                    );
+                }
             })
-            .finally(() => setClicked(false));
+            .finally(() => {
+                if (!unmounted) {
+                    setClicked(false);
+                }
+            });
     };
 
     return (

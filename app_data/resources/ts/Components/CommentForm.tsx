@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useMessage } from './FlashMessageContext';
 
@@ -28,6 +28,13 @@ const CommentForm = (props: Props) => {
         setValue,
     } = useForm<CommentForm>();
 
+    let unmounted = false;
+    useEffect(() => {
+        return () => {
+            unmounted = true;
+        };
+    }, []);
+
     const onSubmit: SubmitHandler<CommentForm> = (data) => {
         setClicked(true);
 
@@ -43,17 +50,23 @@ const CommentForm = (props: Props) => {
             .then((res) => {
                 props.updateItem(res.data.data);
 
-                flashMessage?.setMessage('コメントを投稿しました。');
-                setValue('comment', '');
+                if (!unmounted) {
+                    flashMessage?.setMessage('コメントを投稿しました。');
+                    setValue('comment', '');
+                }
             })
             .catch((error) => {
-                flashMessage?.setErrorMessage(
-                    'コメントの投稿に失敗しました。',
-                    error.response.status
-                );
+                if (!unmounted) {
+                    flashMessage?.setErrorMessage(
+                        'コメントの投稿に失敗しました。',
+                        error.response.status
+                    );
+                }
             })
             .finally(() => {
-                setClicked(false);
+                if (!unmounted) {
+                    setClicked(false);
+                }
             });
     };
 

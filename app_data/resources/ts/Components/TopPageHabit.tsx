@@ -10,29 +10,38 @@ const TopPageHabit = () => {
 
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<boolean>(false);
+    let unmounted = false;
 
     useEffect(() => {
         axios
             .get('/api/habits/top')
             .then((res) => {
-                const data = res.data;
+                if (!unmounted) {
+                    const data = res.data;
 
-                setFollowUserHabits(data.following_user_habits);
+                    setFollowUserHabits(data.following_user_habits);
 
-                const category = data.same_category_habits;
-                setSameCategoryHabits(category.habits);
-                setCategory({
-                    categoryId: category.category_id,
-                    categoryName: category.category_name,
-                });
+                    const category = data.same_category_habits;
+                    setSameCategoryHabits(category.habits);
+                    setCategory({
+                        categoryId: category.category_id,
+                        categoryName: category.category_name,
+                    });
 
-                setNewestDoneHabits(data.newest_done_habits);
+                    setNewestDoneHabits(data.newest_done_habits);
 
-                setLoading(false);
+                    setLoading(false);
+                }
             })
             .catch(() => {
-                setError(true);
+                if (!unmounted) {
+                    setError(true);
+                }
             });
+
+        return () => {
+            unmounted = true;
+        };
     }, []);
 
     return loading ? (

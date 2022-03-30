@@ -2554,6 +2554,13 @@ var CommentForm = function CommentForm(props) {
       errors = _d.formState.errors,
       setValue = _d.setValue;
 
+  var unmounted = false;
+  (0, react_1.useEffect)(function () {
+    return function () {
+      unmounted = true;
+    };
+  }, []);
+
   var onSubmit = function onSubmit(data) {
     setClicked(true);
 
@@ -2565,12 +2572,19 @@ var CommentForm = function CommentForm(props) {
 
     axios_1["default"].post("/api/comments/".concat(commentType), postData).then(function (res) {
       props.updateItem(res.data.data);
-      flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setMessage('コメントを投稿しました。');
-      setValue('comment', '');
+
+      if (!unmounted) {
+        flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setMessage('コメントを投稿しました。');
+        setValue('comment', '');
+      }
     })["catch"](function (error) {
-      flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('コメントの投稿に失敗しました。', error.response.status);
+      if (!unmounted) {
+        flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('コメントの投稿に失敗しました。', error.response.status);
+      }
     })["finally"](function () {
-      setClicked(false);
+      if (!unmounted) {
+        setClicked(false);
+      }
     });
   };
 
@@ -2986,6 +3000,13 @@ var DiaryForm = function DiaryForm(props) {
       handleSubmit = _d.handleSubmit,
       errors = _d.formState.errors;
 
+  var unmounted = false;
+  (0, react_1.useEffect)(function () {
+    return function () {
+      unmounted = true;
+    };
+  }, []);
+
   var onSubmit = function onSubmit(data) {
     setClicked(true);
 
@@ -2994,12 +3015,18 @@ var DiaryForm = function DiaryForm(props) {
     });
 
     axios_1["default"].post('/api/diaries', postData).then(function (res) {
-      props.updateHabit(res.data.data);
-      flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setMessage('日記を投稿しました。');
+      if (!unmounted) {
+        props.updateHabit(res.data.data);
+        flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setMessage('日記を投稿しました。');
+      }
     })["catch"](function (error) {
-      flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('日記の投稿に失敗しました。', error.response.status);
+      if (!unmounted) {
+        flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('日記の投稿に失敗しました。', error.response.status);
+      }
     })["finally"](function () {
-      setClicked(false);
+      if (!unmounted) {
+        setClicked(false);
+      }
     });
   };
 
@@ -3213,8 +3240,12 @@ var EditDiaryForm = function EditDiaryForm(props) {
       errors = _d.formState.errors,
       setValue = _d.setValue;
 
+  var unmounted = false;
   (0, react_1.useEffect)(function () {
     setValue('text', props.text);
+    return function () {
+      unmounted = true;
+    };
   }, []);
 
   var onSubmit = function onSubmit(data) {
@@ -3228,12 +3259,18 @@ var EditDiaryForm = function EditDiaryForm(props) {
     });
 
     axios_1["default"].put("/api/diaries/".concat(props.id), postData).then(function (res) {
-      props.updateDiary(res.data.data);
-      flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setMessage('日記を編集しました。');
+      if (!unmounted) {
+        props.updateDiary(res.data.data);
+        flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setMessage('日記を編集しました。');
+      }
     })["catch"](function (error) {
-      flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('日記の編集に失敗しました。', error.response.status);
+      if (!unmounted) {
+        flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('日記の編集に失敗しました。', error.response.status);
+      }
     })["finally"](function () {
-      return setClicked(false);
+      if (!unmounted) {
+        setClicked(false);
+      }
     });
   };
 
@@ -3353,11 +3390,15 @@ var EditHabitForm = function EditHabitForm(props) {
       errors = _f.formState.errors,
       setValue = _f.setValue;
 
+  var unmounted = false;
   (0, react_1.useEffect)(function () {
     setValue('title', props.title);
     setValue('description', props.description);
     setValue('categoryId', props.categoryId);
     setValue('isPrivate', props.isPrivate);
+    return function () {
+      unmounted = true;
+    };
   }, []);
 
   var onSubmit = function onSubmit(data) {
@@ -3373,12 +3414,18 @@ var EditHabitForm = function EditHabitForm(props) {
       isPrivate: data.isPrivate === 'true'
     };
     axios_1["default"].put("/api/habits/".concat(props.habitId), habitData).then(function (res) {
-      props.updateHabit(res.data.data);
-      flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setMessage('ハビットトラッカーを編集しました。');
+      if (!unmounted) {
+        props.updateHabit(res.data.data);
+        flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setMessage('ハビットトラッカーを編集しました。');
+      }
     })["catch"](function (error) {
-      flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('ハビットトラッカーの編集に失敗しました。', error.response.status);
+      if (!unmounted) {
+        flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('ハビットトラッカーの編集に失敗しました。', error.response.status);
+      }
     })["finally"](function () {
-      return setIsLoading(false);
+      if (!unmounted) {
+        setIsLoading(false);
+      }
     });
   };
 
@@ -3557,6 +3604,13 @@ var EmailChangeForm = function EmailChangeForm() {
       handleSubmit = _f.handleSubmit,
       errors = _f.formState.errors;
 
+  var unmounted = false;
+  (0, react_1.useEffect)(function () {
+    return function () {
+      unmounted = true;
+    };
+  }, []);
+
   var onSubmit = function onSubmit(data) {
     var _a;
 
@@ -3567,17 +3621,23 @@ var EmailChangeForm = function EmailChangeForm() {
     });
 
     axios_1["default"].post('/api/email/change', postData).then(function () {
-      flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setMessage('確認用メッセージを送信しました。');
+      if (!unmounted) {
+        flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setMessage('確認用メッセージを送信しました。');
+      }
     })["catch"](function (error) {
-      if (error.response.status >= 500) {
-        flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('', error.response.status);
-      } else {
-        setFormStatus(__assign(__assign({}, formStatus), {
-          error: error.response.data.errors.email
-        }));
+      if (!unmounted) {
+        if (error.response.status >= 500) {
+          flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('', error.response.status);
+        } else {
+          setFormStatus(__assign(__assign({}, formStatus), {
+            error: error.response.data.errors.email
+          }));
+        }
       }
     })["finally"](function () {
-      setClicked(false);
+      if (!unmounted) {
+        setClicked(false);
+      }
     });
   };
 
@@ -4526,6 +4586,13 @@ var PasswordChangeForm = function PasswordChangeForm() {
       formStatus = _h[0],
       setFormStatus = _h[1];
 
+  var unmounted = false;
+  (0, react_1.useEffect)(function () {
+    return function () {
+      unmounted = true;
+    };
+  }, []);
+
   var _j = (0, react_hook_form_1.useForm)(),
       register = _j.register,
       handleSubmit = _j.handleSubmit,
@@ -4540,25 +4607,29 @@ var PasswordChangeForm = function PasswordChangeForm() {
       password_confirmation: data.password_confirmation
     };
     auth === null || auth === void 0 ? void 0 : auth.changePassword(postData).then(function () {
-      flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setMessage('パスワードを変更しました。');
-      setFormStatus(__assign(__assign({}, formStatus), {
-        errors: {
-          curren_password: '',
-          password: ''
-        }
-      }));
-      reset();
-    })["catch"](function (error) {
-      if (error.response.status >= 500) {
-        flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('', error.response.status);
-      } else {
-        var errorMessage = error.response.data.errors;
+      if (!unmounted) {
+        flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setMessage('パスワードを変更しました。');
         setFormStatus(__assign(__assign({}, formStatus), {
           errors: {
-            curren_password: errorMessage.current_password ? errorMessage.current_password[0] : '',
-            password: errorMessage.password ? errorMessage.password[0] : ''
+            curren_password: '',
+            password: ''
           }
         }));
+        reset();
+      }
+    })["catch"](function (error) {
+      if (!unmounted) {
+        if (error.response.status >= 500) {
+          flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('', error.response.status);
+        } else {
+          var errorMessage = error.response.data.errors;
+          setFormStatus(__assign(__assign({}, formStatus), {
+            errors: {
+              curren_password: errorMessage.current_password ? errorMessage.current_password[0] : '',
+              password: errorMessage.password ? errorMessage.password[0] : ''
+            }
+          }));
+        }
       }
     });
   };
@@ -4820,6 +4891,12 @@ var ProfileImageForm = function ProfileImageForm() {
 
   var auth = (0, Authenticate_1.useAuth)();
   var flashMessage = (0, FlashMessageContext_1.useMessage)();
+  var unmounted = false;
+  (0, react_1.useEffect)(function () {
+    return function () {
+      unmounted = true;
+    };
+  }, []);
 
   var getImage = function getImage(e) {
     if (!e.target.files) return;
@@ -4858,10 +4935,14 @@ var ProfileImageForm = function ProfileImageForm() {
             , axios_1["default"].post('/api/user/image', data, {
               headers: headers
             }).then(function () {
-              setPreview('');
-              flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setMessage('プロフィール画像を変更しました。');
+              if (!unmounted) {
+                setPreview('');
+                flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setMessage('プロフィール画像を変更しました。');
+              }
             })["catch"](function (error) {
-              flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('プロフィール画像の変更に失敗しました。', error.response.status);
+              if (!unmounted) {
+                flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('プロフィール画像の変更に失敗しました。', error.response.status);
+              }
             })];
 
           case 1:
@@ -5079,21 +5160,29 @@ var TopPageHabit = function TopPageHabit() {
       error = _f[0],
       setError = _f[1];
 
+  var unmounted = false;
   (0, react_1.useEffect)(function () {
     axios_1["default"].get('/api/habits/top').then(function (res) {
-      var data = res.data;
-      setFollowUserHabits(data.following_user_habits);
-      var category = data.same_category_habits;
-      setSameCategoryHabits(category.habits);
-      setCategory({
-        categoryId: category.category_id,
-        categoryName: category.category_name
-      });
-      setNewestDoneHabits(data.newest_done_habits);
-      setLoading(false);
+      if (!unmounted) {
+        var data = res.data;
+        setFollowUserHabits(data.following_user_habits);
+        var category_1 = data.same_category_habits;
+        setSameCategoryHabits(category_1.habits);
+        setCategory({
+          categoryId: category_1.category_id,
+          categoryName: category_1.category_name
+        });
+        setNewestDoneHabits(data.newest_done_habits);
+        setLoading(false);
+      }
     })["catch"](function () {
-      setError(true);
+      if (!unmounted) {
+        setError(true);
+      }
     });
+    return function () {
+      unmounted = true;
+    };
   }, []);
   return loading ? react_1["default"].createElement("p", null, "\u8AAD\u307F\u8FBC\u307F\u4E2D...") : error ? react_1["default"].createElement("p", null, "\u60C5\u5831\u306E\u53D6\u5F97\u306B\u5931\u6557\u3057\u307E\u3057\u305F\u3002") : react_1["default"].createElement("div", null, followUserHabits.length > 0 ? react_1["default"].createElement("div", null, react_1["default"].createElement("h2", null, "\u30D5\u30A9\u30ED\u30FC\u4E2D\u306E\u30E6\u30FC\u30B6\u30FC\u306E\u30CF\u30D3\u30C3\u30C8\u30C8\u30E9\u30C3\u30AB\u30FC"), react_1["default"].createElement("ul", null, followUserHabits.map(function (item, index) {
     return react_1["default"].createElement(HabitTracker_1["default"], {
@@ -5283,12 +5372,19 @@ var UserSettingsForm = function UserSettingsForm(props) {
       errors = _j.formState.errors,
       setValue = _j.setValue;
 
+  var unmounted = false;
   (0, react_1.useEffect)(function () {
     var _a, _b, _c;
 
-    setValue('name', (_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.name);
-    setValue('screen_name', (_b = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _b === void 0 ? void 0 : _b.screen_name);
-    setValue('profile', (_c = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _c === void 0 ? void 0 : _c.profile);
+    if (!unmounted) {
+      setValue('name', (_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.name);
+      setValue('screen_name', (_b = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _b === void 0 ? void 0 : _b.screen_name);
+      setValue('profile', (_c = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _c === void 0 ? void 0 : _c.profile);
+    }
+
+    return function () {
+      unmounted = true;
+    };
   }, []);
 
   var onSubmit = function onSubmit(data) {
@@ -5301,19 +5397,24 @@ var UserSettingsForm = function UserSettingsForm(props) {
     });
 
     auth === null || auth === void 0 ? void 0 : auth.edit(editData).then(function (value) {
-      if (value[0] === undefined) {
-        props.setShowSettingsForm(false);
-        flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setMessage('ユーザー情報を更新しました。');
-      } else {
-        setErrorMessage({
-          screen_name: value[0].screen_name ? value[0].screen_name : []
-        });
+      if (!unmounted) {
+        if (value[0] === undefined) {
+          props.setShowSettingsForm(false);
+          flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setMessage('ユーザー情報を更新しました。');
+        } else {
+          setErrorMessage({
+            screen_name: value[0].screen_name ? value[0].screen_name : []
+          });
+        }
       }
-
-      setClicked(false);
     })["catch"](function (error) {
-      flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('ユーザー情報の更新に失敗しました。', error.response.status);
-      setClicked(false);
+      if (!unmounted) {
+        flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('ユーザー情報の更新に失敗しました。', error.response.status);
+      }
+    })["finally"](function () {
+      if (!unmounted) {
+        setClicked(false);
+      }
     });
   };
 
@@ -5362,6 +5463,40 @@ exports["default"] = UserSettingsForm;
 "use strict";
 
 
+var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  Object.defineProperty(o, k2, {
+    enumerable: true,
+    get: function get() {
+      return m[k];
+    }
+  });
+} : function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+});
+
+var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+  Object.defineProperty(o, "default", {
+    enumerable: true,
+    value: v
+  });
+} : function (o, v) {
+  o["default"] = v;
+});
+
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  }
+
+  __setModuleDefault(result, mod);
+
+  return result;
+};
+
 var __importDefault = this && this.__importDefault || function (mod) {
   return mod && mod.__esModule ? mod : {
     "default": mod
@@ -5372,7 +5507,7 @@ Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
 
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 
 var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
 
@@ -5380,6 +5515,12 @@ var FlashMessageContext_1 = __webpack_require__(/*! ../FlashMessageContext */ ".
 
 var CommentDeleteButton = function CommentDeleteButton(props) {
   var flashMessage = (0, FlashMessageContext_1.useMessage)();
+  var unmounted = false;
+  (0, react_1.useEffect)(function () {
+    return function () {
+      unmounted = true;
+    };
+  }, []);
 
   var deleteComment = function deleteComment(commentId) {
     if (window.confirm('コメントを削除します。もとに戻せませんがよろしいですか？')) {
@@ -5505,6 +5646,13 @@ var FollowButton = function FollowButton(props) {
       clicked = _a[0],
       setClicked = _a[1];
 
+  var unmounted = false;
+  (0, react_1.useEffect)(function () {
+    return function () {
+      unmounted = true;
+    };
+  }, []);
+
   var followUser = function followUser() {
     var _a;
 
@@ -5522,9 +5670,13 @@ var FollowButton = function FollowButton(props) {
         props.getUserData();
       }
     })["catch"](function (error) {
-      flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('フォローに失敗しました。', error.response.status);
+      if (!unmounted) {
+        flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('フォローに失敗しました。', error.response.status);
+      }
     })["finally"](function () {
-      setClicked(false);
+      if (!unmounted) {
+        setClicked(false);
+      }
     });
   };
 
@@ -5545,9 +5697,13 @@ var FollowButton = function FollowButton(props) {
         props.getUserData();
       }
     })["catch"](function (error) {
-      flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('フォロー解除に失敗しました。', error.response.status);
+      if (!unmounted) {
+        flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('フォロー解除に失敗しました。', error.response.status);
+      }
     })["finally"](function () {
-      setClicked(false);
+      if (!unmounted) {
+        setClicked(false);
+      }
     });
   };
 
@@ -5640,17 +5796,45 @@ exports["default"] = HabitDoneButton;
 "use strict";
 
 
-var __importDefault = this && this.__importDefault || function (mod) {
-  return mod && mod.__esModule ? mod : {
-    "default": mod
-  };
+var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  Object.defineProperty(o, k2, {
+    enumerable: true,
+    get: function get() {
+      return m[k];
+    }
+  });
+} : function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+});
+
+var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+  Object.defineProperty(o, "default", {
+    enumerable: true,
+    value: v
+  });
+} : function (o, v) {
+  o["default"] = v;
+});
+
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  }
+
+  __setModuleDefault(result, mod);
+
+  return result;
 };
 
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
 
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 
 var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
 
@@ -5662,13 +5846,21 @@ var LogoutButton = function LogoutButton() {
   var navigate = (0, react_router_dom_1.useNavigate)();
   var auth = (0, Authenticate_1.useAuth)();
   var flashMessage = (0, FlashMessageContext_1.useMessage)();
+  var unmounted = false;
+  (0, react_1.useEffect)(function () {
+    return function () {
+      unmounted = true;
+    };
+  }, []);
 
   var logout = function logout() {
     if (window.confirm('ログアウトします。よろしいですか？')) {
       auth === null || auth === void 0 ? void 0 : auth.logout().then(function () {
         navigate('/login');
       })["catch"](function (error) {
-        flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('ログアウトに失敗しました。', error.response.status);
+        if (!unmounted) {
+          flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('ログアウトに失敗しました。', error.response.status);
+        }
       });
     }
   };
@@ -5691,6 +5883,40 @@ exports["default"] = LogoutButton;
 "use strict";
 
 
+var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  Object.defineProperty(o, k2, {
+    enumerable: true,
+    get: function get() {
+      return m[k];
+    }
+  });
+} : function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+});
+
+var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+  Object.defineProperty(o, "default", {
+    enumerable: true,
+    value: v
+  });
+} : function (o, v) {
+  o["default"] = v;
+});
+
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  }
+
+  __setModuleDefault(result, mod);
+
+  return result;
+};
+
 var __importDefault = this && this.__importDefault || function (mod) {
   return mod && mod.__esModule ? mod : {
     "default": mod
@@ -5703,7 +5929,7 @@ Object.defineProperty(exports, "__esModule", ({
 
 var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
 
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 
 var Authenticate_1 = __webpack_require__(/*! ../Authenticate */ "./resources/ts/Components/Authenticate.tsx");
 
@@ -5712,6 +5938,12 @@ var FlashMessageContext_1 = __webpack_require__(/*! ../FlashMessageContext */ ".
 var UserDeleteButton = function UserDeleteButton() {
   var auth = (0, Authenticate_1.useAuth)();
   var flashMessage = (0, FlashMessageContext_1.useMessage)();
+  var unmounted = false;
+  (0, react_1.useEffect)(function () {
+    return function () {
+      unmounted = true;
+    };
+  });
 
   var deleteUser = function deleteUser() {
     var _a;
@@ -5724,7 +5956,9 @@ var UserDeleteButton = function UserDeleteButton() {
       }).then(function () {
         auth === null || auth === void 0 ? void 0 : auth.logout();
       })["catch"](function (error) {
-        flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('アカウント削除に失敗しました。', error.response.status);
+        if (!unmounted) {
+          flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('アカウント削除に失敗しました。', error.response.status);
+        }
       });
     }
   };
@@ -5981,6 +6215,40 @@ if (document.getElementById('app')) {
 "use strict";
 
 
+var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  Object.defineProperty(o, k2, {
+    enumerable: true,
+    get: function get() {
+      return m[k];
+    }
+  });
+} : function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+});
+
+var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+  Object.defineProperty(o, "default", {
+    enumerable: true,
+    value: v
+  });
+} : function (o, v) {
+  o["default"] = v;
+});
+
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  }
+
+  __setModuleDefault(result, mod);
+
+  return result;
+};
+
 var __importDefault = this && this.__importDefault || function (mod) {
   return mod && mod.__esModule ? mod : {
     "default": mod
@@ -5991,7 +6259,7 @@ Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
 
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 
 var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
 
@@ -6001,12 +6269,22 @@ var FlashMessageContext_1 = __webpack_require__(/*! ../../Components/FlashMessag
 
 var EmailVerified = function EmailVerified() {
   var flashMessage = (0, FlashMessageContext_1.useMessage)();
+  var unmounted = false;
+  (0, react_1.useEffect)(function () {
+    return function () {
+      unmounted = true;
+    };
+  }, []);
 
   var sendVerifiedEmail = function sendVerifiedEmail() {
     axios_1["default"].post('api/email/verification-notification').then(function () {
-      flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setMessage('新しいメールを送信しました。');
+      if (!unmounted) {
+        flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setMessage('新しいメールを送信しました。');
+      }
     })["catch"](function (error) {
-      flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('メールの再送信に失敗しました。', error.response.status);
+      if (!unmounted) {
+        flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('メールの再送信に失敗しました。', error.response.status);
+      }
     });
   };
 
@@ -6116,6 +6394,12 @@ var Login = function Login() {
       errors = _b.formState.errors;
 
   var navigate = (0, react_router_dom_1.useNavigate)();
+  var unmounted = false;
+  (0, react_1.useEffect)(function () {
+    return function () {
+      unmounted = true;
+    };
+  }, []);
 
   var onSubmit = function onSubmit(data) {
     setIsLoading(true);
@@ -6123,13 +6407,19 @@ var Login = function Login() {
       auth === null || auth === void 0 ? void 0 : auth.login(data).then(function () {
         navigate('/home');
       })["catch"](function (error) {
-        flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('ログインに失敗しました。メールアドレスとパスワードが正しいかもう一度お確かめください。', error.response.status);
+        if (!unmounted) {
+          flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('ログインに失敗しました。メールアドレスとパスワードが正しいかもう一度お確かめください。', error.response.status);
+        }
       })["finally"](function () {
-        setIsLoading(false);
+        if (!unmounted) {
+          setIsLoading(false);
+        }
       });
     })["catch"](function (error) {
-      flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('認証に失敗しました。', error.response.status);
-      setIsLoading(false);
+      if (!unmounted) {
+        flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('認証に失敗しました。', error.response.status);
+        setIsLoading(false);
+      }
     });
   };
 
@@ -6259,6 +6549,12 @@ var Register = function Register() {
       getValues = _s.getValues;
 
   var navigate = (0, react_router_dom_1.useNavigate)();
+  var unmounted = false;
+  (0, react_1.useEffect)(function () {
+    return function () {
+      unmounted = true;
+    };
+  }, []);
 
   var onSubmit = function onSubmit(data) {
     setIsLoading(true);
@@ -6276,7 +6572,9 @@ var Register = function Register() {
         });
       }
     })["finally"](function () {
-      setIsLoading(false);
+      if (!unmounted) {
+        setIsLoading(false);
+      }
     });
   };
 
@@ -6473,14 +6771,22 @@ var Diary = function Diary() {
 
   var auth = (0, Authenticate_1.useAuth)();
   var flashMessage = (0, FlashMessageContext_1.useMessage)();
+  var unmounted = false;
   (0, react_1.useEffect)(function () {
     setDiary(__assign({}, initialData));
     axios_1["default"].get("/api/habits/".concat(params.id, "/diaries/").concat(params.did)).then(function (res) {
-      setDiary(res.data.data);
-      setStatusCode(res.data.status);
+      if (!unmounted) {
+        setDiary(res.data.data);
+        setStatusCode(res.data.status);
+      }
     })["catch"](function (error) {
-      setStatusCode(error.response.status);
+      if (!unmounted) {
+        setStatusCode(error.response.status);
+      }
     });
+    return function () {
+      unmounted = true;
+    };
   }, [locationPath]);
 
   var updateDiary = function updateDiary(diaryItem) {
@@ -6493,10 +6799,14 @@ var Diary = function Diary() {
       axios_1["default"]["delete"]("/api/diaries/".concat(diaryId)).then(function () {
         var _a;
 
-        flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setMessage('日記を削除しました。');
-        navigate("/user/".concat((_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.screen_name, "/habit/").concat(diary.habit_id));
+        if (!unmounted) {
+          flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setMessage('日記を削除しました。');
+          navigate("/user/".concat((_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.screen_name, "/habit/").concat(diary.habit_id));
+        }
       })["catch"](function (error) {
-        flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('日記の削除に失敗しました。', error.response.status);
+        if (!unmounted) {
+          flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('日記の削除に失敗しました。', error.response.status);
+        }
       });
     }
   };
@@ -6616,14 +6926,24 @@ var FollowedUser = function FollowedUser() {
       isLoding = _b[0],
       setIsLoding = _b[1];
 
+  var unmounted = false;
   (0, react_1.useEffect)(function () {
     axios_1["default"].get("/api/followed/".concat(screenName)).then(function (res) {
-      setFollowedList(res.data.data);
+      if (!unmounted) {
+        setFollowedList(res.data.data);
+      }
     })["catch"](function (error) {
-      flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('フォローされているユーザーの取得に失敗しました。', error.response.status);
+      if (!unmounted) {
+        flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('フォローされているユーザーの取得に失敗しました。', error.response.status);
+      }
     })["finally"](function () {
-      setIsLoding(false);
+      if (!unmounted) {
+        setIsLoding(false);
+      }
     });
+    return function () {
+      unmounted = true;
+    };
   }, []);
 
   var updateFollowInfo = function updateFollowInfo(userItem, index) {
@@ -6722,14 +7042,24 @@ var FollowingUser = function FollowingUser() {
       isLoding = _b[0],
       setIsLoding = _b[1];
 
+  var unmounted = false;
   (0, react_1.useEffect)(function () {
     axios_1["default"].get("/api/following/".concat(screenName)).then(function (res) {
-      setFollowingList(res.data.data);
+      if (!unmounted) {
+        setFollowingList(res.data.data);
+      }
     })["catch"](function (error) {
-      flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('フォロー中ユーザーの取得に失敗しました。', error.response.status);
+      if (!unmounted) {
+        flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('フォロー中ユーザーの取得に失敗しました。', error.response.status);
+      }
     })["finally"](function () {
-      setIsLoding(false);
+      if (!unmounted) {
+        setIsLoding(false);
+      }
     });
+    return function () {
+      unmounted = true;
+    };
   }, []);
 
   var updateFollowInfo = function updateFollowInfo(userItem, index) {
@@ -6851,26 +7181,39 @@ var ForgotPassword = function ForgotPassword() {
       handleSubmit = _d.handleSubmit,
       errors = _d.formState.errors;
 
+  var unmounted = false;
+  (0, react_1.useEffect)(function () {
+    return function () {
+      unmounted = true;
+    };
+  }, []);
+
   var onSubmit = function onSubmit(data) {
     setClicked(true);
     setFormStatus(__assign(__assign({}, formStatus), {
       error: ''
     }));
     axios_1["default"].post('/api/forgot-password', data).then(function () {
-      flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setMessage('パスワードリセット用のメールを送信しました。');
-      setFormStatus(__assign(__assign({}, formStatus), {
-        error: ''
-      }));
-    })["catch"](function (error) {
-      if (error.response.status >= 500) {
-        flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('', error.response.status);
-      } else {
+      if (!unmounted) {
+        flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setMessage('パスワードリセット用のメールを送信しました。');
         setFormStatus(__assign(__assign({}, formStatus), {
-          error: error.response.data.errors.email[0]
+          error: ''
         }));
       }
+    })["catch"](function (error) {
+      if (!unmounted) {
+        if (error.response.status >= 500) {
+          flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('', error.response.status);
+        } else {
+          setFormStatus(__assign(__assign({}, formStatus), {
+            error: error.response.data.errors.email[0]
+          }));
+        }
+      }
     })["finally"](function () {
-      setClicked(false);
+      if (!unmounted) {
+        setClicked(false);
+      }
     });
   };
 
@@ -6990,6 +7333,13 @@ var HabitPost = function HabitPost() {
       errors = _f.formState.errors,
       reset = _f.reset;
 
+  var unmounted = false;
+  (0, react_1.useEffect)(function () {
+    return function () {
+      unmounted = true;
+    };
+  }, []);
+
   var onSubmit = function onSubmit(data) {
     var _a;
 
@@ -7002,12 +7352,18 @@ var HabitPost = function HabitPost() {
       isPrivate: data.isPrivate === 'true'
     };
     axios_1["default"].post('/api/habits', habitData).then(function () {
-      flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setMessage('ハビットトラッカーを作成しました。');
-      reset();
-    })["catch"](function () {
-      flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('ハビットトラッカーの作成に失敗しました。');
+      if (!unmounted) {
+        flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setMessage('ハビットトラッカーを作成しました。');
+        reset();
+      }
+    })["catch"](function (error) {
+      if (!unmounted) {
+        flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('ハビットトラッカーの作成に失敗しました。', error.response.status);
+      }
     })["finally"](function () {
-      return setIsLoading(false);
+      if (!unmounted) {
+        setIsLoading(false);
+      }
     });
   };
 
@@ -7387,14 +7743,22 @@ var HabitStatus = function HabitStatus() {
   var params = (0, react_router_dom_1.useParams)();
   var navigate = (0, react_router_dom_1.useNavigate)();
   var userId = HabitItem.user.id;
+  var unmounted = false;
   (0, react_1.useEffect)(function () {
     axios_1["default"].get("/api/user/".concat(params.screenName, "/habits/").concat(params.id)).then(function (res) {
-      setHabitItem(res.data.data);
-      setStatusCode(res.data.status);
+      if (!unmounted) {
+        setHabitItem(res.data.data);
+        setStatusCode(res.data.status);
+      }
     })["catch"](function (error) {
-      setStatusCode(error.response.status);
+      if (!unmounted) {
+        setStatusCode(error.response.status);
+      }
     });
     getDiary(params.id, paginateData.currentPage);
+    return function () {
+      unmounted = true;
+    };
   }, []);
 
   var doneHabit = function doneHabit(habitId) {
@@ -7404,10 +7768,14 @@ var HabitStatus = function HabitStatus() {
       userId: (_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.id,
       id: habitId
     }).then(function (res) {
-      flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setMessage('今日の目標を達成しました🎉 お疲れ様です!');
-      setHabitItem(res.data.data);
+      if (!unmounted) {
+        flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setMessage('今日の目標を達成しました🎉 お疲れ様です!');
+        setHabitItem(res.data.data);
+      }
     })["catch"](function (error) {
-      flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('更新に失敗しました。', error.response.status);
+      if (!unmounted) {
+        flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('更新に失敗しました。', error.response.status);
+      }
     });
   };
 
@@ -7423,8 +7791,11 @@ var HabitStatus = function HabitStatus() {
           case 1:
             _a.sent();
 
-            setHabitItem(habitItem);
-            setEditing(false);
+            if (!unmounted) {
+              setHabitItem(habitItem);
+              setEditing(false);
+            }
+
             return [2
             /*return*/
             ];
@@ -7438,10 +7809,14 @@ var HabitStatus = function HabitStatus() {
       axios_1["default"]["delete"]("/api/habits/".concat(habitId)).then(function () {
         var _a;
 
-        flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setMessage('ハビットトラッカーを削除しました。');
-        navigate("/user/".concat((_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.screen_name));
+        if (!unmounted) {
+          flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setMessage('ハビットトラッカーを削除しました。');
+          navigate("/user/".concat((_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.screen_name));
+        }
       })["catch"](function (error) {
-        flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('ハビットトラッカーの削除に失敗しました。', error.response.status);
+        if (!unmounted) {
+          flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('ハビットトラッカーの削除に失敗しました。', error.response.status);
+        }
       });
     }
   };
@@ -7456,19 +7831,23 @@ var HabitStatus = function HabitStatus() {
         return [2
         /*return*/
         , axios_1["default"].get("/api/habits/".concat(id, "/diaries?page=").concat(page)).then(function (res) {
-          var data = res.data.data;
+          if (!unmounted) {
+            var data = res.data.data;
 
-          if (data.length > 0) {
-            setDiaries(data);
-            var paginate = res.data.meta;
-            setPaginateData(__assign(__assign({}, paginateData), {
-              perPage: paginate.per_page,
-              totalItem: paginate.total,
-              currentPage: paginate.current_page
-            }));
+            if (data) {
+              setDiaries(data);
+              var paginate = res.data.meta;
+              setPaginateData(__assign(__assign({}, paginateData), {
+                perPage: paginate.per_page,
+                totalItem: paginate.total,
+                currentPage: paginate.current_page
+              }));
+            }
           }
         })["catch"](function (error) {
-          flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('日記の取得に失敗しました。', error.response.status);
+          if (!unmounted) {
+            flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('日記の取得に失敗しました。', error.response.status);
+          }
         })];
       });
     });
@@ -7695,6 +8074,8 @@ var Notification = function Notification() {
       paginate = _c[0],
       setPaginate = _c[1];
 
+  var unmounted = false;
+
   var getNotificationData = function getNotificationData(nextCursor) {
     setClicked(true);
     var cursor = '';
@@ -7704,21 +8085,30 @@ var Notification = function Notification() {
     }
 
     axios_1["default"].get("/api/notifications".concat(cursor)).then(function (res) {
-      var data = res.data;
-      setNotification(__spreadArray(__spreadArray([], notification, true), data.notification, true));
-      setPaginate(__assign(__assign({}, paginate), {
-        nextCursor: data.next_cursor,
-        hasNext: data.has_next
-      }));
+      if (!unmounted) {
+        var data = res.data;
+        setNotification(__spreadArray(__spreadArray([], notification, true), data.notification, true));
+        setPaginate(__assign(__assign({}, paginate), {
+          nextCursor: data.next_cursor,
+          hasNext: data.has_next
+        }));
+      }
     })["catch"](function (error) {
-      flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('通知情報の取得に失敗しました。', error.response.status);
+      if (!unmounted) {
+        flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('通知情報の取得に失敗しました。', error.response.status);
+      }
     })["finally"](function () {
-      setClicked(false);
+      if (!unmounted) {
+        setClicked(false);
+      }
     });
   };
 
   (0, react_1.useEffect)(function () {
     getNotificationData();
+    return function () {
+      unmounted = true;
+    };
   }, []);
   return react_1["default"].createElement("div", null, react_1["default"].createElement("h2", null, "\u901A\u77E5"), react_1["default"].createElement("hr", null), react_1["default"].createElement("ul", null, notification.map(function (item, index) {
     return react_1["default"].createElement(NotificationItem_1["default"], __assign({}, item, {
@@ -7873,6 +8263,12 @@ var ResetPassword = function ResetPassword() {
   var pathname = (0, react_router_dom_1.useLocation)().pathname;
   var token = pathname.match(/[\w]+$/g);
   var navigate = (0, react_router_dom_1.useNavigate)();
+  var unmounted = false;
+  (0, react_1.useEffect)(function () {
+    return function () {
+      unmounted = true;
+    };
+  }, []);
 
   var _h = (0, react_hook_form_1.useForm)({
     mode: 'onBlur'
@@ -7891,12 +8287,18 @@ var ResetPassword = function ResetPassword() {
     });
 
     axios_1["default"].post('/api/reset-password', postData).then(function () {
-      flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setMessage('パスワードをリセットしました。');
-      navigate('/login');
+      if (!unmounted) {
+        flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setMessage('パスワードをリセットしました。');
+        navigate('/login');
+      }
     })["catch"](function (error) {
-      flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('パスワードのリセットに失敗しました。', error.response.status);
+      if (!unmounted) {
+        flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('パスワードのリセットに失敗しました。', error.response.status);
+      }
     })["finally"](function () {
-      setClicked(false);
+      if (!unmounted) {
+        setClicked(false);
+      }
     });
   };
 
@@ -8036,6 +8438,7 @@ var Search = function Search() {
 
   var auth = (0, Authenticate_1.useAuth)();
   var flashMessage = (0, FlashMessageContext_1.useMessage)();
+  var unmounted = false;
 
   var _e = (0, react_1.useState)({
     perPage: 1,
@@ -8044,6 +8447,12 @@ var Search = function Search() {
   }),
       paginateData = _e[0],
       setPaginateData = _e[1];
+
+  (0, react_1.useEffect)(function () {
+    return function () {
+      unmounted = true;
+    };
+  }, []);
 
   var setSearchInfo = function setSearchInfo(data) {
     setSearchData(data);
@@ -8065,24 +8474,30 @@ var Search = function Search() {
     });
 
     axios_1["default"].post('/api/search', searchInfo).then(function (res) {
-      var data = res.data.habits;
+      if (!unmounted) {
+        var data_1 = res.data.habits;
 
-      if (data !== undefined) {
-        setSearchResult(data);
-      } else {
-        setNoContent(true);
+        if (data_1 !== undefined) {
+          setSearchResult(data_1);
+        } else {
+          setNoContent(true);
+        }
+
+        var paginate = res.data.meta;
+        setPaginateData(__assign(__assign({}, paginateData), {
+          perPage: paginate.per_page,
+          totalItem: paginate.total,
+          currentPage: paginate.current_page
+        }));
       }
-
-      var paginate = res.data.meta;
-      setPaginateData(__assign(__assign({}, paginateData), {
-        perPage: paginate.per_page,
-        totalItem: paginate.total,
-        currentPage: paginate.current_page
-      }));
     })["catch"](function (error) {
-      flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('検索に失敗しました。', error.response.status);
+      if (!unmounted) {
+        flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('検索に失敗しました。', error.response.status);
+      }
     })["finally"](function () {
-      setSearching(false);
+      if (!unmounted) {
+        setSearching(false);
+      }
     });
   };
 
@@ -8094,15 +8509,20 @@ var Search = function Search() {
       id: habitId
     }).then(function (res) {
       flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setMessage('今日の目標を達成しました🎉 お疲れ様です!');
-      var data = res.data.data;
 
-      if (index !== undefined) {
-        setSearchResult(searchResult.map(function (habit, key) {
-          return key === index ? data : habit;
-        }));
+      if (!unmounted) {
+        var data_2 = res.data.data;
+
+        if (index !== undefined) {
+          setSearchResult(searchResult.map(function (habit, key) {
+            return key === index ? data_2 : habit;
+          }));
+        }
       }
     })["catch"](function (error) {
-      flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('更新に失敗しました。', error.response.status);
+      if (!unmounted) {
+        flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('更新に失敗しました。', error.response.status);
+      }
     });
   };
 
@@ -8363,6 +8783,7 @@ var User = function User() {
   var locationPath = (0, react_router_dom_2.useLocation)().pathname;
   var auth = (0, Authenticate_1.useAuth)();
   var flashMessage = (0, FlashMessageContext_1.useMessage)();
+  var unmounted = false;
 
   var _e = (0, react_1.useState)({
     perPage: 1,
@@ -8375,10 +8796,15 @@ var User = function User() {
   var _getUserData = function getUserData(screenName) {
     axios_1["default"].get("/api/user/".concat(screenName)).then(function (res) {
       var data = res.data.data.user;
-      setUserData(data);
-      setStatusCode(res.data.status);
+
+      if (!unmounted) {
+        setUserData(data);
+        setStatusCode(res.data.status);
+      }
     })["catch"](function (error) {
-      setStatusCode(error.response.status);
+      if (!unmounted) {
+        setStatusCode(error.response.status);
+      }
     });
   };
 
@@ -8392,13 +8818,17 @@ var User = function User() {
       flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setMessage('今日の目標を達成しました🎉 お疲れ様です!');
       var data = res.data.data;
 
-      if (index !== undefined) {
-        setHabits(habits.map(function (habit, key) {
-          return key === index ? data : habit;
-        }));
+      if (!unmounted) {
+        if (index !== undefined) {
+          setHabits(habits.map(function (habit, key) {
+            return key === index ? data : habit;
+          }));
+        }
       }
     })["catch"](function (error) {
-      flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('更新に失敗しました。', error.response.status);
+      if (!unmounted) {
+        flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('更新に失敗しました。', error.response.status);
+      }
     });
   };
 
@@ -8408,15 +8838,19 @@ var User = function User() {
     }
 
     axios_1["default"].get("/api/habits/".concat(screenName, "?page=").concat(page)).then(function (res) {
-      setHabits(res.data.data);
-      var paginate = res.data.meta;
-      setPaginateData(__assign(__assign({}, paginateData), {
-        perPage: paginate.per_page,
-        totalItem: paginate.total,
-        currentPage: paginate.current_page
-      }));
+      if (!unmounted) {
+        setHabits(res.data.data);
+        var paginate = res.data.meta;
+        setPaginateData(__assign(__assign({}, paginateData), {
+          perPage: paginate.per_page,
+          totalItem: paginate.total,
+          currentPage: paginate.current_page
+        }));
+      }
     })["catch"](function (error) {
-      setStatusCode(error.response.status);
+      if (!unmounted) {
+        setStatusCode(error.response.status);
+      }
     });
   };
 
@@ -8428,6 +8862,9 @@ var User = function User() {
     _getUserData(screenName);
 
     getUserHabits(screenName);
+    return function () {
+      unmounted = true;
+    };
   }, [locationPath]);
   return react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("h1", null, "\u30E6\u30FC\u30B6\u30DA\u30FC\u30B8"), react_1["default"].createElement(PageRender_1["default"], {
     status: statusCode

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useMessage } from '../Components/FlashMessageContext';
@@ -18,6 +18,13 @@ const ResetPassword = () => {
     const pathname = useLocation().pathname;
     const token = pathname.match(/[\w]+$/g);
     const navigate = useNavigate();
+
+    let unmounted = false;
+    useEffect(() => {
+        return () => {
+            unmounted = true;
+        };
+    }, []);
 
     const {
         register,
@@ -38,17 +45,23 @@ const ResetPassword = () => {
         axios
             .post('/api/reset-password', postData)
             .then(() => {
-                flashMessage?.setMessage('パスワードをリセットしました。');
-                navigate('/login');
+                if (!unmounted) {
+                    flashMessage?.setMessage('パスワードをリセットしました。');
+                    navigate('/login');
+                }
             })
             .catch((error) => {
-                flashMessage?.setErrorMessage(
-                    'パスワードのリセットに失敗しました。',
-                    error.response.status
-                );
+                if (!unmounted) {
+                    flashMessage?.setErrorMessage(
+                        'パスワードのリセットに失敗しました。',
+                        error.response.status
+                    );
+                }
             })
             .finally(() => {
-                setClicked(false);
+                if (!unmounted) {
+                    setClicked(false);
+                }
             });
     };
 

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useMessage } from './FlashMessageContext';
 
@@ -21,6 +21,13 @@ const DiaryForm = (props: Props) => {
         formState: { errors },
     } = useForm<Diary>();
 
+    let unmounted = false;
+    useEffect(() => {
+        return () => {
+            unmounted = true;
+        };
+    }, []);
+
     const onSubmit: SubmitHandler<Diary> = (data) => {
         setClicked(true);
 
@@ -32,14 +39,23 @@ const DiaryForm = (props: Props) => {
         axios
             .post('/api/diaries', postData)
             .then((res) => {
-                props.updateHabit(res.data.data);
-                flashMessage?.setMessage('日記を投稿しました。');
+                if (!unmounted) {
+                    props.updateHabit(res.data.data);
+                    flashMessage?.setMessage('日記を投稿しました。');
+                }
             })
             .catch((error) => {
-                flashMessage?.setErrorMessage('日記の投稿に失敗しました。', error.response.status);
+                if (!unmounted) {
+                    flashMessage?.setErrorMessage(
+                        '日記の投稿に失敗しました。',
+                        error.response.status
+                    );
+                }
             })
             .finally(() => {
-                setClicked(false);
+                if (!unmounted) {
+                    setClicked(false);
+                }
             });
     };
 

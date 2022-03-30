@@ -1,21 +1,33 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import axios from 'axios';
 import LogoutButton from '../../Components/atoms/LogoutButton';
 import { useMessage } from '../../Components/FlashMessageContext';
 
 const EmailVerified = () => {
     const flashMessage = useMessage();
+
+    let unmounted = false;
+    useEffect(() => {
+        return () => {
+            unmounted = true;
+        };
+    }, []);
+
     const sendVerifiedEmail = () => {
         axios
             .post('api/email/verification-notification')
             .then(() => {
-                flashMessage?.setMessage('新しいメールを送信しました。');
+                if (!unmounted) {
+                    flashMessage?.setMessage('新しいメールを送信しました。');
+                }
             })
             .catch((error) => {
-                flashMessage?.setErrorMessage(
-                    'メールの再送信に失敗しました。',
-                    error.response.status
-                );
+                if (!unmounted) {
+                    flashMessage?.setErrorMessage(
+                        'メールの再送信に失敗しました。',
+                        error.response.status
+                    );
+                }
             });
     };
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useAuth } from './Authenticate';
 import { useMessage } from './FlashMessageContext';
@@ -19,6 +19,13 @@ const PasswordChangeForm = () => {
         },
     });
 
+    let unmounted = false;
+    useEffect(() => {
+        return () => {
+            unmounted = true;
+        };
+    }, []);
+
     const {
         register,
         handleSubmit,
@@ -36,30 +43,34 @@ const PasswordChangeForm = () => {
 
         auth?.changePassword(postData)
             .then(() => {
-                flashMessage?.setMessage('パスワードを変更しました。');
-                setFormStatus({
-                    ...formStatus,
-                    errors: {
-                        curren_password: '',
-                        password: '',
-                    },
-                });
-                reset();
-            })
-            .catch((error) => {
-                if (error.response.status >= 500) {
-                    flashMessage?.setErrorMessage('', error.response.status);
-                } else {
-                    const errorMessage = error.response.data.errors;
+                if (!unmounted) {
+                    flashMessage?.setMessage('パスワードを変更しました。');
                     setFormStatus({
                         ...formStatus,
                         errors: {
-                            curren_password: errorMessage.current_password
-                                ? errorMessage.current_password[0]
-                                : '',
-                            password: errorMessage.password ? errorMessage.password[0] : '',
+                            curren_password: '',
+                            password: '',
                         },
                     });
+                    reset();
+                }
+            })
+            .catch((error) => {
+                if (!unmounted) {
+                    if (error.response.status >= 500) {
+                        flashMessage?.setErrorMessage('', error.response.status);
+                    } else {
+                        const errorMessage = error.response.data.errors;
+                        setFormStatus({
+                            ...formStatus,
+                            errors: {
+                                curren_password: errorMessage.current_password
+                                    ? errorMessage.current_password[0]
+                                    : '',
+                                password: errorMessage.password ? errorMessage.password[0] : '',
+                            },
+                        });
+                    }
                 }
             });
     };

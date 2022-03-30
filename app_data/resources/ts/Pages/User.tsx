@@ -33,6 +33,7 @@ const User = () => {
 
     const auth = useAuth();
     const flashMessage = useMessage();
+    let unmounted = false;
 
     const [paginateData, setPaginateData] = useState({
         perPage: 1,
@@ -45,11 +46,16 @@ const User = () => {
             .get(`/api/user/${screenName}`)
             .then((res) => {
                 const data = res.data.data.user;
-                setUserData(data);
-                setStatusCode(res.data.status);
+
+                if (!unmounted) {
+                    setUserData(data);
+                    setStatusCode(res.data.status);
+                }
             })
             .catch((error) => {
-                setStatusCode(error.response.status);
+                if (!unmounted) {
+                    setStatusCode(error.response.status);
+                }
             });
     };
 
@@ -59,16 +65,20 @@ const User = () => {
             .then((res) => {
                 flashMessage?.setMessage('今日の目標を達成しました🎉 お疲れ様です!');
                 const data = res.data.data;
-                if (index !== undefined) {
-                    setHabits(
-                        habits.map((habit, key) => {
-                            return key === index ? data : habit;
-                        })
-                    );
+                if (!unmounted) {
+                    if (index !== undefined) {
+                        setHabits(
+                            habits.map((habit, key) => {
+                                return key === index ? data : habit;
+                            })
+                        );
+                    }
                 }
             })
             .catch((error) => {
-                flashMessage?.setErrorMessage('更新に失敗しました。', error.response.status);
+                if (!unmounted) {
+                    flashMessage?.setErrorMessage('更新に失敗しました。', error.response.status);
+                }
             });
     };
 
@@ -76,18 +86,22 @@ const User = () => {
         axios
             .get(`/api/habits/${screenName}?page=${page}`)
             .then((res) => {
-                setHabits(res.data.data);
+                if (!unmounted) {
+                    setHabits(res.data.data);
 
-                const paginate = res.data.meta;
-                setPaginateData({
-                    ...paginateData,
-                    perPage: paginate.per_page,
-                    totalItem: paginate.total,
-                    currentPage: paginate.current_page,
-                });
+                    const paginate = res.data.meta;
+                    setPaginateData({
+                        ...paginateData,
+                        perPage: paginate.per_page,
+                        totalItem: paginate.total,
+                        currentPage: paginate.current_page,
+                    });
+                }
             })
             .catch((error) => {
-                setStatusCode(error.response.status);
+                if (!unmounted) {
+                    setStatusCode(error.response.status);
+                }
             });
     };
 
@@ -98,6 +112,10 @@ const User = () => {
     useEffect(() => {
         getUserData(screenName);
         getUserHabits(screenName);
+
+        return () => {
+            unmounted = true;
+        };
     }, [locationPath]);
 
     return (

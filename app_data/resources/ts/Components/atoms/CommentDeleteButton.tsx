@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import axios from 'axios';
 import { useMessage } from '../FlashMessageContext';
 
@@ -10,6 +10,13 @@ type Props = {
 
 const CommentDeleteButton = (props: Props) => {
     const flashMessage = useMessage();
+
+    let unmounted = false;
+    useEffect(() => {
+        return () => {
+            unmounted = true;
+        };
+    }, []);
 
     const deleteComment = (commentId: number) => {
         if (window.confirm('コメントを削除します。もとに戻せませんがよろしいですか？')) {

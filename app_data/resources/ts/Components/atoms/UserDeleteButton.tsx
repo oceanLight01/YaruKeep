@@ -1,11 +1,18 @@
 import axios from 'axios';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useAuth } from '../Authenticate';
 import { useMessage } from '../FlashMessageContext';
 
 const UserDeleteButton = () => {
     const auth = useAuth();
     const flashMessage = useMessage();
+
+    let unmounted = false;
+    useEffect(() => {
+        return () => {
+            unmounted = true;
+        };
+    });
 
     const deleteUser = () => {
         if (
@@ -17,10 +24,12 @@ const UserDeleteButton = () => {
                     auth?.logout();
                 })
                 .catch((error) => {
-                    flashMessage?.setErrorMessage(
-                        'アカウント削除に失敗しました。',
-                        error.response.status
-                    );
+                    if (!unmounted) {
+                        flashMessage?.setErrorMessage(
+                            'アカウント削除に失敗しました。',
+                            error.response.status
+                        );
+                    }
                 });
         }
     };

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../Components/Authenticate';
 import { useMessage } from '../FlashMessageContext';
@@ -8,6 +8,13 @@ const LogoutButton = () => {
     const auth = useAuth();
     const flashMessage = useMessage();
 
+    let unmounted = false;
+    useEffect(() => {
+        return () => {
+            unmounted = true;
+        };
+    }, []);
+
     const logout = () => {
         if (window.confirm('ログアウトします。よろしいですか？')) {
             auth?.logout()
@@ -15,10 +22,12 @@ const LogoutButton = () => {
                     navigate('/login');
                 })
                 .catch((error) => {
-                    flashMessage?.setErrorMessage(
-                        'ログアウトに失敗しました。',
-                        error.response.status
-                    );
+                    if (!unmounted) {
+                        flashMessage?.setErrorMessage(
+                            'ログアウトに失敗しました。',
+                            error.response.status
+                        );
+                    }
                 });
         }
     };
