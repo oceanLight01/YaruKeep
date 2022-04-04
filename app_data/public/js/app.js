@@ -4885,9 +4885,13 @@ var ProfileImageForm = function ProfileImageForm() {
       preview = _c[0],
       setPreview = _c[1];
 
-  var _d = (0, react_1.useState)(''),
+  var _d = (0, react_1.useState)([]),
       errorMessage = _d[0],
       setErrorMessage = _d[1];
+
+  var _e = (0, react_1.useState)(false),
+      clicked = _e[0],
+      setClicked = _e[1];
 
   var auth = (0, Authenticate_1.useAuth)();
   var flashMessage = (0, FlashMessageContext_1.useMessage)();
@@ -4899,16 +4903,19 @@ var ProfileImageForm = function ProfileImageForm() {
   }, []);
 
   var getImage = function getImage(e) {
-    if (!e.target.files) return;
+    if (e.target.files.length === 0) {
+      return;
+    }
+
     var image = e.target.files[0];
     setImage(image);
     setPreview(window.URL.createObjectURL(image));
-    setErrorMessage('');
+    setErrorMessage([]);
   };
 
   var handleSubmit = function handleSubmit(e) {
     return __awaiter(void 0, void 0, void 0, function () {
-      var data, headers;
+      var data, headers, error_1, errorList;
 
       var _a;
 
@@ -4918,18 +4925,24 @@ var ProfileImageForm = function ProfileImageForm() {
             e.preventDefault();
 
             if (image === undefined) {
-              setErrorMessage('画像を選択してください。');
+              setErrorMessage(['画像を選択してください。']);
               return [2
               /*return*/
               ];
             }
 
+            setClicked(true);
             data = new FormData();
             data.append('profile_image', image);
             data.append('user_id', String((_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.id));
             headers = {
               'content-type': 'multipart/form-data'
             };
+            _b.label = 1;
+
+          case 1:
+            _b.trys.push([1, 3,, 4]);
+
             return [4
             /*yield*/
             , axios_1["default"].post('/api/user/image', data, {
@@ -4939,16 +4952,45 @@ var ProfileImageForm = function ProfileImageForm() {
                 setPreview('');
                 flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setMessage('プロフィール画像を変更しました。');
               }
-            })["catch"](function (error) {
-              if (!unmounted) {
-                flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('プロフィール画像の変更に失敗しました。', error.response.status);
-              }
+
+              auth === null || auth === void 0 ? void 0 : auth.getUser();
+            })["finally"](function () {
+              setClicked(false);
             })];
 
-          case 1:
+          case 2:
             _b.sent();
 
-            auth === null || auth === void 0 ? void 0 : auth.getUser();
+            return [3
+            /*break*/
+            , 4];
+
+          case 3:
+            error_1 = _b.sent();
+
+            if (axios_1["default"].isAxiosError(error_1) && error_1.response !== undefined) {
+              if (!unmounted) {
+                if (error_1.response.status === 413) {
+                  setErrorMessage(['プロフィール画像のファイルサイズは1MB以下にしてください。']);
+                } else {
+                  errorList = error_1.response.data.errors.profile_image;
+
+                  if (errorList.length > 0) {
+                    setErrorMessage(errorList.map(function (message) {
+                      return message;
+                    }));
+                  } else {
+                    flashMessage === null || flashMessage === void 0 ? void 0 : flashMessage.setErrorMessage('プロフィール画像の変更に失敗しました。', error_1.response.status);
+                  }
+                }
+              }
+            }
+
+            return [3
+            /*break*/
+            , 4];
+
+          case 4:
             return [2
             /*return*/
             ];
@@ -4957,27 +4999,32 @@ var ProfileImageForm = function ProfileImageForm() {
     });
   };
 
-  return react_1["default"].createElement(react_1["default"].Fragment, null, errorMessage.length > 0 && react_1["default"].createElement("p", null, errorMessage), preview && react_1["default"].createElement("img", {
+  return react_1["default"].createElement(react_1["default"].Fragment, null, errorMessage.length > 0 && errorMessage.map(function (message, index) {
+    return react_1["default"].createElement("p", {
+      key: index
+    }, message);
+  }), preview && react_1["default"].createElement("img", {
     src: preview,
     alt: "\u30D7\u30ED\u30D5\u30A3\u30FC\u30EB\u753B\u50CF\u306E\u30D7\u30EC\u30D3\u30E5\u30FC"
   }), react_1["default"].createElement("img", {
     src: "/storage/profiles/".concat((_a = auth === null || auth === void 0 ? void 0 : auth.userData) === null || _a === void 0 ? void 0 : _a.profile_image),
     alt: "\u73FE\u5728\u8A2D\u5B9A\u3055\u308C\u3066\u3044\u308B\u30D7\u30ED\u30D5\u30A3\u30FC\u30EB\u753B\u50CF"
-  }), react_1["default"].createElement("form", {
+  }), react_1["default"].createElement("div", null, react_1["default"].createElement("ul", null, react_1["default"].createElement("li", null, "\u5F62\u5F0F: jpg, png"), react_1["default"].createElement("li", null, "\u30D5\u30A1\u30A4\u30EB\u30B5\u30A4\u30BA: \u6700\u59271MB"), react_1["default"].createElement("li", null, "1\u8FBA\u306E\u9577\u3055: \u6700\u59271000\u30D4\u30AF\u30BB\u30EB\xD71000\u30D4\u30AF\u30BB\u30EB"))), react_1["default"].createElement("form", {
     name: "profile_img"
   }, react_1["default"].createElement("label", {
     htmlFor: "profile_img"
   }, "\u30D7\u30ED\u30D5\u30A3\u30FC\u30EB\u753B\u50CF"), react_1["default"].createElement("br", null), react_1["default"].createElement("input", {
     type: "file",
     name: "profile_img",
-    accept: "image/*,.png,.jpg",
+    accept: ".png, .jpg, .jpeg",
     onChange: getImage
   }), react_1["default"].createElement("input", {
     type: "button",
     value: "\u9001\u4FE1",
     onClick: function onClick(e) {
       return handleSubmit(e);
-    }
+    },
+    disabled: clicked
   })));
 };
 

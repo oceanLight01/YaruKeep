@@ -7,10 +7,11 @@ ENV COMPOSER_ALLOW_SUPERUSER=1 \
 COPY --from=composer:2.0 /usr/bin/composer /usr/bin/composer
 
 RUN apt-get update && \
-  apt-get -y install git unzip libzip-dev libicu-dev libonig-dev curl && \
+  apt-get -y install git unzip libzip-dev libicu-dev libonig-dev curl zlib1g-dev libpng-dev libjpeg62-turbo-dev && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/* && \
-  docker-php-ext-install intl pdo_mysql zip bcmath
+  docker-php-ext-configure gd --with-jpeg && \
+  docker-php-ext-install gd intl pdo_mysql zip bcmath
 
 RUN useradd -m -s /bin/sh -u 1000 nginx
 

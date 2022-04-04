@@ -53,6 +53,10 @@ class UserController extends Controller
      */
     public function storeProfileImage(Request $request)
     {
+        $validated = $request->validate([
+            'profile_image' => 'required|image|mimes:jpeg,jpg,png|max:1024|dimensions:max_width=1000,max_height=1000'
+        ]);
+
         $user = User::find($request->user_id);
         $profile_image = $request->file('profile_image');
         $file_name = Auth::id().'_'.date("YmdHis").'.jpg';
