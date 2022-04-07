@@ -71,5 +71,4 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     // メールアドレス変更に関するルーティング
     Route::post('/email/change', 'ChangeEmailController@sendChangeEmailLink');
-
 });

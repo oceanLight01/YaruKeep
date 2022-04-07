@@ -25,18 +25,6 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 import Echo from 'laravel-echo';
 
 window.Pusher = require('pusher-js');
-
-const cookies = document.cookie;
-const cookiesList = cookies.split('; ');
-let csrfToken;
-
-const pattern = /XSRF-TOKEN=(.+$)/;
-for (let value of cookiesList) {
-    if (pattern.test(value)) {
-        csrfToken = value.match(pattern)![1];
-    }
-}
-
 window.Echo = new Echo({
     authEndpoint: '/api/pusher/auth',
     broadcaster: 'pusher',

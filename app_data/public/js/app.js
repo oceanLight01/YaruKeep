@@ -8981,19 +8981,6 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 var laravel_echo_1 = __importDefault(__webpack_require__(/*! laravel-echo */ "./node_modules/laravel-echo/dist/echo.js"));
 
 window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
-var cookies = document.cookie;
-var cookiesList = cookies.split('; ');
-var csrfToken;
-var pattern = /XSRF-TOKEN=(.+$)/;
-
-for (var _i = 0, cookiesList_1 = cookiesList; _i < cookiesList_1.length; _i++) {
-  var value = cookiesList_1[_i];
-
-  if (pattern.test(value)) {
-    csrfToken = value.match(pattern)[1];
-  }
-}
-
 window.Echo = new laravel_echo_1["default"]({
   authEndpoint: '/api/pusher/auth',
   broadcaster: 'pusher',
