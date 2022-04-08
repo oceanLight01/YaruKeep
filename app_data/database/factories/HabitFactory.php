@@ -19,6 +19,7 @@ class HabitFactory extends Factory
             'title' => $this->faker->text(50),
             'description' => $this->faker->realText(300),
             'max_done_day' => $this->faker->numberBetween(1, 300),
+            'is_private' => $this->faker->boolean(),
             'created_at' => $this->faker->datetime($max = 'now', $timezone = date_default_timezone_get()),
             'updated_at' => $this->faker->datetime($max = 'now', $timezone = date_default_timezone_get()),
         ];
