@@ -2,5 +2,8 @@
     "Verify Email Address": "メールアドレスの検証をする",
     "Please click the button below to verify your email address.": "メールアドレスの検証を行うため下記のボタンをクリックしてください。",
     "If you did not create an account, no further action is required.": "もしアカウントを作成していない場合は追加の処理は必要ありません。",
-    "Hello!": "こんにちは"
+    "Hello!": "こんにちは",
+    "The :attribute must contain at least one uppercase and one lowercase letter.": ":attributeは英大文字と小文字をそれぞれ1つ以上使用してください。",
+    "The :attribute must contain at least one number.": ":attributeは半角数字を1つ以上使用してください。",
+    "The :attribute must be at least :length characters.": ":attributeは:length文字以上にしてください。"
 }
