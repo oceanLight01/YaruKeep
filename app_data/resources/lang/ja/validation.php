@@ -165,7 +165,8 @@ return [
         'profile_image' => 'プロフィール画像',
         'title' => '目標',
         'categoryId' => 'カテゴリー',
-        'isPrivate' => '公開設定'
+        'isPrivate' => '公開設定',
+        'text' => '日記'
     ],
 
 ];

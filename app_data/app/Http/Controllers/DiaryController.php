@@ -74,7 +74,7 @@ class DiaryController extends Controller
         $diary = Diary::where('id', $diary_id)->first();
         $user_id = $diary->habit->user->id;
 
-        if ($request->userId === $user_id)
+        if ($diary->exists() && $request->userId === $user_id)
         {
             $diary->text = $request->text;
             $diary->save();
@@ -92,15 +92,19 @@ class DiaryController extends Controller
      */
     public function destroy($diary_id)
     {
-        $diary = Diary::where('id', $diary_id);
-        $user_id = $diary->first()->habit->user->id;
+        $diary = Diary::where('id', $diary_id)->first();
+        $user_id;
 
-        if ($diary->exists() && $user_id === Auth::id())
+        if ($diary) {
+            $user_id = $diary->habit->user->id;
+        }
+
+        if ($diary && $user_id === Auth::id())
         {
             $diary->delete();
             return response(['message' => 'success'], 204);
         } else {
-            return response(['message' => 'faild to delete'], 400);
+            return response(['message' => 'failed to delete'], 400);
         }
     }
 
