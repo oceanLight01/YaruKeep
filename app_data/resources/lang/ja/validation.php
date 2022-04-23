@@ -25,7 +25,7 @@ return [
     'before' => 'The :attribute must be a date before :date.',
     'before_or_equal' => 'The :attribute must be a date before or equal to :date.',
     'between' => [
-        'numeric' => 'The :attribute must be between :min and :max.',
+        'numeric' => ':attributeIDは:min以上:max以下にしてください。',
         'file' => 'The :attribute must be between :min and :max kilobytes.',
         'string' => 'The :attribute must be between :min and :max characters.',
         'array' => 'The :attribute must have between :min and :max items.',
@@ -64,7 +64,7 @@ return [
     'image' => ':attributeは画像ファイルにしてください。',
     'in' => 'The selected :attribute is invalid.',
     'in_array' => 'The :attribute field does not exist in :other.',
-    'integer' => 'The :attribute must be an integer.',
+    'integer' => ':attributeIDは整数にしてください',
     'ip' => 'The :attribute must be a valid IP address.',
     'ipv4' => 'The :attribute must be a valid IPv4 address.',
     'ipv6' => 'The :attribute must be a valid IPv6 address.',
@@ -162,7 +162,10 @@ return [
         'screen_name' => 'ユーザID',
         'email' => 'メールアドレス',
         'password' => 'パスワード',
-        'profile_image' => 'プロフィール画像'
+        'profile_image' => 'プロフィール画像',
+        'title' => '目標',
+        'categoryId' => 'カテゴリー',
+        'isPrivate' => '公開設定'
     ],
 
 ];

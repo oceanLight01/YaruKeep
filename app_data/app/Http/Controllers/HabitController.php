@@ -53,7 +53,7 @@ class HabitController extends Controller
         $validated = $request->validate([
             'title' => 'required|max:50',
             'description' => 'max:300',
-            'categoryId' => 'required|digits_between:1,15',
+            'categoryId' => 'required|integer|between:1,15',
             'isPrivate' => 'required|boolean'
         ]);
 
@@ -117,6 +117,8 @@ class HabitController extends Controller
                     $habit->max_done_day = $count;
                 }
                 $habit->save();
+            } else {
+                return response(["message" => "This habit already done."], 400);
             }
 
             return new HabitResource(Habit::find($habit_id));
@@ -136,7 +138,7 @@ class HabitController extends Controller
         $validated = $request->validate([
             'title' => 'required|max:50',
             'description' => 'max:300',
-            'categoryId' => 'required|digits_between:1,15',
+            'categoryId' => 'required|integer|between:1,15',
             'isPrivate' => 'required|boolean'
         ]);
 
