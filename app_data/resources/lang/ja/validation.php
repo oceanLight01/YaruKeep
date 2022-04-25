@@ -166,7 +166,8 @@ return [
         'title' => '目標',
         'categoryId' => 'カテゴリー',
         'isPrivate' => '公開設定',
-        'text' => '日記'
+        'text' => '日記',
+        'comment' => 'コメント'
     ],
 
 ];
