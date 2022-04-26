@@ -81,7 +81,7 @@ class ChangeEmailController extends Controller
             {
                 EmailReset::where('token', $token)->delete();
             }
-            return redirexct('/settings');
+            return redirect('/settings');
         }
     }
 
