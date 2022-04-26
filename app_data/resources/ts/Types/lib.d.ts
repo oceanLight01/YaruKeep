@@ -85,3 +85,5 @@ type NotificationItem = {
     };
     read_at: string | null;
 };
+
+declare module '*.scss';
