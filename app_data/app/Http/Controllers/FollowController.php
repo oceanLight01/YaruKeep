@@ -21,7 +21,12 @@ class FollowController extends Controller
     public function getFollowingUser($screen_name)
     {
         $user_id = User::where('screen_name', $screen_name)->value('id');
-        return FollowUserResource::collection(User::find($user_id)->follows()->get());
+
+        if ($user_id) {
+            return FollowUserResource::collection(User::find($user_id)->follows()->get());
+        } else {
+            return response(['message' => 'Not found user data.'], 400);
+        }
     }
 
     /**
@@ -32,7 +37,12 @@ class FollowController extends Controller
     public function getFollowedUser($screen_name)
     {
         $user_id = User::where('screen_name', $screen_name)->value('id');
-        return FollowUserResource::collection(User::find($user_id)->followers()->get());
+
+        if ($user_id) {
+            return FollowUserResource::collection(User::find($user_id)->followers()->get());
+        } else {
+            return response(['message' => 'Not found user data.'], 400);
+        }
     }
 
     /**
@@ -48,7 +58,7 @@ class FollowController extends Controller
 
         if ($user_id !== Auth::id())
         {
-            return response(["message" => "Failed to follow"], 400);
+            return response(["message" => "Failed to follow user."], 400);
         }
 
         $following = Follow::where('user_id', $user_id)->where('following_user_id', $following_user)->exists();
@@ -86,7 +96,7 @@ class FollowController extends Controller
 
         if ($user_id !== Auth::id())
         {
-            return response(["error" => "Failed to unfollow user"], 400);
+            return response(["message" => "Failed to unfollow user."], 400);
         }
 
         $following = Follow::where('user_id', $user_id)->where('following_user_id', $following_user)->exists();
