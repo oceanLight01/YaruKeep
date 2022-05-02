@@ -5,8 +5,12 @@ import { useAuth } from './Authenticate';
 import { useMessage } from './FlashMessageContext';
 import NavNotificationItem from './NavNotificationItem';
 
+import styles from './../../scss/Notification.modules.scss';
+import { Badge } from '@mui/material';
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+
 const NavigationNotification = () => {
-    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [clicked, setClicked] = useState<boolean>(false);
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -19,7 +23,7 @@ const NavigationNotification = () => {
     }>({ count: 0, notificationList: [] });
 
     useEffect(() => {
-        setIsOpen(false);
+        setClicked(false);
 
         if (location.pathname === '/notifications' && notification.notificationList.length > 0) {
             readAllNotification();
@@ -61,7 +65,7 @@ const NavigationNotification = () => {
     }, []);
 
     const updateNotification = (id: string, url: string) => {
-        setIsOpen(false);
+        setClicked(false);
 
         axios
             .put('/api/notifications', { id: id })
@@ -84,7 +88,7 @@ const NavigationNotification = () => {
     };
 
     const readAllNotification = () => {
-        setIsOpen(false);
+        setClicked(false);
         axios
             .put('/api/notifications/read')
             .then((res) => {
@@ -106,29 +110,40 @@ const NavigationNotification = () => {
     };
 
     return (
-        <div>
-            {isOpen ? (
-                <div>
-                    <div onClick={() => setIsOpen(false)}>閉じる</div>
-                    {notification.notificationList.length > 0 ? (
-                        <ul>
-                            {notification.notificationList.map((item, index) => {
-                                return (
-                                    <NavNotificationItem
-                                        {...{ item, updateNotification }}
-                                        key={index}
-                                    />
-                                );
-                            })}
-                        </ul>
-                    ) : (
-                        <p>通知はありません</p>
-                    )}
-                    <p onClick={readAllNotification}>全ての通知を確認</p>
-                </div>
-            ) : (
-                <p onClick={() => setIsOpen(true)}>通知：{notification.count}</p>
-            )}
+        <div className={styles.notification_wrapper}>
+            <Badge
+                badgeContent={notification.count}
+                color="primary"
+                className={styles.notification_badge}
+                onClick={() => setClicked(true)}
+            >
+                <NotificationsNoneIcon className={styles.notification_icon} />
+            </Badge>
+            <div
+                className={`${styles.notification_inner} ${
+                    clicked ? styles.notification_active : ''
+                }`}
+                onClick={() => setClicked(false)}
+            ></div>
+            <div className={`${styles.notification} ${clicked ? styles.notification_active : ''}`}>
+                {notification.notificationList.length > 0 ? (
+                    <ul>
+                        {notification.notificationList.map((item, index) => {
+                            return (
+                                <NavNotificationItem
+                                    {...{ item, updateNotification }}
+                                    key={index}
+                                />
+                            );
+                        })}
+                    </ul>
+                ) : (
+                    <p className={styles.notification_no_item}>通知はありません</p>
+                )}
+                <p className={styles.notification_all_read} onClick={readAllNotification}>
+                    全ての通知を確認
+                </p>
+            </div>
         </div>
     );
 };

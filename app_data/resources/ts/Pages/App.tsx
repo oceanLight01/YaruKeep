@@ -9,7 +9,6 @@ import ProvideAuth, {
 
 import Loading from './../Components/Loading';
 import Header from '../Components/Header';
-import Navigation from '../Components/Navigation';
 import Top from './Top';
 import Login from './Auth/Login';
 import Register from './Auth/Register';
@@ -37,7 +36,6 @@ const App = () => {
                 <Loading>
                     <BrowserRouter>
                         <Header />
-                        <Navigation />
                         <FlashMessage />
                         <Routes>
                             <Route

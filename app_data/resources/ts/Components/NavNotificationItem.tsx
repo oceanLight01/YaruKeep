@@ -1,6 +1,7 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from './Authenticate';
+
+import styles from './../../scss/NavNotificationItem.modules.scss';
 
 type Props = {
     item: NotificationItem;
@@ -17,7 +18,10 @@ const NotificationItem = (props: Props) => {
     switch (notificationType) {
         case 'follow_notification':
             return (
-                <li onClick={() => props.updateNotification(itemId, `/user/${data.screen_name}`)}>
+                <li
+                    onClick={() => props.updateNotification(itemId, `/user/${data.screen_name}`)}
+                    className={styles.notification_item}
+                >
                     <p>{data.name}さんにフォローされました。</p>
                 </li>
             );
@@ -30,9 +34,10 @@ const NotificationItem = (props: Props) => {
                             `/user/${screenName}/habit/${data.habit?.habit_id}`
                         )
                     }
+                    className={styles.notification_item}
                 >
                     <p>{data.name}さんがハビットトラッカーにコメントしました。</p>
-                    <div>
+                    <div className={styles.notification_item_habit}>
                         <p>{data.habit?.title}</p>
                     </div>
                 </li>
@@ -46,6 +51,7 @@ const NotificationItem = (props: Props) => {
                             `/user/${screenName}/habit/${data.habit?.habit_id}`
                         )
                     }
+                    className={styles.notification_item}
                 >
                     <p>{data.name}さんがコメントに返信しました。</p>
                 </li>
@@ -59,6 +65,7 @@ const NotificationItem = (props: Props) => {
                             `/user/${screenName}/habit/${data.diary?.habit_id}/diary/${data.diary?.diary_id}`
                         )
                     }
+                    className={styles.notification_item}
                 >
                     <p>{data.name}さんが日記にコメントしました。</p>
                 </li>
@@ -72,6 +79,7 @@ const NotificationItem = (props: Props) => {
                             `/user/${screenName}/habit/${data.diary?.habit_id}/diary/${data.diary?.diary_id}`
                         )
                     }
+                    className={styles.notification_item}
                 >
                     <p>{data.name}さんがコメントに返信しました。</p>
                 </li>

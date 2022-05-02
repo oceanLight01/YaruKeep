@@ -1,0 +1,25 @@
+.notification_item {
+    width: 100%;
+    padding: 0.5em 1em;
+    box-sizing: border-box;
+    border-bottom: #2d2d2d 1px solid;
+
+    p {
+        margin: 0;
+    }
+
+    &:hover {
+        background-color: #e8eff4;
+        cursor: pointer;
+    }
+}
+
+.notification_item_habit {
+    padding: 0.5em;
+    overflow-wrap: anywhere;
+
+    p {
+        font-size: 0.8em;
+        color: #696969;
+    }
+}
