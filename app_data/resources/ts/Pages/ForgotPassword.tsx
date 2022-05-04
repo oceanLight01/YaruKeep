@@ -1,7 +1,12 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useMessage } from '../Components/FlashMessageContext';
+
+import styles from './../../scss/ForgotPassword.modules.scss';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import FormVaridateMessage from '../Components/atoms/FormVaridateMessage';
 
 type ForgotPasswordForm = {
     email: string;
@@ -15,6 +20,7 @@ const ForgotPassword = () => {
         register,
         handleSubmit,
         formState: { errors },
+        control,
     } = useForm<ForgotPasswordForm>({ mode: 'onBlur' });
 
     let unmounted = false;
@@ -62,25 +68,42 @@ const ForgotPassword = () => {
     };
 
     return (
-        <>
-            <h2>パスワードリセット</h2>
-            {formStatus.error.length > 0 && <p>{formStatus.error}</p>}
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <div>
-                    {errors.email?.type === 'required' && <p>メールアドレスを入力してください。</p>}
-                    <label>
-                        メールアドレス
-                        <input
-                            type="email"
-                            autoComplete="off"
-                            max={255}
-                            {...register('email', { required: true })}
-                        />
-                    </label>
+        <div className={styles.forgot_password_container}>
+            <div className={styles.forgot_password_wrapper}>
+                <div className={styles.title}>
+                    <h1>パスワードリセット</h1>
                 </div>
-                <input type="submit" value="送信" disabled={clicked} />
-            </form>
-        </>
+                {formStatus.error.length > 0 && <p>{formStatus.error}</p>}
+                <form onSubmit={handleSubmit(onSubmit)} className={styles.mail_form}>
+                    <p>
+                        アカウントに登録したメールアドレスを入力してください。
+                        <br />
+                        パスワードリセット用メールを登録メールアドレス宛に送信します。
+                    </p>
+                    <div className={styles.form_input}>
+                        <Controller
+                            name="email"
+                            control={control}
+                            render={() => (
+                                <TextField
+                                    label="メールアドレス"
+                                    type="email"
+                                    margin="dense"
+                                    fullWidth
+                                    {...register('email', { required: true })}
+                                />
+                            )}
+                        />
+                        {errors.email?.type === 'required' && (
+                            <FormVaridateMessage message={'メールアドレスを入力してください。'} />
+                        )}
+                    </div>
+                    <Button type="submit" variant="contained" disabled={clicked}>
+                        送信
+                    </Button>
+                </form>
+            </div>
+        </div>
     );
 };
 
