@@ -71,12 +71,11 @@ const Login = () => {
     return (
         <div className={styles.login_container}>
             <div className={styles.login_wrapper}>
-                <h1>ログイン</h1>
+                <div className={styles.title}>
+                    <h1>ログイン</h1>
+                </div>
                 <form onSubmit={handleSubmit(onSubmit)} className={styles.login_form}>
                     <div className={styles.form_input}>
-                        {errors.email && (
-                            <FormVaridateMessage message={'メールアドレスを入力してください。'} />
-                        )}
                         <Controller
                             name="email"
                             control={control}
@@ -90,11 +89,11 @@ const Login = () => {
                                 />
                             )}
                         />
+                        {errors.email && (
+                            <FormVaridateMessage message={'メールアドレスを入力してください。'} />
+                        )}
                     </div>
                     <div className={styles.form_input}>
-                        {errors.password && (
-                            <FormVaridateMessage message={'パスワードを入力してください。'} />
-                        )}
                         <Controller
                             name="password"
                             control={control}
@@ -108,6 +107,9 @@ const Login = () => {
                                 />
                             )}
                         />
+                        {errors.password && (
+                            <FormVaridateMessage message={'パスワードを入力してください。'} />
+                        )}
                     </div>
                     <div>
                         <label>
