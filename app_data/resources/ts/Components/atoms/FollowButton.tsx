@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '../Authenticate';
 import { useMessage } from '../FlashMessageContext';
 
+import styles from './../../../scss/FollowButton.modules.scss';
+
 type Props = {
     following_id: number;
     following: boolean;
@@ -90,7 +92,13 @@ const FollowButton = (props: Props) => {
     const handleClick = props.following ? unFollowUser : followUser;
 
     return (
-        <button onClick={() => handleClick()} disabled={clicked}>
+        <button
+            onClick={() => handleClick()}
+            disabled={clicked}
+            className={`${styles.follow_button} ${props.following && styles.following} ${
+                clicked && styles.disable
+            }`}
+        >
             {props.following ? 'フォロー中' : 'フォロー'}
         </button>
     );

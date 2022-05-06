@@ -19,7 +19,7 @@ mix.ts('resources/ts/app.tsx', 'public/js')
             rules: [
                 {
                     test: /\.css$/,
-                    loaders: [
+                    rules: [
                         {
                             loader: 'css-loader',
                             options: {

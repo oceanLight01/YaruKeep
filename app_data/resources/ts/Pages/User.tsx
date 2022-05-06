@@ -10,6 +10,8 @@ import HabitTracker from '../Components/HabitTracker';
 import Paginate from '../Components/Paginate';
 import PageRender from './PageRender';
 
+import styles from './../../scss/User.modules.scss';
+
 type UserData = {
     id: number;
     name: string;
@@ -119,36 +121,54 @@ const User = () => {
     }, [locationPath]);
 
     return (
-        <>
-            <h1>ユーザページ</h1>
+        <div className={styles.user_container}>
             <PageRender status={statusCode}>
-                <>
-                    <div>
-                        <p>ID:{userData?.id}</p>
-                        <p>name:{userData?.name}</p>
-                        <p>UserID{userData?.screen_name}</p>
-                        <p>Profile:{formatText(userData?.profile!)}</p>
-                        <img
-                            src={`/storage/profiles/${userData?.profile_image}`}
-                            alt="プロフィール画像"
-                        />
-                        {auth?.userData?.id !== userData?.id && (
-                            <FollowButton
-                                following={userData?.following!}
-                                following_id={userData?.id!}
-                                getUserData={() => getUserData(userData?.screen_name)!}
-                            />
-                        )}
-                        <p>
-                            <Link to={`/user/${userData?.screen_name}/following`}>
-                                フォロー中:{userData?.following_count}
-                            </Link>
-                        </p>
-                        <p>
-                            <Link to={`/user/${userData?.screen_name}/followed`}>
-                                フォロワー:{userData?.followed_count}
-                            </Link>
-                        </p>
+                <div className={styles.user_wrapper}>
+                    <div className={styles.user_profile_container}>
+                        <div className={styles.user_profile_image_container}>
+                            <div className={styles.user_profile_image_wrapper}>
+                                <img
+                                    className={styles.user_profile_image}
+                                    src={`/storage/profiles/${userData?.profile_image}`}
+                                    alt="プロフィール画像"
+                                />
+                            </div>
+                        </div>
+                        <div className={styles.user_profile_info}>
+                            <div className={styles.user_profile_name}>
+                                <h1>{userData?.name}</h1>
+                                <h2>{userData?.screen_name}</h2>
+                            </div>
+                            <div className={styles.user_profile_text}>
+                                <p>{formatText(userData?.profile!)}</p>
+                            </div>
+                            <div className={styles.user_profile_followinfo}>
+                                <div>
+                                    <Link to={`/user/${userData?.screen_name}/following`}>
+                                        <span className={styles.count}>
+                                            {userData?.following_count}
+                                        </span>
+                                        <span className={styles.text}>フォロー</span>
+                                    </Link>
+                                    <Link to={`/user/${userData?.screen_name}/followed`}>
+                                        <span className={styles.count}>
+                                            {userData?.followed_count}
+                                        </span>
+                                        <span className={styles.text}>フォロワー</span>
+                                    </Link>
+                                </div>
+                                {auth?.userData?.id !== userData?.id && (
+                                    <FollowButton
+                                        following={userData?.following!}
+                                        following_id={userData?.id!}
+                                        getUserData={() => getUserData(userData?.screen_name)!}
+                                    />
+                                )}
+                            </div>
+                            <div className={styles.user_followed}>
+                                <span>{userData?.followed_by ? 'フォローされています' : null}</span>
+                            </div>
+                        </div>
                     </div>
                     <hr />
                     <div>
@@ -175,9 +195,9 @@ const User = () => {
                             <p>ハビットトラッカーはありません。</p>
                         )}
                     </div>
-                </>
+                </div>
             </PageRender>
-        </>
+        </div>
     );
 };
 
