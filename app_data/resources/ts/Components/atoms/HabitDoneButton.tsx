@@ -1,5 +1,7 @@
 import React from 'react';
 
+import Button from '@mui/material/Button';
+
 type Props = {
     id: number;
     isDone: boolean;
@@ -9,9 +11,13 @@ type Props = {
 
 const HabitDoneButton = (props: Props) => {
     return (
-        <button onClick={() => props.doneHabit(props.id, props.index)} disabled={props.isDone}>
+        <Button
+            variant="contained"
+            onClick={() => props.doneHabit(props.id, props.index)}
+            disabled={props.isDone}
+        >
             完了
-        </button>
+        </Button>
     );
 };
 
