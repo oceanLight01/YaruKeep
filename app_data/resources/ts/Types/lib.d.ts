@@ -55,6 +55,7 @@ type CommentItem = {
         id: number;
         name: string;
         screen_name: string;
+        profile_image: string;
     };
     children: CommentItem[];
 };

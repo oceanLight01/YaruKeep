@@ -5,6 +5,10 @@ import { useAuth } from './Authenticate';
 import CommentForm from './CommentForm';
 import formatText from './FormatText';
 
+import styles from './../../scss/CommentItem.modules.scss';
+import Avatar from '@mui/material/Avatar';
+import styledEngine from '@mui/styled-engine';
+
 type Props = {
     item: CommentItem;
     commentType: 'habit' | 'diary';
@@ -18,11 +22,21 @@ const CommentItem = ({ item, updateItem, commentType }: Props) => {
     const isHabitComment = commentType === 'habit';
 
     return (
-        <li>
-            <p>{formatText(item.comment)}</p>
-            <p>
-                <Link to={`/user/${item.user.screen_name}`}>{item.user.name}</Link>
-            </p>
+        <li className={styles.comment_item}>
+            <div className={styles.user_info_container}>
+                <div className={styles.user_info_wapper}>
+                    <Link to={`/user/${item.user.screen_name}`}>
+                        <div className={styles.user_info}>
+                            <Avatar
+                                alt={item.user.name}
+                                src={`/storage/profiles/${item.user.profile_image}`}
+                            />
+                            <div className={styles.username}>{item.user.name}</div>
+                        </div>
+                    </Link>
+                </div>
+            </div>
+            <p className={styles.comment}>{formatText(item.comment)}</p>
             <div>
                 {showCommentForm ? (
                     <CommentForm
@@ -36,9 +50,10 @@ const CommentItem = ({ item, updateItem, commentType }: Props) => {
                         }}
                     />
                 ) : null}
-                <button onClick={() => setShowCommentForm(!showCommentForm)}>
-                    {showCommentForm ? '戻る' : 'コメントする'}
-                </button>
+                <div onClick={() => setShowCommentForm(!showCommentForm)} className={styles.reply}>
+                    {showCommentForm ? '戻る' : '返信'}
+                </div>
+
                 {auth?.userData?.id === item.user.id && (
                     <CommentDeleteButton
                         id={item.id}

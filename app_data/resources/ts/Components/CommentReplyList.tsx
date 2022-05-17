@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import CommentItem from './CommentItem';
 
+import styles from './../../scss/CommentReplyList.modules.scss';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+
 type UpdateItem = ((habitItem: HabitItem) => void) | ((diaryItem: DiaryItem) => void);
 
 type Props = {
@@ -13,8 +17,10 @@ type Props = {
 const CommentReplyList = ({ item, commentType, updateItem, index }: Props) => {
     const [isHidden, setIsHidden] = useState<boolean>(true);
 
+    // コメントに対する返信コメントを表示
     const renderReplyComment = (item: CommentItem, updateItem: UpdateItem) => {
         return item.children.map((itemChild) => {
+            // 返信コメントにさらに返信がなければコンポーネント単体で表示
             if (itemChild.children.length === 0) {
                 return (
                     <CommentItem
@@ -25,6 +31,7 @@ const CommentReplyList = ({ item, commentType, updateItem, index }: Props) => {
                 );
             }
 
+            // 返信コメントに返信があればリスト形式で表示
             return (
                 <React.Fragment key={itemChild.id}>
                     <CommentItem
@@ -46,14 +53,29 @@ const CommentReplyList = ({ item, commentType, updateItem, index }: Props) => {
     };
 
     return (
-        <>
+        <div className={styles.reply_comments}>
             {isHidden ? null : (
                 <li key={index}>
                     <ul>{renderReplyComment(item, updateItem)}</ul>
                 </li>
             )}
-            <p onClick={() => setIsHidden(!isHidden)}>{isHidden ? '返信を表示' : '返信を非表示'}</p>
-        </>
+            <div
+                onClick={() => setIsHidden(!isHidden)}
+                className={styles.toggle_render_reply_container}
+            >
+                {isHidden ? (
+                    <div className={styles.toggle_render_reply}>
+                        <ArrowDropDownIcon />
+                        <span> 返信を表示</span>
+                    </div>
+                ) : (
+                    <div className={styles.toggle_render_reply}>
+                        <ArrowDropUpIcon />
+                        <span>返信を非表示</span>
+                    </div>
+                )}
+            </div>
+        </div>
     );
 };
 

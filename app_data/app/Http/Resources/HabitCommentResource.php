@@ -21,7 +21,8 @@ class HabitCommentResource extends JsonResource
             'user' => [
                 'id' => $this->user->id,
                 'name' => $this->user->name,
-                'screen_name' => $this->user->screen_name
+                'screen_name' => $this->user->screen_name,
+                'profile_image' => $this->user->profile_image
             ],
             'parent_id' => $this->parent_id,
             'comment' => $this->comment,

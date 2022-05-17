@@ -7,6 +7,7 @@ import ContributionCalendar from './ContributionCalendar';
 import formatText from './FormatText';
 
 import styles from './../../scss/HabitTracker.modules.scss';
+import CategoryBadge from './atoms/CategoryBadge';
 
 type Props = {
     item: HabitItem;
@@ -21,26 +22,6 @@ const HabitTracker = ({ item, index, doneHabit }: Props) => {
     const handleClick = () => {
         navigation(`/user/${item.user.screen_name}/habit/${item.id}`);
     };
-
-    const categoryBadgeList = [
-        styles.category_01,
-        styles.category_02,
-        styles.category_03,
-        styles.category_04,
-        styles.category_05,
-        styles.category_06,
-        styles.category_07,
-        styles.category_08,
-        styles.category_09,
-        styles.category_10,
-        styles.category_11,
-        styles.category_12,
-        styles.category_13,
-        styles.category_14,
-        styles.category_15,
-    ];
-
-    const categoryBadgeStyle = categoryBadgeList[item.category_id - 1];
 
     // 親要素のクリックイベントを発火させないための関数
     const stopEvent = (e: React.MouseEvent) => {
@@ -70,11 +51,9 @@ const HabitTracker = ({ item, index, doneHabit }: Props) => {
                     </div>
                 </div>
             </div>
-            <div className={styles.habit_tracker_category}>
-                <div className={`${styles.category} ${categoryBadgeStyle}`}>
-                    {item.category_name}
-                </div>
-            </div>
+            <CategoryBadge
+                {...{ category_id: item.category_id, category_name: item.category_name }}
+            />
             <div className={styles.habit_tracker_created}>{item.created_at}</div>
             <div className={styles.habit_tracker_user_name}>
                 <Link to={`/user/${item.user.screen_name}`} onClick={stopEvent}>

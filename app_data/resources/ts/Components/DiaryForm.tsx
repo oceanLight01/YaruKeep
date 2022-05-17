@@ -1,7 +1,11 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useMessage } from './FlashMessageContext';
+
+import styles from './../../scss/DiaryForm.modules.scss';
+import TextField from '@mui/material/TextField';
+import Button from './atoms/Button';
 
 type Diary = {
     text: string;
@@ -19,6 +23,7 @@ const DiaryForm = (props: Props) => {
         register,
         handleSubmit,
         formState: { errors },
+        control,
     } = useForm<Diary>();
 
     let unmounted = false;
@@ -60,18 +65,30 @@ const DiaryForm = (props: Props) => {
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
             <div>
+                <label>日記</label>
+                <Controller
+                    name="text"
+                    control={control}
+                    render={() => (
+                        <TextField
+                            type="text"
+                            margin="dense"
+                            maxLength={1000}
+                            placeholder={'今日のことを日記に書こう'}
+                            multiline
+                            fullWidth
+                            {...register('text', { required: true, maxLength: 300 })}
+                        />
+                    )}
+                />
                 {errors.text?.type === 'maxLength' && <p>日記は1000文字以下で入力してください。</p>}
                 {errors.text?.type === 'required' && <p>内容を入力してください。</p>}
-                <label>日記</label>
-                <textarea
-                    maxLength={1000}
-                    autoComplete="off"
-                    {...register('text', { required: true, maxLength: 300 })}
-                />
             </div>
-            <input type="submit" value="投稿" disabled={clicked} />
+            <div className={styles.button_wrapper}>
+                <Button value="投稿" type="submit" disabled={clicked} />
+            </div>
         </form>
     );
 };

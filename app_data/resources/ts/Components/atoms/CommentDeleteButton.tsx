@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import axios from 'axios';
 import { useMessage } from '../FlashMessageContext';
 
+import styles from './../../../scss/CommentDeleteButton.modules.scss';
+
 type Props = {
     id: number;
     commentType: 'habit' | 'diary';
@@ -35,7 +37,11 @@ const CommentDeleteButton = (props: Props) => {
         }
     };
 
-    return <button onClick={() => deleteComment(props.id)}>削除</button>;
+    return (
+        <div onClick={() => deleteComment(props.id)} className={styles.comment_delete_button}>
+            削除
+        </div>
+    );
 };
 
 export default CommentDeleteButton;

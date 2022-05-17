@@ -1,7 +1,11 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useMessage } from './FlashMessageContext';
+
+import styles from './../../scss/CommentForm.modules.scss';
+import TextField from '@mui/material/TextField';
+import Button from './atoms/Button';
 
 type Props = {
     id?: number;
@@ -26,6 +30,7 @@ const CommentForm = (props: Props) => {
         handleSubmit,
         formState: { errors },
         setValue,
+        control,
     } = useForm<CommentForm>();
 
     let unmounted = false;
@@ -71,20 +76,32 @@ const CommentForm = (props: Props) => {
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
             <div>
+                <label>コメント</label>
+                <Controller
+                    name="comment"
+                    control={control}
+                    render={() => (
+                        <TextField
+                            type="text"
+                            margin="dense"
+                            maxLength={300}
+                            placeholder={'コメントを追加'}
+                            multiline
+                            fullWidth
+                            {...register('comment', { required: true, maxLength: 300 })}
+                        />
+                    )}
+                />
                 {errors.comment?.type === 'maxLength' && (
                     <p>コメントは300文字以下で入力してください。</p>
                 )}
                 {errors.comment?.type === 'required' && <p>内容を入力してください。</p>}
-                <label>コメント</label>
-                <textarea
-                    maxLength={300}
-                    autoComplete="off"
-                    {...register('comment', { required: true, maxLength: 300 })}
-                />
             </div>
-            <input type="submit" value="投稿" disabled={clicked} />
+            <div className={styles.button_wrapper}>
+                <Button value="コメント" type="submit" disabled={clicked} />
+            </div>
         </form>
     );
 };
