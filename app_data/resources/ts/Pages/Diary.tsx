@@ -12,6 +12,12 @@ import formatText from '../Components/FormatText';
 import LoginUserContent from '../Components/LoginUserContent';
 import PageRender from './PageRender';
 
+import styles from './../../scss/Diary.modules.scss';
+import IconButton from '@mui/material/IconButton';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+
 const Diary = () => {
     const initialData = {
         id: 0,
@@ -21,6 +27,7 @@ const Diary = () => {
             id: 0,
             screen_name: '',
             name: '',
+            profile_image: '',
         },
         comments: [],
         created_at: '',
@@ -28,7 +35,6 @@ const Diary = () => {
 
     const params = useParams<{ id: string; did: string }>();
     const locationPath = useLocation().pathname;
-    const habitPath = locationPath.match(/\/user\/[\w]+\/habit\/[\d]+/);
     const navigate = useNavigate();
 
     const [diary, setDiary] = useState<DiaryItem>({ ...initialData });
@@ -87,16 +93,49 @@ const Diary = () => {
         }
     };
 
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event: any) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
     return (
         <PageRender status={statusCode}>
             <>
-                <Link to={`${habitPath![0]}`}>戻る</Link>
+                <h2>日記</h2>
                 {!editing ? (
-                    <div>
+                    <div className={styles.diary_container}>
                         <p>{formatText(diary.text)}</p>
-                        <p>{diary.created_at}</p>
+                        <div className={styles.created}>{diary.created_at}</div>
                         <LoginUserContent userId={diary.user.id}>
-                            <DiaryDeleteButton diaryId={diary.id} deleteDiary={deleteDiary} />
+                            <div className={styles.diary_settings_container}>
+                                <div className={styles.diary_settings}>
+                                    <IconButton onClick={handleClick}>
+                                        <MoreVertIcon />
+                                    </IconButton>
+                                    <Menu open={open} anchorEl={anchorEl} onClose={handleClose}>
+                                        <MenuItem
+                                            onClick={() => {
+                                                handleClose();
+                                                setEditing(!editing);
+                                            }}
+                                        >
+                                            編集
+                                        </MenuItem>
+                                        <MenuItem
+                                            onClick={() => {
+                                                handleClose();
+                                                deleteDiary(diary.id);
+                                            }}
+                                        >
+                                            削除
+                                        </MenuItem>
+                                    </Menu>
+                                </div>
+                            </div>
                         </LoginUserContent>
                     </div>
                 ) : (
@@ -107,17 +146,13 @@ const Diary = () => {
                                 text: diary.text,
                                 habitId: diary.habit_id,
                                 updateDiary: updateDiary,
+                                setEditing: setEditing,
                             }}
                         />
                     </div>
                 )}
 
-                <LoginUserContent userId={diary.user.id}>
-                    <button onClick={() => setEditing(!editing)}>
-                        {editing ? '戻る' : '編集する'}
-                    </button>
-                </LoginUserContent>
-
+                <h2>日記のコメント</h2>
                 <CommentForm
                     {...{
                         userId: auth?.userData?.id!,

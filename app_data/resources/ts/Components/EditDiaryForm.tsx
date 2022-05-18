@@ -1,8 +1,12 @@
+import TextField from '@mui/material/TextField';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import Button from './atoms/Button';
 import { useAuth } from './Authenticate';
 import { useMessage } from './FlashMessageContext';
+
+import styles from './../../scss/EditDiaryForm.modules.scss';
 
 type Diary = {
     text: string;
@@ -13,6 +17,7 @@ type Props = {
     text: string;
     habitId: number;
     updateDiary: (DiaryItem: any) => void;
+    setEditing: Dispatch<SetStateAction<boolean>>;
 };
 
 const EditDiaryForm = (props: Props) => {
@@ -24,6 +29,7 @@ const EditDiaryForm = (props: Props) => {
         handleSubmit,
         formState: { errors },
         setValue,
+        control,
     } = useForm<Diary>();
 
     let unmounted = false;
@@ -69,17 +75,36 @@ const EditDiaryForm = (props: Props) => {
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
-            <div>
+            <div className={styles.form_input}>
+                <Controller
+                    name="text"
+                    control={control}
+                    render={() => (
+                        <TextField
+                            type="text"
+                            margin="dense"
+                            fullWidth
+                            multiline
+                            {...register('text', { required: true })}
+                        />
+                    )}
+                />
                 {errors.text?.type === 'maxLength' && <p>日記は1000文字以下で入力してください。</p>}
                 {errors.text?.type === 'required' && <p>内容を入力してください。</p>}
-                <label>日記</label>
-                <textarea
-                    maxLength={1000}
-                    autoComplete="off"
-                    {...register('text', { required: true, maxLength: 300 })}
-                />
             </div>
-            <input type="submit" value="更新する" disabled={clicked} />
+            <div className={styles.form_buttons}>
+                <div className={styles.button_wrapper}>
+                    <Button type="submit" value="更新" disabled={clicked} />
+                </div>
+                <div className={styles.button_wrapper}>
+                    <Button
+                        variant="outlined"
+                        value="戻る"
+                        clickHandler={() => props.setEditing(false)}
+                        disabled={clicked}
+                    />
+                </div>
+            </div>
         </form>
     );
 };

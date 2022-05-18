@@ -40,6 +40,7 @@ type DiaryItem = {
         id: number;
         screen_name: string;
         name: string;
+        profile_image: string;
     };
     text: string;
     comments: CommentItem[];
