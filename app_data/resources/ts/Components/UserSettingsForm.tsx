@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useAuth } from './Authenticate';
 import { useMessage } from './FlashMessageContext';
+
+import styles from './../../scss/UserSettingsForm.modules.scss';
+import TextField from '@mui/material/TextField';
+import Button from './atoms/Button';
+import FormVaridateMessage from './atoms/FormVaridateMessage';
+import ValidateCountInput from './ValidateCountInput';
 
 type SettingsForm = {
     name: string;
@@ -27,6 +33,8 @@ const UserSettingsForm = (props: Props) => {
         handleSubmit,
         formState: { errors },
         setValue,
+        control,
+        watch,
     } = useForm<SettingsForm>({ mode: 'onBlur' });
 
     let unmounted = false;
@@ -80,50 +88,89 @@ const UserSettingsForm = (props: Props) => {
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
-            <div>
-                {errors.name?.type === 'maxLength' && (
-                    <p>アカウント名は30文字以下で入力してください。</p>
-                )}
-                {errors.name?.type === 'required' && <p>アカウント名を入力してください。</p>}
-                <label>アカウント名</label>
-                <input
-                    type="text"
-                    maxLength={30}
-                    autoComplete="on"
-                    {...register('name', { required: true, maxLength: 30 })}
+            <div className={styles.form_input}>
+                <div className={styles.form_label}>
+                    <label>アカウント名</label>
+                    <ValidateCountInput text={watch('name')} limit={30} />
+                </div>
+                <Controller
+                    name="name"
+                    control={control}
+                    render={() => (
+                        <TextField
+                            type="text"
+                            margin="dense"
+                            fullWidth
+                            {...register('name', { required: true, maxLength: 30 })}
+                        />
+                    )}
                 />
+                {errors.name?.type === 'maxLength' && (
+                    <FormVaridateMessage message="アカウント名は30文字以下で入力してください。" />
+                )}
+                {errors.name?.type === 'required' && (
+                    <FormVaridateMessage message="アカウント名を入力してください。" />
+                )}
             </div>
-            <div>
-                {errors.screen_name?.type === 'required' && <p>アカウントIDを入力してください。</p>}
+            <div className={styles.form_input}>
+                <div className={styles.form_label}>
+                    <label>アカウントID</label>
+                    <ValidateCountInput text={watch('screen_name')} limit={20} />
+                </div>
+                <Controller
+                    name="screen_name"
+                    control={control}
+                    render={() => (
+                        <TextField
+                            type="text"
+                            margin="dense"
+                            fullWidth
+                            {...register('screen_name', {
+                                required: true,
+                                maxLength: 20,
+                                pattern: /^(?=.*?[a-zA-Z\d])[a-zA-Z\d]+$/,
+                            })}
+                        />
+                    )}
+                />
+                {errors.screen_name?.type === 'required' && (
+                    <FormVaridateMessage message="アカウントIDを入力してください。" />
+                )}
                 {errors.screen_name?.type === 'maxLength' && (
-                    <p>アカウントIDは20文字以下で入力してください。</p>
+                    <FormVaridateMessage message="アカウントIDは20文字以下で入力してください。" />
                 )}
                 {errors.screen_name?.type === 'pattern' && (
-                    <p>アカウントIDは半角英数字のみ使用できます。</p>
+                    <FormVaridateMessage message="アカウントIDは半角英数字のみ使用できます。" />
                 )}
                 {errorMessage.screen_name.map((str, index) => {
-                    return <p key={index}>{str}</p>;
+                    return <FormVaridateMessage message={str} key={index} />;
                 })}
-                <label>アカウントID</label>
-                <input
-                    type="text"
-                    maxLength={20}
-                    autoComplete="on"
-                    {...register('screen_name', {
-                        required: true,
-                        maxLength: 20,
-                        pattern: /^(?=.*?[a-zA-Z\d])[a-zA-Z\d]+$/,
-                    })}
+            </div>
+            <div className={styles.form_input}>
+                <div className={styles.form_label}>
+                    <label>プロフィール</label>
+                    <ValidateCountInput text={watch('profile')} limit={300} />
+                </div>
+                <Controller
+                    name="profile"
+                    control={control}
+                    render={() => (
+                        <TextField
+                            type="text"
+                            margin="dense"
+                            fullWidth
+                            multiline
+                            {...register('profile', { maxLength: 300 })}
+                        />
+                    )}
                 />
-            </div>
-            <div>
                 {errors.profile?.type === 'maxLength' && (
-                    <p>プロフィールは300文字以下で入力してください。</p>
+                    <FormVaridateMessage message="プロフィールは300文字以下で入力してください。" />
                 )}
-                <label>プロフィール</label>
-                <textarea maxLength={300} {...register('profile', { maxLength: 300 })} />
             </div>
-            <input type="submit" value="変更" disabled={clicked} />
+            <div className={styles.form_button_wrapper}>
+                <Button type="submit" value="変更" disabled={clicked} />
+            </div>
         </form>
     );
 };

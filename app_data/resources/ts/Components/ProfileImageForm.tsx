@@ -3,6 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from './Authenticate';
 import { useMessage } from './FlashMessageContext';
 
+import styles from './../../scss/ProfileImageForm.modules.scss';
+import Button from '@mui/material/Button';
+import FormVaridateMessage from './atoms/FormVaridateMessage';
+
 const ProfileImageForm = () => {
     const [image, setImage] = useState<File>();
     const [preview, setPreview] = useState<string>('');
@@ -85,34 +89,60 @@ const ProfileImageForm = () => {
     return (
         <>
             {errorMessage.length > 0 &&
-                errorMessage.map((message, index) => <p key={index}>{message}</p>)}
-            {preview && <img src={preview} alt="プロフィール画像のプレビュー" />}
-            <img
-                src={`/storage/profiles/${auth?.userData?.profile_image}`}
-                alt="現在設定されているプロフィール画像"
-            />
+                errorMessage.map((message, index) => (
+                    <FormVaridateMessage message={message} key={index} />
+                ))}
+
+            <div className={styles.profile_images}>
+                <div className={styles.profile_image_container}>
+                    <div className={styles.profile_image_wrapper}>
+                        <img
+                            src={`/storage/profiles/${auth?.userData?.profile_image}`}
+                            alt="現在設定されているプロフィール画像"
+                            className={styles.profile_image}
+                        />
+                    </div>
+                    <div>現在のプロフィール画像</div>
+                </div>
+                {preview && (
+                    <div className={styles.profile_image_container}>
+                        <div className={styles.profile_image_wrapper}>
+                            <img
+                                src={preview}
+                                alt="プロフィール画像のプレビュー"
+                                className={styles.profile_image}
+                            />
+                        </div>
+                        <div>プレビュー</div>
+                    </div>
+                )}
+            </div>
             <div>
-                <ul>
+                <ul className={styles.image_rules}>
                     <li>形式: jpg, png</li>
                     <li>ファイルサイズ: 最大1MB</li>
                     <li>1辺の長さ: 最大1000ピクセル×1000ピクセル</li>
                 </ul>
             </div>
-            <form name="profile_img">
-                <label htmlFor="profile_img">プロフィール画像</label>
-                <br />
-                <input
-                    type="file"
-                    name="profile_img"
-                    accept=".png, .jpg, .jpeg"
-                    onChange={getImage}
-                />
-                <input
-                    type="button"
-                    value="送信"
-                    onClick={(e) => handleSubmit(e)}
-                    disabled={clicked}
-                />
+            <form name="profile_img" className={styles.form}>
+                <label htmlFor="profile_image">
+                    <input
+                        id="profile_image"
+                        className={styles.input}
+                        type="file"
+                        name="profile_img"
+                        accept=".png, .jpg, .jpeg"
+                        onChange={getImage}
+                    />
+                    <Button variant="contained" component="span">
+                        ファイルを選択
+                    </Button>
+                </label>
+                <div className={styles.form_button_wrapper}>
+                    <Button variant="contained" onClick={(e) => handleSubmit(e)} disabled={clicked}>
+                        変更
+                    </Button>
+                </div>
             </form>
         </>
     );
