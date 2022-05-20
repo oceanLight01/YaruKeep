@@ -7,8 +7,13 @@
         width: 94%;
         max-width: 1024px;
 
+        .title {
+            margin-bottom: 2em;
+            text-align: center;
+        }
+
         .settings {
-            padding: 1.5em 1em;
+            padding: 1em 4em;
             border-radius: 5px;
             box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.2);
         }
@@ -16,9 +21,10 @@
 }
 
 .settings_section {
-    margin-bottom: 4em;
+    margin: 3em 0;
+}
 
-    .title {
-        text-align: center;
-    }
+.form_button_wrapper {
+    display: flex;
+    justify-content: flex-end;
 }

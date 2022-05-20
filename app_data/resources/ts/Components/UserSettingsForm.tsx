@@ -19,11 +19,7 @@ type ErrorMessage = {
     screen_name: string[];
 };
 
-type Props = {
-    setShowSettingsForm: React.Dispatch<React.SetStateAction<boolean>>;
-};
-
-const UserSettingsForm = (props: Props) => {
+const UserSettingsForm = () => {
     const auth = useAuth();
     const flashMessage = useMessage();
     const [errorMessage, setErrorMessage] = useState<ErrorMessage>({ screen_name: [] });
@@ -62,7 +58,6 @@ const UserSettingsForm = (props: Props) => {
             .then((value) => {
                 if (!unmounted) {
                     if (value[0] === undefined) {
-                        props.setShowSettingsForm(false);
                         flashMessage?.setMessage('ユーザー情報を更新しました。');
                     } else {
                         setErrorMessage({

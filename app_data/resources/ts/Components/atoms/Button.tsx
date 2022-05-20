@@ -5,7 +5,7 @@ import MaterialButton from '@mui/material/Button';
 type Props = {
     variant?: 'outlined';
     value: string;
-    color?: 'warning';
+    color?: 'warning' | 'error';
     type?: 'submit';
     disabled?: boolean;
     clickHandler?: () => void;
