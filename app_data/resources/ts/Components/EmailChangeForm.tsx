@@ -1,8 +1,14 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useAuth } from './Authenticate';
 import { useMessage } from './FlashMessageContext';
+
+import styles from './../../scss/EmailChangeForm.modules.scss';
+import TextField from '@mui/material/TextField';
+import FormVaridateMessage from './atoms/FormVaridateMessage';
+import Button from './atoms/Button';
+import ValidateCountInput from './ValidateCountInput';
 
 type EmailChangeForm = {
     email: string;
@@ -18,6 +24,8 @@ const EmailChangeForm = () => {
         register,
         handleSubmit,
         formState: { errors },
+        control,
+        watch,
     } = useForm<EmailChangeForm>({ mode: 'onBlur' });
 
     let unmounted = false;
@@ -64,30 +72,42 @@ const EmailChangeForm = () => {
     return (
         <>
             <form onSubmit={handleSubmit(onSubmit)}>
-                <div>
+                <div className={styles.form_input}>
+                    <div className={styles.form_label}>
+                        <label>新しいメールアドレス</label>
+                        <ValidateCountInput text={watch('email')} limit={255} />
+                    </div>
+                    <Controller
+                        name="email"
+                        control={control}
+                        render={() => (
+                            <TextField
+                                type="email"
+                                margin="dense"
+                                fullWidth
+                                {...register('email', {
+                                    required: true,
+                                    maxLength: 255,
+                                    pattern:
+                                        /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+                                })}
+                            />
+                        )}
+                    />
                     {formStatus.error.length > 0 && <p>{formStatus.error}</p>}
-                    {errors.email?.type === 'required' && <p>メールアドレスを入力してください。</p>}
+                    {errors.email?.type === 'required' && (
+                        <FormVaridateMessage message="メールアドレスを入力してください。" />
+                    )}
                     {errors.email?.type === 'maxLength' && (
-                        <p>メールアドレスは255文字以下で入力してください。</p>
+                        <FormVaridateMessage message="メールアドレスは255文字以下で入力してください。" />
                     )}
                     {errors.email?.type === 'pattern' && (
-                        <p>正しい形式のメールアドレスを入力してください。</p>
+                        <FormVaridateMessage message="正しい形式のメールアドレスを入力してください。" />
                     )}
-                    <label>
-                        新しいメールアドレス
-                        <input
-                            type="email"
-                            maxLength={255}
-                            {...register('email', {
-                                required: true,
-                                maxLength: 255,
-                                pattern:
-                                    /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
-                            })}
-                        />
-                    </label>
                 </div>
-                <input type="submit" value="送信" disabled={clicked} />
+                <div className={styles.form_button_wrapper}>
+                    <Button type="submit" value="送信" disabled={clicked} />
+                </div>
             </form>
         </>
     );
