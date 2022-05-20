@@ -3,7 +3,7 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useAuth } from './Authenticate';
 import { useMessage } from './FlashMessageContext';
 
-import styles from './../../scss/UserSettingsForm.modules.scss';
+import styles from './../../scss/SettingsForm.modules.scss';
 import TextField from '@mui/material/TextField';
 import Button from './atoms/Button';
 import FormVaridateMessage from './atoms/FormVaridateMessage';
