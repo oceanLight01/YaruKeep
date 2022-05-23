@@ -2,6 +2,9 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import HabitTracker from './HabitTracker';
 
+import styles from './../../scss/TopPageHabit.modules.scss';
+import Circular from './atoms/Circular';
+
 const TopPageHabit = () => {
     const [followUserHabits, setFollowUserHabits] = useState<HabitItem[]>([]);
     const [sameCategoryHabits, setSameCategoryHabits] = useState<HabitItem[]>([]);
@@ -45,15 +48,15 @@ const TopPageHabit = () => {
     }, []);
 
     return loading ? (
-        <p>読み込み中...</p>
+        <Circular />
     ) : error ? (
-        <p>情報の取得に失敗しました。</p>
+        <div>情報の取得に失敗しました。</div>
     ) : (
         <div>
             {followUserHabits.length > 0 ? (
-                <div>
-                    <h2>フォロー中のユーザーのハビットトラッカー</h2>
-                    <ul>
+                <div className={styles.container}>
+                    <h2 className={styles.title}>フォロー中のユーザーのハビットトラッカー</h2>
+                    <ul className={styles.habit_list}>
                         {followUserHabits.map((item, index) => {
                             return <HabitTracker item={item} index={index} key={index} />;
                         })}
@@ -61,21 +64,21 @@ const TopPageHabit = () => {
                 </div>
             ) : null}
             {category.categoryId === null || sameCategoryHabits.length === 0 ? null : (
-                <div>
-                    <>
-                        <h2>「{category.categoryName}」カテゴリのハビットトラッカー</h2>
-                        <ul>
-                            {sameCategoryHabits.map((item, index) => {
-                                return <HabitTracker item={item} index={index} key={index} />;
-                            })}
-                        </ul>
-                    </>
+                <div className={styles.container}>
+                    <h2 className={styles.title}>
+                        「{category.categoryName}」カテゴリのハビットトラッカー
+                    </h2>
+                    <ul className={styles.habit_list}>
+                        {sameCategoryHabits.map((item, index) => {
+                            return <HabitTracker item={item} index={index} key={index} />;
+                        })}
+                    </ul>
                 </div>
             )}
             {newestDoneHabits.length > 0 ? (
-                <div>
-                    <h2>最新の達成ハビットトラッカー</h2>
-                    <ul>
+                <div className={styles.container}>
+                    <h2 className={styles.title}>最新の達成ハビットトラッカー</h2>
+                    <ul className={styles.habit_list}>
                         {newestDoneHabits.map((item, index) => {
                             return <HabitTracker item={item} index={index} key={index} />;
                         })}
