@@ -3,6 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useMessage } from '../Components/FlashMessageContext';
 import UserItem from '../Components/UserItem';
+import Circular from '../Components/atoms/Circular';
+
+import styles from './../../scss/FollowInfo.modules.scss';
 
 const FollowedUser = () => {
     const flashMessage = useMessage();
@@ -47,28 +50,29 @@ const FollowedUser = () => {
     };
 
     return (
-        <>
-            <h2>フォロワーのユーザー</h2>
-            <hr />
-            {isLoding ? (
-                <p>読み込み中...</p>
-            ) : followedList.length > 0 ? (
-                <ul>
-                    {followedList.map((item, index) => {
-                        return (
-                            <UserItem
-                                userItem={item}
-                                key={index}
-                                index={index}
-                                updateFollowInfo={updateFollowInfo}
-                            />
-                        );
-                    })}
-                </ul>
-            ) : (
-                <p>フォローされているユーザーはいません。</p>
-            )}
-        </>
+        <div className={styles.container}>
+            <div className={styles.wrapper}>
+                <h1 className={styles.title}>フォロワーのユーザー</h1>
+                {isLoding ? (
+                    <Circular />
+                ) : followedList.length > 0 ? (
+                    <ul>
+                        {followedList.map((item, index) => {
+                            return (
+                                <UserItem
+                                    userItem={item}
+                                    key={index}
+                                    index={index}
+                                    updateFollowInfo={updateFollowInfo}
+                                />
+                            );
+                        })}
+                    </ul>
+                ) : (
+                    <div className={styles.no_users}>フォローされているユーザーはいません。</div>
+                )}
+            </div>
+        </div>
     );
 };
 

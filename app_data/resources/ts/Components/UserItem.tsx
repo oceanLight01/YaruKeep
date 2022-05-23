@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import FollowButton from './atoms/FollowButton';
 import { useAuth } from './Authenticate';
 
+import styles from './../../scss/UserItem.modules.scss';
+
 type Props = {
     userItem: UserItem;
     index: number;
@@ -19,15 +21,31 @@ const UserItem = ({ userItem, index, updateFollowInfo }: Props) => {
     };
 
     return (
-        <li>
-            <p>
-                <Link to={`/user/${userItem.screen_name}`}>{userItem.name}</Link>
-            </p>
-            <p>{userItem.screen_name}</p>
-            <p>{userItem.name}</p>
-            <img src={`/storage/profiles/${userItem.profile_image}`} alt="プロフィール画像" />
-            {auth?.userData?.id !== userItem.id && <FollowButton {...buttonProps} />}
-            {userItem.followed_by && <p>フォローされています</p>}
+        <li className={styles.container}>
+            <div className={styles.wrapper}>
+                <div className={styles.profile_image_container}>
+                    <div className={styles.profile_image_wrapper}>
+                        <img
+                            src={`/storage/profiles/${userItem.profile_image}`}
+                            alt="プロフィール画像"
+                            className={styles.profile_image}
+                        />
+                    </div>
+                </div>
+                <div className={styles.user_names}>
+                    <div className={styles.name}>
+                        <Link to={`/user/${userItem.screen_name}`}>{userItem.name}</Link>
+                    </div>
+                    <div className={styles.screen_name}>{userItem.screen_name}</div>
+
+                    <div className={styles.follow_button_wrapper}>
+                        {auth?.userData?.id !== userItem.id && <FollowButton {...buttonProps} />}
+                    </div>
+                    {userItem.followed_by && (
+                        <div className={styles.is_follow}>フォローされています</div>
+                    )}
+                </div>
+            </div>
         </li>
     );
 };
