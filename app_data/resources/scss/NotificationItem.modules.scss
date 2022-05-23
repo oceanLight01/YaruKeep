@@ -1,0 +1,40 @@
+.container {
+    a {
+        color: #000000;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    padding: 2em 0;
+    border-top: solid 1px #d3d3d3;
+
+    .wrapper {
+        display: flex;
+        align-items: center;
+
+        .icon_wrapper {
+            margin-right: 1em;
+        }
+
+        .notification {
+            display: inline-block;
+        }
+    }
+
+    .content {
+        margin: 1em;
+
+        .habit_title {
+            margin-bottom: 1em;
+            font-size: 0.8em;
+            color: #808080;
+            word-wrap: break-word;
+        }
+    }
+}
+
+.container:last-child {
+    border-bottom: solid 1px #d3d3d3;
+}

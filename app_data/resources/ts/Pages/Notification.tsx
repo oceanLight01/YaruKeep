@@ -3,10 +3,15 @@ import axios from 'axios';
 import NotificationItem from '../Components/NotificationItem';
 import { useMessage } from '../Components/FlashMessageContext';
 
+import styles from './../../scss/NotificationPage.modules.scss';
+import Circular from '../Components/atoms/Circular';
+import Button from '../Components/atoms/Button';
+
 const Notification = () => {
     const flashMessage = useMessage();
     const [clicked, setClicked] = useState<boolean>(false);
     const [notification, setNotification] = useState<NotificationItem[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const [paginate, setPaginate] = useState({
         nextCursor: '',
         hasNext: false,
@@ -45,6 +50,7 @@ const Notification = () => {
             .finally(() => {
                 if (!unmounted) {
                     setClicked(false);
+                    setIsLoading(false);
                 }
             });
     };
@@ -58,20 +64,37 @@ const Notification = () => {
     }, []);
 
     return (
-        <div>
-            <h2>通知</h2>
-            <hr />
-            <ul>
-                {notification.map((item, index) => {
-                    return <NotificationItem {...item} key={index} />;
-                })}
-            </ul>
-
-            {paginate.hasNext && (
-                <button onClick={() => getNotificationData(paginate.nextCursor)} disabled={clicked}>
-                    さらに通知を取得
-                </button>
-            )}
+        <div className={styles.container}>
+            <div className={styles.wrapper}>
+                <h1 className={styles.title}>通知</h1>
+                {isLoading ? (
+                    <Circular />
+                ) : (
+                    <>
+                        <ul>
+                            {notification.map((item, index) => {
+                                return <NotificationItem {...item} key={index} />;
+                            })}
+                        </ul>
+                        {paginate.hasNext && (
+                            <div className={styles.button_wrapper}>
+                                {clicked ? (
+                                    <Circular />
+                                ) : (
+                                    <Button
+                                        value="さらに通知を表示"
+                                        variant="text"
+                                        clickHandler={() =>
+                                            getNotificationData(paginate.nextCursor)
+                                        }
+                                        disabled={clicked}
+                                    />
+                                )}
+                            </div>
+                        )}
+                    </>
+                )}
+            </div>
         </div>
     );
 };

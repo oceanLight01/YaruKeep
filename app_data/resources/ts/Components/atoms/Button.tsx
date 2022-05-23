@@ -3,7 +3,7 @@ import React from 'react';
 import MaterialButton from '@mui/material/Button';
 
 type Props = {
-    variant?: 'outlined';
+    variant?: 'outlined' | 'text';
     value: string;
     color?: 'warning' | 'error';
     type?: 'submit';
