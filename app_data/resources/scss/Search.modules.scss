@@ -1,0 +1,19 @@
+.search_container {
+    display: flex;
+    justify-content: center;
+    margin: 3em 0;
+
+    .search_wrapper {
+        width: 100%;
+        max-width: 1024px;
+
+        .title {
+            text-align: center;
+        }
+
+        .paginate_wrapper {
+            display: flex;
+            justify-content: center;
+        }
+    }
+}

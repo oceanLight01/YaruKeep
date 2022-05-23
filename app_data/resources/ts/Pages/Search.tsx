@@ -5,17 +5,20 @@ import { useMessage } from '../Components/FlashMessageContext';
 import HabitTracker from '../Components/HabitTracker';
 import Paginate from '../Components/Paginate';
 import SearchForm from '../Components/SearchForm';
+import Circular from '../Components/atoms/Circular';
+
+import styles from './../../scss/Search.modules.scss';
 
 type SearchFormData = {
     keyword: string;
-    categories: string[];
+    categories: string;
 };
 
 const Search = () => {
     const [searchResult, setSearchResult] = useState<HabitItem[]>([]);
     const [searching, setSearching] = useState<boolean>(false);
     const [noContent, setNoContent] = useState<boolean>(false);
-    const [searchData, setSearchData] = useState<SearchFormData>({ keyword: '', categories: [] });
+    const [searchData, setSearchData] = useState<SearchFormData>({ keyword: '', categories: '' });
 
     const auth = useAuth();
     const flashMessage = useMessage();
@@ -33,6 +36,7 @@ const Search = () => {
         };
     }, []);
 
+    // フォームに入力された検索情報を保存
     const setSearchInfo = (data: SearchForm) => {
         setSearchData(data);
         setSearchResult([]);
@@ -41,10 +45,15 @@ const Search = () => {
         searchHabit(1, data);
     };
 
+    // 検索情報をもとにデータを取得
     const searchHabit = (page = paginateData.currentPage, searchFormData?: SearchForm) => {
         const data = searchFormData === undefined ? searchData : searchFormData;
+        const keyword = data.keyword;
+        const categoriesId =
+            data.categories.length === 0 ? [] : data.categories.split(',').map((id) => Number(id));
         const searchInfo = {
-            ...data,
+            keyword: keyword,
+            categories: categoriesId,
             page: page,
         };
 
@@ -104,16 +113,16 @@ const Search = () => {
     };
 
     return (
-        <>
-            <h1>検索ページ</h1>
-            <SearchForm searchHabit={setSearchInfo} />
-            <hr />
-            {noContent && <p>検索結果はありませんでした。</p>}
-            <div>
-                {searching ? (
-                    <p>検索中...</p>
-                ) : (
-                    <>
+        <div className={styles.search_container}>
+            <div className={styles.search_wrapper}>
+                <h1 className={styles.title}>ハビットトラッカー検索</h1>
+                <SearchForm searchHabit={setSearchInfo} disabled={searching} />
+                {searchResult.length > 0 && <hr />}
+                {noContent && <p>検索結果はありませんでした。</p>}
+                <div className={styles.search_result}>
+                    {searching ? (
+                        <Circular />
+                    ) : (
                         <ul>
                             {searchResult.map((item, index) => {
                                 return (
@@ -126,17 +135,19 @@ const Search = () => {
                                 );
                             })}
                         </ul>
-                    </>
-                )}
-                {searchResult.length > 0 ? (
-                    <Paginate
-                        perPage={paginateData.perPage}
-                        itemCount={paginateData.totalItem}
-                        getData={searchHabit}
-                    />
-                ) : null}
+                    )}
+                    {searchResult.length > 0 ? (
+                        <div className={styles.paginate_wrapper}>
+                            <Paginate
+                                perPage={paginateData.perPage}
+                                itemCount={paginateData.totalItem}
+                                getData={searchHabit}
+                            />
+                        </div>
+                    ) : null}
+                </div>
             </div>
-        </>
+        </div>
     );
 };
 
