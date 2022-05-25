@@ -120,6 +120,7 @@ const User = () => {
     useEffect(() => {
         setUserData(null);
         setHabits([]);
+        setStatusCode(0);
         getUserData(screenName);
         getUserHabits(screenName);
 
@@ -183,26 +184,27 @@ const User = () => {
                         <h2 className={styles.title}>ハビットトラッカー</h2>
                         {isFetch ? (
                             <Circular />
-                        ) : (
-                            <ul className={styles.habit_list}>
-                                {habits.map((item, index: number) => {
-                                    return (
-                                        <HabitTracker
-                                            item={item}
-                                            key={index}
-                                            index={index}
-                                            doneHabit={doneHabit}
-                                        />
-                                    );
-                                })}
-                            </ul>
-                        )}
-                        {habits.length > 0 ? (
-                            <Paginate
-                                perPage={paginateData.perPage}
-                                itemCount={paginateData.totalItem}
-                                getData={paginateHabit}
-                            />
+                        ) : habits.length > 0 ? (
+                            <>
+                                <ul className={styles.habit_list}>
+                                    {habits.map((item, index: number) => {
+                                        return (
+                                            <HabitTracker
+                                                item={item}
+                                                key={index}
+                                                index={index}
+                                                doneHabit={doneHabit}
+                                            />
+                                        );
+                                    })}
+                                </ul>
+
+                                <Paginate
+                                    perPage={paginateData.perPage}
+                                    itemCount={paginateData.totalItem}
+                                    getData={paginateHabit}
+                                />
+                            </>
                         ) : (
                             <div>ハビットトラッカーはありません。</div>
                         )}

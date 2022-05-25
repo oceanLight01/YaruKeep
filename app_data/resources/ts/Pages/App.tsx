@@ -27,8 +27,6 @@ import ForgotPassword from './ForgotPassword';
 import ResetPassword from './ResetPassword';
 import ProvideMessage, { FlashMessage } from '../Components/FlashMessageContext';
 
-import '../../scss/app.scss';
-
 const App = () => {
     return (
         <ProvideAuth>
