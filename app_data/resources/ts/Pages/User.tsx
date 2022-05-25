@@ -11,6 +11,7 @@ import Paginate from '../Components/Paginate';
 import PageRender from './PageRender';
 
 import styles from './../../scss/User.modules.scss';
+import Circular from '../Components/atoms/Circular';
 
 type UserData = {
     id: number;
@@ -32,6 +33,7 @@ const User = () => {
     const [habits, setHabits] = useState<HabitItem[] | []>([]);
     const [statusCode, setStatusCode] = useState<number>(0);
     const locationPath = useLocation().pathname;
+    const [isFetch, setIsFetch] = useState<boolean>(true);
 
     const auth = useAuth();
     const flashMessage = useMessage();
@@ -85,6 +87,7 @@ const User = () => {
     };
 
     const getUserHabits = (screenName?: string, page = paginateData.currentPage) => {
+        setIsFetch(true);
         axios
             .get(`/api/habits/${screenName}?page=${page}`)
             .then((res) => {
@@ -104,6 +107,9 @@ const User = () => {
                 if (!unmounted) {
                     setStatusCode(error.response.status);
                 }
+            })
+            .finally(() => {
+                setIsFetch(false);
             });
     };
 
@@ -112,6 +118,8 @@ const User = () => {
     };
 
     useEffect(() => {
+        setUserData(null);
+        setHabits([]);
         getUserData(screenName);
         getUserHabits(screenName);
 
@@ -172,19 +180,23 @@ const User = () => {
                     </div>
                     <hr />
                     <div>
-                        <h2>ハビットトラッカー</h2>
-                        <ul>
-                            {habits.map((item, index: number) => {
-                                return (
-                                    <HabitTracker
-                                        item={item}
-                                        key={index}
-                                        index={index}
-                                        doneHabit={doneHabit}
-                                    />
-                                );
-                            })}
-                        </ul>
+                        <h2 className={styles.title}>ハビットトラッカー</h2>
+                        {isFetch ? (
+                            <Circular />
+                        ) : (
+                            <ul className={styles.habit_list}>
+                                {habits.map((item, index: number) => {
+                                    return (
+                                        <HabitTracker
+                                            item={item}
+                                            key={index}
+                                            index={index}
+                                            doneHabit={doneHabit}
+                                        />
+                                    );
+                                })}
+                            </ul>
+                        )}
                         {habits.length > 0 ? (
                             <Paginate
                                 perPage={paginateData.perPage}
@@ -192,7 +204,7 @@ const User = () => {
                                 getData={paginateHabit}
                             />
                         ) : (
-                            <p>ハビットトラッカーはありません。</p>
+                            <div>ハビットトラッカーはありません。</div>
                         )}
                     </div>
                 </div>

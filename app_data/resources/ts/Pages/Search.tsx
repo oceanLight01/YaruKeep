@@ -47,6 +47,8 @@ const Search = () => {
 
     // 検索情報をもとにデータを取得
     const searchHabit = (page = paginateData.currentPage, searchFormData?: SearchForm) => {
+        setSearching(true);
+
         const data = searchFormData === undefined ? searchData : searchFormData;
         const keyword = data.keyword;
         const categoriesId =
@@ -123,7 +125,7 @@ const Search = () => {
                     {searching ? (
                         <Circular />
                     ) : (
-                        <ul>
+                        <ul className={styles.habit_list}>
                             {searchResult.map((item, index) => {
                                 return (
                                     <HabitTracker
@@ -136,15 +138,13 @@ const Search = () => {
                             })}
                         </ul>
                     )}
-                    {searchResult.length > 0 ? (
-                        <div className={styles.paginate_wrapper}>
-                            <Paginate
-                                perPage={paginateData.perPage}
-                                itemCount={paginateData.totalItem}
-                                getData={searchHabit}
-                            />
-                        </div>
-                    ) : null}
+                    {searchResult.length > 0 && (
+                        <Paginate
+                            perPage={paginateData.perPage}
+                            itemCount={paginateData.totalItem}
+                            getData={searchHabit}
+                        />
+                    )}
                 </div>
             </div>
         </div>

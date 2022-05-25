@@ -1,5 +1,10 @@
 @import './variables/variable';
 
+.container {
+    display: flex;
+    justify-content: center;
+}
+
 .paginate {
     display: flex;
 }
@@ -49,8 +54,4 @@
     width: 30px;
     height: 30px;
     margin-left: 0.5em;
-}
-
-.disabled {
-    display: none;
 }

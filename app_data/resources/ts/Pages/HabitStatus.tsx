@@ -27,6 +27,7 @@ import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import { Box } from '@mui/material';
+import Circular from '../Components/atoms/Circular';
 
 const HabitStatus = () => {
     const auth = useAuth();
@@ -54,6 +55,7 @@ const HabitStatus = () => {
         updated_at: '',
     });
     const [diaries, setDiaries] = useState<DiaryItem[]>([]);
+    const [diariesFetch, setDiariesFetch] = useState<boolean>(false);
     const [paginateData, setPaginateData] = useState({
         perPage: 1,
         totalItem: 1,
@@ -137,6 +139,8 @@ const HabitStatus = () => {
     };
 
     const getDiary = async (id?: string, page = paginateData.currentPage) => {
+        setDiariesFetch(true);
+
         return axios
             .get(`/api/habits/${id}/diaries?page=${page}`)
             .then((res) => {
@@ -162,6 +166,9 @@ const HabitStatus = () => {
                         error.response.status
                     );
                 }
+            })
+            .finally(() => {
+                setDiariesFetch(false);
             });
     };
 
@@ -203,7 +210,7 @@ const HabitStatus = () => {
                     </Box>
                     <TabPanel value="1">
                         <>
-                            <DiaryList diaries={diaries} />
+                            {diariesFetch ? <Circular /> : <DiaryList diaries={diaries} />}
                             {diaries.length > 0 ? (
                                 <Paginate
                                     perPage={paginateData.perPage}

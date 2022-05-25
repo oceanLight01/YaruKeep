@@ -1,4 +1,5 @@
 import React from 'react';
+import Circular from '../Components/atoms/Circular';
 
 type Props = {
     children: JSX.Element;
@@ -8,7 +9,7 @@ type Props = {
 const PageRender = ({ children, status }: Props) => {
     switch (status) {
         case 0:
-            return <p>読み込み中...</p>;
+            return <Circular />;
         case 404:
             return <p>お探しのページは存在しません。すでに削除された可能性があります。</p>;
         case 500:

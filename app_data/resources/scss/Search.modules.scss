@@ -11,9 +11,9 @@
             text-align: center;
         }
 
-        .paginate_wrapper {
-            display: flex;
-            justify-content: center;
+        .habit_list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
         }
     }
 }

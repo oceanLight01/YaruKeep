@@ -9,7 +9,7 @@ type Props = {
     getData: (page: number) => void;
 };
 
-const Paginate = ({ perPage = 1, itemCount = 1, getData }: Props) => {
+const Paginate = ({ perPage, itemCount, getData }: Props) => {
     const handlePageClick = (selectedItem: { selected: number }) => {
         const selectPage = selectedItem.selected + 1;
         getData(selectPage);
@@ -20,27 +20,28 @@ const Paginate = ({ perPage = 1, itemCount = 1, getData }: Props) => {
     };
 
     return (
-        <ReactPaginate
-            pageCount={calculatePageCount(itemCount, perPage)}
-            pageRangeDisplayed={5}
-            marginPagesDisplayed={2}
-            onPageChange={handlePageClick}
-            containerClassName={styles.paginate}
-            pageClassName={styles.page_item}
-            pageLinkClassName={styles.page_link}
-            activeClassName={styles.active}
-            activeLinkClassName={styles.active_link}
-            previousLabel="<"
-            previousClassName={styles.previous_item}
-            previousLinkClassName={styles.page_link}
-            nextLabel=">"
-            nextClassName={styles.next_item}
-            nextLinkClassName={styles.page_link}
-            breakLabel="..."
-            breakClassName={styles.page_item}
-            breakLinkClassName={styles.page_link}
-            disabledClassName={styles.disabled}
-        />
+        <div className={styles.container}>
+            <ReactPaginate
+                pageCount={calculatePageCount(itemCount, perPage)}
+                pageRangeDisplayed={5}
+                marginPagesDisplayed={2}
+                onPageChange={handlePageClick}
+                containerClassName={styles.paginate}
+                pageClassName={styles.page_item}
+                pageLinkClassName={styles.page_link}
+                activeClassName={styles.active}
+                activeLinkClassName={styles.active_link}
+                previousLabel="<"
+                previousClassName={styles.previous_item}
+                previousLinkClassName={styles.page_link}
+                nextLabel=">"
+                nextClassName={styles.next_item}
+                nextLinkClassName={styles.page_link}
+                breakLabel="..."
+                breakClassName={styles.page_item}
+                breakLinkClassName={styles.page_link}
+            />
+        </div>
     );
 };
 
