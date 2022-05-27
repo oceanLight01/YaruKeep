@@ -1,5 +1,15 @@
 .form {
     margin: 2em 0;
+
+    .form_label {
+        display: flex;
+        align-items: flex-end;
+
+        > label {
+            display: inline-block;
+            margin-right: 1em;
+        }
+    }
 }
 
 .button_wrapper {

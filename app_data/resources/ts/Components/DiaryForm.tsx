@@ -6,6 +6,8 @@ import { useMessage } from './FlashMessageContext';
 import styles from './../../scss/DiaryForm.modules.scss';
 import TextField from '@mui/material/TextField';
 import Button from './atoms/Button';
+import FormVaridateMessage from './atoms/FormVaridateMessage';
+import ValidateCountInput from './ValidateCountInput';
 
 type Diary = {
     text: string;
@@ -24,6 +26,7 @@ const DiaryForm = (props: Props) => {
         handleSubmit,
         formState: { errors },
         control,
+        watch,
     } = useForm<Diary>();
 
     let unmounted = false;
@@ -55,10 +58,6 @@ const DiaryForm = (props: Props) => {
                         '日記の投稿に失敗しました。',
                         error.response.status
                     );
-                }
-            })
-            .finally(() => {
-                if (!unmounted) {
                     setClicked(false);
                 }
             });
@@ -67,7 +66,10 @@ const DiaryForm = (props: Props) => {
     return (
         <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
             <div>
-                <label>日記</label>
+                <div className={styles.form_label}>
+                    <label>日記</label>
+                    <ValidateCountInput text={watch('text')} limit={300} />
+                </div>
                 <Controller
                     name="text"
                     control={control}
@@ -75,7 +77,6 @@ const DiaryForm = (props: Props) => {
                         <TextField
                             type="text"
                             margin="dense"
-                            maxLength={1000}
                             placeholder={'今日のことを日記に書こう'}
                             multiline
                             fullWidth
@@ -83,11 +84,15 @@ const DiaryForm = (props: Props) => {
                         />
                     )}
                 />
-                {errors.text?.type === 'maxLength' && <p>日記は1000文字以下で入力してください。</p>}
-                {errors.text?.type === 'required' && <p>内容を入力してください。</p>}
+                {errors.text?.type === 'maxLength' && (
+                    <FormVaridateMessage message={'日記は300文字以下で入力してください。'} />
+                )}
+                {errors.text?.type === 'required' && (
+                    <FormVaridateMessage message={'内容を入力してください。'} />
+                )}
             </div>
             <div className={styles.button_wrapper}>
-                <Button value="投稿" type="submit" disabled={clicked} />
+                <Button value="投稿する" type="submit" disabled={clicked} />
             </div>
         </form>
     );
