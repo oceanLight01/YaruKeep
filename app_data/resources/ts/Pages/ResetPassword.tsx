@@ -9,6 +9,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import FormVaridateMessage from '../Components/atoms/FormVaridateMessage';
 import FormRule from '../Components/atoms/FormRule';
+import ValidateCountInput from '../Components/ValidateCountInput';
 
 type ResetPasswordForm = {
     password: string;
@@ -38,6 +39,7 @@ const ResetPassword = () => {
         formState: { errors },
         getValues,
         control,
+        watch,
     } = useForm<ResetPasswordForm>({ mode: 'onBlur' });
 
     const onSubmit: SubmitHandler<ResetPasswordForm> = (data) => {
@@ -80,12 +82,15 @@ const ResetPassword = () => {
                 </div>
                 <form onSubmit={handleSubmit(onSubmit)} className={styles.password_form}>
                     <div className={styles.form_input}>
+                        <div className={styles.form_label}>
+                            <label>新しいパスワード</label>
+                            <ValidateCountInput text={watch('password')} limit={64} />
+                        </div>
                         <Controller
                             name="password"
                             control={control}
                             render={() => (
                                 <TextField
-                                    label="新しいパスワード"
                                     type="password"
                                     margin="dense"
                                     fullWidth
@@ -125,12 +130,14 @@ const ResetPassword = () => {
                         )}
                     </div>
                     <div className={styles.form_input}>
+                        <div className={styles.form_label}>
+                            <label>パスワード確認</label>
+                        </div>
                         <Controller
                             name="password_confirmation"
                             control={control}
                             render={() => (
                                 <TextField
-                                    label="パスワード確認"
                                     type="password"
                                     margin="dense"
                                     fullWidth
@@ -149,9 +156,11 @@ const ResetPassword = () => {
                             <FormVaridateMessage message={'パスワードが一致しません。'} />
                         )}
                     </div>
-                    <Button type="submit" variant="contained" disabled={clicked}>
-                        パスワード変更
-                    </Button>
+                    <div className={styles.form_button_wrapper}>
+                        <Button type="submit" variant="contained" disabled={clicked}>
+                            パスワード変更
+                        </Button>
+                    </div>
                 </form>
             </div>
         </div>

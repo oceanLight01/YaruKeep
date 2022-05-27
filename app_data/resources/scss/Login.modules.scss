@@ -24,7 +24,22 @@
 
     .form_input {
         margin-bottom: 1.5em;
+
+        .form_label {
+            display: flex;
+            align-items: flex-end;
+
+            > label {
+                display: inline-block;
+                margin-right: 1em;
+            }
+        }
     }
+}
+
+.form_button_wrapper {
+    display: flex;
+    justify-content: flex-end;
 }
 
 .links {

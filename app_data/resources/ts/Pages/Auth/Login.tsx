@@ -76,12 +76,14 @@ const Login = () => {
                 </div>
                 <form onSubmit={handleSubmit(onSubmit)} className={styles.login_form}>
                     <div className={styles.form_input}>
+                        <div className={styles.form_label}>
+                            <label>メールアドレス</label>
+                        </div>
                         <Controller
                             name="email"
                             control={control}
                             render={() => (
                                 <TextField
-                                    label="メールアドレス"
                                     type="email"
                                     margin="dense"
                                     fullWidth
@@ -94,12 +96,14 @@ const Login = () => {
                         )}
                     </div>
                     <div className={styles.form_input}>
+                        <div className={styles.form_label}>
+                            <label>パスワード</label>
+                        </div>
                         <Controller
                             name="password"
                             control={control}
                             render={() => (
                                 <TextField
-                                    label="パスワード"
                                     type="password"
                                     margin="dense"
                                     fullWidth
@@ -121,9 +125,11 @@ const Login = () => {
                             />
                         </label>
                     </div>
-                    <Button type="submit" variant="contained" disabled={isLoading}>
-                        ログイン
-                    </Button>
+                    <div className={styles.form_button_wrapper}>
+                        <Button type="submit" variant="contained" disabled={isLoading}>
+                            ログイン
+                        </Button>
+                    </div>
                 </form>
                 <div className={styles.links}>
                     <Link to="/register" className={styles.links_item}>

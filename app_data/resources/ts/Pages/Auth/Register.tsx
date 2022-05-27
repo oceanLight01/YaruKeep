@@ -6,10 +6,10 @@ import { useMessage } from '../../Components/FlashMessageContext';
 
 import styles from './../../../scss/Register.modules.scss';
 import TextField from '@mui/material/TextField';
-import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
 import FormVaridateMessage from '../../Components/atoms/FormVaridateMessage';
 import FormRule from '../../Components/atoms/FormRule';
+import ValidateCountInput from '../../Components/ValidateCountInput';
 
 type RegisterForm = {
     name: string;
@@ -35,6 +35,7 @@ const Register = () => {
         formState: { errors },
         getValues,
         control,
+        watch,
     } = useForm<RegisterForm>({ mode: 'onBlur' });
     const navigate = useNavigate();
 
@@ -78,21 +79,22 @@ const Register = () => {
                 </div>
                 <form onSubmit={handleSubmit(onSubmit)} className={styles.register_form}>
                     <div className={styles.form_input}>
+                        <div className={styles.form_label}>
+                            <label>アカウント名</label>
+                            <ValidateCountInput text={watch('name')} limit={30} />
+                        </div>
                         <Controller
-                            name="email"
+                            name="name"
                             control={control}
                             render={() => (
                                 <TextField
-                                    label="アカウント名"
                                     type="text"
-                                    maxLength={30}
                                     margin="dense"
                                     fullWidth
                                     {...register('name', { required: true, maxLength: 30 })}
                                 />
                             )}
                         />
-                        <FormRule rule={'・30文字以下'} />
                         {errors.name?.type === 'maxLength' && (
                             <FormVaridateMessage
                                 message={'アカウント名は30文字以下で入力してください。'}
@@ -103,14 +105,16 @@ const Register = () => {
                         )}
                     </div>
                     <div className={styles.form_input}>
+                        <div className={styles.form_label}>
+                            <label>アカウントID</label>
+                            <ValidateCountInput text={watch('screen_name')} limit={20} />
+                        </div>
                         <Controller
                             name="screen_name"
                             control={control}
                             render={() => (
                                 <TextField
-                                    label="アカウントID"
                                     type="text"
-                                    maxLength={20}
                                     margin="dense"
                                     fullWidth
                                     {...register('screen_name', {
@@ -121,7 +125,7 @@ const Register = () => {
                                 />
                             )}
                         />
-                        <FormRule rule={'・20文字以下  ・使用可能文字：半角英数字'} />
+                        <FormRule rule={'・使用可能文字：半角英数字'} />
                         {errors.screen_name?.type === 'required' && (
                             <FormVaridateMessage message={'アカウントIDを入力してください。'} />
                         )}
@@ -140,14 +144,16 @@ const Register = () => {
                         })}
                     </div>
                     <div className={styles.form_input}>
+                        <div className={styles.form_label}>
+                            <label>メールアドレス</label>
+                            <ValidateCountInput text={watch('email')} limit={255} />
+                        </div>
                         <Controller
                             name="email"
                             control={control}
                             render={() => (
                                 <TextField
-                                    label="メールアドレス"
                                     type="email"
-                                    maxLength={255}
                                     margin="dense"
                                     fullWidth
                                     {...register('email', {
@@ -177,14 +183,16 @@ const Register = () => {
                         })}
                     </div>
                     <div className={styles.form_input}>
+                        <div className={styles.form_label}>
+                            <label>パスワード</label>
+                            <ValidateCountInput text={watch('password')} limit={64} />
+                        </div>
                         <Controller
                             name="password"
                             control={control}
                             render={() => (
                                 <TextField
-                                    label="パスワード"
                                     type="password"
-                                    maxLength={64}
                                     margin="dense"
                                     fullWidth
                                     {...register('password', {
@@ -224,14 +232,15 @@ const Register = () => {
                         )}
                     </div>
                     <div className={styles.form_input}>
+                        <div className={styles.form_label}>
+                            <label>パスワード確認</label>
+                        </div>
                         <Controller
                             name="password_confirmation"
                             control={control}
                             render={() => (
                                 <TextField
-                                    label="パスワード確認"
                                     type="password"
-                                    maxLength={64}
                                     margin="dense"
                                     fullWidth
                                     {...register('password_confirmation', {
@@ -249,9 +258,11 @@ const Register = () => {
                             <FormVaridateMessage message={'パスワードが一致しません。'} />
                         )}
                     </div>
-                    <Button type="submit" variant="contained" disabled={isLoading}>
-                        登録
-                    </Button>
+                    <div className={styles.form_button_wrapper}>
+                        <Button type="submit" variant="contained" disabled={isLoading}>
+                            登録
+                        </Button>
+                    </div>
                 </form>
                 <div className={styles.link}>
                     <Link to="/login" className={styles.link_name}>

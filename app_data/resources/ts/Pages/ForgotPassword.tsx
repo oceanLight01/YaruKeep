@@ -86,7 +86,6 @@ const ForgotPassword = () => {
                             control={control}
                             render={() => (
                                 <TextField
-                                    label="メールアドレス"
                                     type="email"
                                     margin="dense"
                                     fullWidth
@@ -98,9 +97,11 @@ const ForgotPassword = () => {
                             <FormVaridateMessage message={'メールアドレスを入力してください。'} />
                         )}
                     </div>
-                    <Button type="submit" variant="contained" disabled={clicked}>
-                        送信
-                    </Button>
+                    <div className={styles.form_button_wrapper}>
+                        <Button type="submit" variant="contained" disabled={clicked}>
+                            送信
+                        </Button>
+                    </div>
                 </form>
             </div>
         </div>
