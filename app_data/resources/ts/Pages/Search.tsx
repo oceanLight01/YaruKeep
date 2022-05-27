@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '../Components/Authenticate';
 import { useMessage } from '../Components/FlashMessageContext';
 import HabitTracker from '../Components/HabitTracker';
-import Paginate from '../Components/Paginate';
+import Paginate from '../Components/atoms/Paginate';
 import SearchForm from '../Components/SearchForm';
 import Circular from '../Components/atoms/Circular';
 
@@ -125,25 +125,28 @@ const Search = () => {
                     {searching ? (
                         <Circular />
                     ) : (
-                        <ul className={styles.habit_list}>
-                            {searchResult.map((item, index) => {
-                                return (
-                                    <HabitTracker
-                                        item={item}
-                                        index={index}
-                                        doneHabit={doneHabit}
-                                        key={index}
-                                    />
-                                );
-                            })}
-                        </ul>
-                    )}
-                    {searchResult.length > 0 && (
-                        <Paginate
-                            perPage={paginateData.perPage}
-                            itemCount={paginateData.totalItem}
-                            getData={searchHabit}
-                        />
+                        searchResult.length > 0 && (
+                            <>
+                                <ul className={styles.habit_list}>
+                                    {searchResult.map((item, index) => {
+                                        return (
+                                            <HabitTracker
+                                                item={item}
+                                                index={index}
+                                                doneHabit={doneHabit}
+                                                key={index}
+                                            />
+                                        );
+                                    })}
+                                </ul>
+                                <Paginate
+                                    perPage={paginateData.perPage}
+                                    itemCount={paginateData.totalItem}
+                                    currentPage={paginateData.currentPage}
+                                    handleClick={searchHabit}
+                                />
+                            </>
+                        )
                     )}
                 </div>
             </div>

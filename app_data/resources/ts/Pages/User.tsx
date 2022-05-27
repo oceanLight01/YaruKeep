@@ -7,7 +7,7 @@ import { useAuth } from '../Components/Authenticate';
 import { useMessage } from '../Components/FlashMessageContext';
 import formatText from '../Components/FormatText';
 import HabitTracker from '../Components/HabitTracker';
-import Paginate from '../Components/Paginate';
+import Paginate from '../Components/atoms/Paginate';
 import PageRender from './PageRender';
 
 import styles from './../../scss/User.modules.scss';
@@ -202,7 +202,8 @@ const User = () => {
                                 <Paginate
                                     perPage={paginateData.perPage}
                                     itemCount={paginateData.totalItem}
-                                    getData={paginateHabit}
+                                    currentPage={paginateData.currentPage}
+                                    handleClick={paginateHabit}
                                 />
                             </>
                         ) : (

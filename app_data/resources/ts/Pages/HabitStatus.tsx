@@ -12,7 +12,7 @@ import EditHabitForm from '../Components/EditHabitForm';
 import { useMessage } from '../Components/FlashMessageContext';
 import formatText from '../Components/FormatText';
 import LoginUserContent from '../Components/LoginUserContent';
-import Paginate from '../Components/Paginate';
+import Paginate from '../Components/atoms/Paginate';
 import Diary from './Diary';
 import PageRender from './PageRender';
 
@@ -210,13 +210,19 @@ const HabitStatus = () => {
                     </Box>
                     <TabPanel value="1">
                         <>
-                            {diariesFetch ? <Circular /> : <DiaryList diaries={diaries} />}
-                            {diaries.length > 0 ? (
-                                <Paginate
-                                    perPage={paginateData.perPage}
-                                    itemCount={paginateData.totalItem}
-                                    getData={paginateDiary}
-                                />
+                            {diariesFetch ? (
+                                <Circular />
+                            ) : diaries.length > 0 ? (
+                                <>
+                                    <DiaryList diaries={diaries} />
+
+                                    <Paginate
+                                        perPage={paginateData.perPage}
+                                        itemCount={paginateData.totalItem}
+                                        currentPage={paginateData.currentPage}
+                                        handleClick={paginateDiary}
+                                    />
+                                </>
                             ) : (
                                 <p>日記はありません。</p>
                             )}

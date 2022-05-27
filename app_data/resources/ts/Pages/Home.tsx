@@ -1,4 +1,5 @@
 import React from 'react';
+import Paginate from '../Components/atoms/Paginate';
 import TopPageHabit from '../Components/TopPageHabit';
 
 import styles from './../../scss/Home.modules.scss';
