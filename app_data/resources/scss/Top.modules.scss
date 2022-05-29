@@ -1,0 +1,34 @@
+.container {
+    display: flex;
+    justify-content: center;
+    margin: 5em 0 5em;
+
+    .wrapper {
+        width: 94%;
+        max-width: 1024px;
+
+        h2 {
+            font-size: 3em;
+        }
+
+        .description {
+            margin-bottom: 4em;
+        }
+
+        .buttons_container {
+            display: flex;
+            justify-content: center;
+            .button_wrapper {
+                margin-right: 2em;
+            }
+        }
+
+        p:last-of-type {
+            margin-top: 3em;
+        }
+
+        a {
+            color: #ffffff;
+        }
+    }
+}
