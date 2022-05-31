@@ -94,7 +94,9 @@ const EmailChangeForm = () => {
                             />
                         )}
                     />
-                    {formStatus.error.length > 0 && <p>{formStatus.error}</p>}
+                    {formStatus.error.length > 0 && (
+                        <FormVaridateMessage message={formStatus.error} />
+                    )}
                     {errors.email?.type === 'required' && (
                         <FormVaridateMessage message="メールアドレスを入力してください。" />
                     )}
