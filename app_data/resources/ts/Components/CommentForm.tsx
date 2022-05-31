@@ -29,7 +29,7 @@ const CommentForm = (props: Props) => {
         register,
         handleSubmit,
         formState: { errors },
-        setValue,
+        reset,
         control,
     } = useForm<CommentForm>();
 
@@ -42,6 +42,7 @@ const CommentForm = (props: Props) => {
 
     const onSubmit: SubmitHandler<CommentForm> = (data) => {
         setClicked(true);
+        console.log('commentForm');
 
         const postData = {
             ...data,
@@ -55,18 +56,14 @@ const CommentForm = (props: Props) => {
             .then((res) => {
                 props.updateItem(res.data.data);
 
-                if (!unmounted) {
-                    flashMessage?.setMessage('コメントを投稿しました。');
-                    setValue('comment', '');
-                }
+                flashMessage?.setMessage('コメントを投稿しました。');
+                reset();
             })
             .catch((error) => {
-                if (!unmounted) {
-                    flashMessage?.setErrorMessage(
-                        'コメントの投稿に失敗しました。',
-                        error.response.status
-                    );
-                }
+                flashMessage?.setErrorMessage(
+                    'コメントの投稿に失敗しました。',
+                    error.response.status
+                );
             })
             .finally(() => {
                 if (!unmounted) {

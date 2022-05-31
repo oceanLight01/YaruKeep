@@ -1,5 +1,8 @@
-import { AxiosError } from 'axios';
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
+
+import styles from './../../scss/FlashMessage.modules.scss';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
 type Message = {
     type: 'success' | 'error' | 'none';
@@ -78,20 +81,34 @@ export const FlashMessage = () => {
     const flashMessage = useMessage();
     const message = flashMessage?.flashMessage;
     const startTime = flashMessage?.nowTime;
+    const renderFlg = useRef(false);
 
     useEffect(() => {
-        const timer = setTimeout(() => {
-            flashMessage?.resetMessage();
-        }, 5000);
+        if (renderFlg.current) {
+            const timer = setTimeout(() => {
+                flashMessage?.resetMessage();
+            }, 5000);
 
-        return () => {
-            clearTimeout(timer);
-        };
+            return () => {
+                clearTimeout(timer);
+            };
+        } else {
+            renderFlg.current = true;
+        }
     }, [startTime]);
 
+    const icon =
+        message?.type === 'success' ? (
+            <CheckCircleOutlineIcon fontSize="large" />
+        ) : (
+            <ErrorOutlineIcon fontSize="large" />
+        );
+    const color = message?.type === 'success' ? styles.success : styles.error;
+
     return message !== undefined && message.type !== 'none' ? (
-        <p style={{ backgroundColor: message.type === 'success' ? 'lime' : 'red' }}>
-            {flashMessage?.flashMessage.message}
-        </p>
+        <div className={`${styles.container} ${color}`}>
+            <div className={styles.icon}>{icon}</div>
+            <div className={styles.message}>{flashMessage?.flashMessage.message}</div>
+        </div>
     ) : null;
 };
