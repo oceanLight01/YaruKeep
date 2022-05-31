@@ -16,7 +16,7 @@ class SearchController extends Controller
      */
     public function search(Request $request)
     {
-        $limit = 5;
+        $limit = 20;
         $page = $request->page;
 
         $keyword = $request->keyword;

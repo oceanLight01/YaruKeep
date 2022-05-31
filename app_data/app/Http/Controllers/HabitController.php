@@ -280,7 +280,7 @@ class HabitController extends Controller
 
         if ($user_id) {
             return HabitResource::collection($habit_data->orderBy('id', 'desc')
-                                                    ->paginate(5));
+                                                    ->paginate(10));
         } else {
             return response(['message' => 'Faild get habits'], 400);
         }

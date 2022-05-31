@@ -121,7 +121,7 @@ class DiaryController extends Controller
 
             if ($is_private === 0)
             {
-                return DiaryResource::collection($diary->orderBy('id', 'desc')->paginate(5));
+                return DiaryResource::collection($diary->orderBy('id', 'desc')->paginate(20));
             } else {
                 return response(['message' => 'Not found diaries'], 404);
             }
