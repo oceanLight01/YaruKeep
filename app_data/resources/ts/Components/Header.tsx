@@ -6,6 +6,7 @@ import styles from '../../scss/Header.modules.scss';
 import NavigationNotification from './NavigationNotification';
 import SearchIcon from '@mui/icons-material/Search';
 import Navigation from './Navigation';
+import SpMenu from './SpMenu';
 
 const Header = () => {
     const auth = useAuth();
@@ -32,9 +33,11 @@ const Header = () => {
                             </div>
                         </>
                     )}
+
                     <div className={styles.header_user_name}>
                         <Navigation />
                     </div>
+                    <SpMenu />
                 </div>
             </div>
         </header>

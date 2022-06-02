@@ -38,6 +38,7 @@
     .header_search {
         display: flex;
         align-items: center;
+        height: 100%;
         color: $font_color;
 
         > a {
@@ -58,9 +59,27 @@
     .header_user_name {
         display: flex;
         align-items: center;
+        height: 100%;
 
         > a {
             color: $font_color;
+        }
+    }
+}
+
+@media screen and (max-width: 599px) {
+    .header_menu_wrapper {
+        .header_search {
+            display: none;
+        }
+
+        .header_user_name {
+            display: none;
+        }
+
+        .header_notification {
+            width: 48px;
+            margin: 0;
         }
     }
 }
