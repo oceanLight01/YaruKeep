@@ -62,7 +62,6 @@ const SearchForm = (props: Props) => {
         }
 
         setValue('categories', newCategories.join(','));
-        console.log(getValues('categories'));
         return newCategories.join(',');
     };
 

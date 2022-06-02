@@ -108,3 +108,9 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
 }
+
+@media screen and (max-width: 599px) {
+    .habit_list {
+        display: block;
+    }
+}

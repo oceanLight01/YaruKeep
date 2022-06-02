@@ -60,16 +60,18 @@ const HabitTracker = ({ item, index, doneHabit }: Props) => {
                     {item.user.name}
                 </Link>
             </div>
-            <span onClick={stopEvent}>
-                {auth?.userData?.id === item.user.id && doneHabit !== undefined ? (
-                    <HabitDoneButton
-                        doneHabit={doneHabit!}
-                        id={item.id}
-                        isDone={item.is_done}
-                        index={index}
-                    />
-                ) : null}
-            </span>
+            <div className={styles.button_wrapper}>
+                <span onClick={stopEvent}>
+                    {auth?.userData?.id === item.user.id && doneHabit !== undefined ? (
+                        <HabitDoneButton
+                            doneHabit={doneHabit!}
+                            id={item.id}
+                            isDone={item.is_done}
+                            index={index}
+                        />
+                    ) : null}
+                </span>
+            </div>
         </li>
     );
 };

@@ -68,4 +68,20 @@
             }
         }
     }
+
+    .button_wrapper {
+        display: flex;
+        justify-content: flex-end;
+    }
+}
+
+@media screen and (max-width: 599px) {
+    .habit_tracker_container {
+        padding: 1em;
+        margin: 2em 0;
+
+        .calendar_container {
+            display: block;
+        }
+    }
 }
