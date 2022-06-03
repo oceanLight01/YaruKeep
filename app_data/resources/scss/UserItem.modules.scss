@@ -76,3 +76,28 @@
         font-size: 0.8em;
     }
 }
+
+@media screen and (max-width: 599px) {
+    .profile_image_container {
+        width: 30%;
+        height: 50%;
+    }
+
+    .user_names {
+        width: 100%;
+        margin: 0.5em 0 0.5em 0.5em;
+
+        .name {
+            a {
+                font-size: 1.1em;
+            }
+        }
+        .screen_name {
+            margin-bottom: 1em;
+        }
+
+        .follow_button_wrapper {
+            display: inline-block;
+        }
+    }
+}
