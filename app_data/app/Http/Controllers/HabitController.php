@@ -245,11 +245,18 @@ class HabitController extends Controller
         }
 
         // 達成日時が最新のハビットトラッカーを取得
-        $newest_done_habits = Habit::where('is_private', 0)
-                                   ->whereNotIn('done_days_count', [0])
-                                   ->latest('updated_at')
-                                   ->limit(10)
-                                   ->get();
+        $newest_done_habit_ids = HabitDoneDay::latest('created_at')
+        ->pluck('habit_id')
+        ->unique()
+        ->toArray();
+
+        $ids_order = implode(',', $newest_done_habit_ids);
+
+        $newest_done_habit_list = Habit::whereIn('id', $newest_done_habit_ids)
+        ->orderByRaw("FIELD(id, $ids_order)")
+        ->where('is_private', 0)
+        ->limit(10)
+        ->get();
 
         return [
             'following_user_habits' => HabitResource::collection($following_user_habits),
@@ -258,7 +265,7 @@ class HabitController extends Controller
                 'category_name' => $category_name,
                 'habits' => HabitResource::collection($same_category_habits),
             ],
-            'newest_done_habits' => HabitResource::collection($newest_done_habits),
+            'newest_done_habits' => HabitResource::collection($newest_done_habit_list),
         ];
     }
 
