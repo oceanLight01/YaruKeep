@@ -95,3 +95,17 @@
     width: 100vw;
     overflow-y: hidden;
 }
+
+@media screen and (max-width: 599px) {
+    .habit_status_container {
+        .habit_status_wrapper {
+            .habit_tracker_title {
+                font-size: 2em;
+            }
+
+            .calendar_container {
+                display: block;
+            }
+        }
+    }
+}
