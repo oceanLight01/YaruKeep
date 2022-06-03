@@ -45,6 +45,10 @@
             display: flex;
             align-items: center;
             color: $font_color;
+
+            > span {
+                white-space: nowrap;
+            }
         }
     }
 

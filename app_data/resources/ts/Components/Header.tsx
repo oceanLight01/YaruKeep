@@ -25,7 +25,7 @@ const Header = () => {
                             <div className={styles.header_search}>
                                 <Link to={'/search'}>
                                     <SearchIcon />
-                                    検索
+                                    <span>検索</span>
                                 </Link>
                             </div>
                             <div className={styles.header_notification}>
