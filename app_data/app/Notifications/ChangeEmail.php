@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Lang;
 
 class ChangeEmail extends Notification
 {
@@ -42,9 +43,12 @@ class ChangeEmail extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->subject('【Yarukeep】メールアドレス変更')
-                    ->view('emails.changeEmail')
-                    ->action('メールアドレス変更', url('api/email/change', $this->token));
+                    ->subject(Lang::get('mail.change_email.subject'))
+                    ->line(Lang::get('mail.change_email.line_01'))
+                    ->line(Lang::get('mail.change_email.line_02'))
+                    ->action(Lang::get('mail.change_email.action'), url('api/email/change', $this->token))
+                    ->line(Lang::get('mail.change_email.line_03'))
+                    ->line(Lang::get('mail.change_email.line_04'));
     }
 
     /**

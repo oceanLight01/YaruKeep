@@ -2,8 +2,11 @@
 
 namespace App\Providers;
 
+use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Lang;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -25,6 +28,13 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        VerifyEmail::toMailUsing(function ($notifiable, $url) {
+            return (new MailMessage)
+                ->subject('mail.verify_email.subject')
+                ->line(Lang::get('mail.verify_email.line_01'))
+                ->line(Lang::get('mail.verify_email.line_02'))
+                ->action(Lang::get('mail.verify_email.action'), $url)
+                ->line(Lang::get('mail.verify_email.line_03'));
+        });
     }
 }
