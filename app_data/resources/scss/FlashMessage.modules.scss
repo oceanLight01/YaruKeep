@@ -26,3 +26,15 @@
     background-color: #ffcccc;
     color: #330505;
 }
+
+@media screen and (max-width: 599px) {
+    .container {
+        .icon {
+            margin-left: 1em;
+        }
+
+        .message {
+            margin-left: 0.5em;
+        }
+    }
+}
