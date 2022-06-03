@@ -1,10 +1,14 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import LogoutButton from '../../Components/atoms/LogoutButton';
 import { useMessage } from '../../Components/FlashMessageContext';
 
+import styles from './../../../scss/EmailVerified.modules.scss';
+import Button from '../../Components/atoms/Button';
+
 const EmailVerified = () => {
     const flashMessage = useMessage();
+    const [clicked, setClicked] = useState<boolean>(false);
 
     let unmounted = false;
     useEffect(() => {
@@ -14,6 +18,7 @@ const EmailVerified = () => {
     }, []);
 
     const sendVerifiedEmail = () => {
+        setClicked(true);
         axios
             .post('api/email/verification-notification')
             .then(() => {
@@ -28,19 +33,33 @@ const EmailVerified = () => {
                         error.response.status
                     );
                 }
+            })
+            .finally(() => {
+                setClicked(false);
             });
     };
 
     return (
-        <>
-            <p>
-                登録されたメールアドレス宛にメールアドレス検証用リンクをお送りしました。
-                <br />
-                記載されたURLよりメールアドレスの検証を完了してください。
-            </p>
-            <button onClick={sendVerifiedEmail}>検証メールを再送信する</button>
-            <LogoutButton />
-        </>
+        <div className={styles.container}>
+            <div className={styles.wrapper}>
+                <p>Yarukeepへのご登録ありがとうございます！</p>
+                <p>
+                    登録されたメールアドレス宛にメールアドレス確認用リンクをお送りしました。
+                    <br />
+                    記載されたURLよりメールアドレスの確認を完了してください。
+                </p>
+                <div className={styles.button_wrapper}>
+                    <Button
+                        value="検証メールを再送信する"
+                        clickHandler={sendVerifiedEmail}
+                        disabled={clicked}
+                    />
+                </div>
+                <div className={styles.logout_wrapper}>
+                    <LogoutButton />
+                </div>
+            </div>
+        </div>
     );
 };
 
