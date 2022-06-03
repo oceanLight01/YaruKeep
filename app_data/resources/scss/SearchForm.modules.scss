@@ -17,3 +17,13 @@
 .checkbox_item {
     display: inline-block;
 }
+
+@media screen and (max-width: 599px) {
+    .search_form {
+        padding: 1em 0.5em;
+    }
+
+    .form_input {
+        margin: 1em;
+    }
+}
