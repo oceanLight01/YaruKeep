@@ -75,6 +75,14 @@
     }
 }
 
+@media screen and (max-width: 1024px) {
+    .habit_tracker_container {
+        .calendar_container {
+            display: block;
+        }
+    }
+}
+
 @media screen and (max-width: 599px) {
     .habit_tracker_container {
         padding: 1em;
