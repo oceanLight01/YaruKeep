@@ -110,6 +110,29 @@
 }
 
 @media screen and (max-width: 599px) {
+    .user_profile_container {
+        display: block;
+        width: 100%;
+        padding: 1em 0;
+
+        .user_profile_image_container {
+            display: flex;
+            justify-content: center;
+            width: 50%;
+            margin: 0 auto;
+        }
+
+        .user_profile_info {
+            width: 100%;
+            padding: 0;
+            margin: 2em 0 1em;
+
+            .user_profile_name {
+                box-sizing: border-box;
+            }
+        }
+    }
+
     .habit_list {
         display: block;
     }

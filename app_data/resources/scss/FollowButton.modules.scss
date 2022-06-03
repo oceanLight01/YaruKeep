@@ -30,3 +30,9 @@
 .disable {
     opacity: 0.4;
 }
+
+@media screen and (max-width: 599px) {
+    .follow_button {
+        width: 120px;
+    }
+}
