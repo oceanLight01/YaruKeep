@@ -4,12 +4,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../Components/Authenticate';
 import { useMessage } from '../../Components/FlashMessageContext';
 
-import styles from './../../../scss/Register.modules.scss';
+import styles from 'scss/Pages/Auth/Register.modules.scss';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import FormVaridateMessage from '../../Components/atoms/FormVaridateMessage';
-import FormRule from '../../Components/atoms/FormRule';
-import ValidateCountInput from '../../Components/ValidateCountInput';
+import FormVaridateMessage from '../../Components/Atoms/FormVaridateMessage';
+import FormRule from '../../Components/Atoms/FormRule';
+import ValidateCountInput from '../../Components/Atoms/ValidateCountInput';
 
 type RegisterForm = {
     name: string;

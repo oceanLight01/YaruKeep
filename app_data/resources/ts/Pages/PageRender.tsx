@@ -1,5 +1,5 @@
 import React from 'react';
-import Circular from '../Components/atoms/Circular';
+import Circular from '../Components/Atoms/Circular';
 
 type Props = {
     children: JSX.Element;

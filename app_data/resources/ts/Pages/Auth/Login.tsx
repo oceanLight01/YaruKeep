@@ -5,11 +5,11 @@ import axios from 'axios';
 import { useAuth } from '../../Components/Authenticate';
 import { useMessage } from '../../Components/FlashMessageContext';
 
-import styles from './../../../scss/Login.modules.scss';
+import styles from 'scss/Pages/Auth/Login.modules.scss';
 import TextField from '@mui/material/TextField';
 import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
-import FormVaridateMessage from '../../Components/atoms/FormVaridateMessage';
+import FormVaridateMessage from '../../Components/Atoms/FormVaridateMessage';
 
 type LoginForm = {
     email: string;

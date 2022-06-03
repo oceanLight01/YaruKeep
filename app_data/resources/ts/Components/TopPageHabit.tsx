@@ -2,8 +2,8 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import HabitTracker from './HabitTracker';
 
-import styles from './../../scss/TopPageHabit.modules.scss';
-import Circular from './atoms/Circular';
+import styles from 'scss/Components/TopPageHabit.modules.scss';
+import Circular from './Atoms/Circular';
 
 const TopPageHabit = () => {
     const [followUserHabits, setFollowUserHabits] = useState<HabitItem[]>([]);

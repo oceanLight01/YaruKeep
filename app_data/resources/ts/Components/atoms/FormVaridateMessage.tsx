@@ -1,6 +1,6 @@
 import React from 'react';
 
-import styles from './../../../scss/FormVaridateMessage.modules.scss';
+import styles from 'scss/Components/Atoms/FormVaridateMessage.modules.scss';
 
 type Props = {
     message: string;

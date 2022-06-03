@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import NotificationItem from '../Components/NotificationItem';
+import NotificationItem from '../Components/Atoms/NotificationItem';
 import { useMessage } from '../Components/FlashMessageContext';
 
-import styles from './../../scss/NotificationPage.modules.scss';
-import Circular from '../Components/atoms/Circular';
-import Button from '../Components/atoms/Button';
+import styles from 'scss/Pages/NotificationPage.modules.scss';
+import Circular from '../Components/Atoms/Circular';
+import Button from '../Components/Atoms/Buttons/Button';
 
 const Notification = () => {
     const flashMessage = useMessage();

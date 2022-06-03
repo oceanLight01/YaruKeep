@@ -1,5 +1,5 @@
 import React from 'react';
-import DiaryItem from './DiaryItem';
+import DiaryItem from './Atoms/DiaryItem';
 
 type Props = {
     diaries: DiaryItem[];

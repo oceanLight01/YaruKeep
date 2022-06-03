@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import CommentItem from './CommentItem';
+import CommentItem from './Atoms/CommentItem';
 
-import styles from './../../scss/CommentReplyList.modules.scss';
+import styles from 'scss/Components/CommentReplyList.modules.scss';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 

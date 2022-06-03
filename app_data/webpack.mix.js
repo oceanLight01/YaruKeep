@@ -1,4 +1,5 @@
 const mix = require('laravel-mix');
+const path = require('path');
 
 /*
  |--------------------------------------------------------------------------
@@ -30,5 +31,10 @@ mix.ts('resources/ts/app.tsx', 'public/js')
                     ],
                 },
             ],
+        },
+        resolve: {
+            alias: {
+                scss: path.resolve(__dirname, 'resources/scss'),
+            },
         },
     });

@@ -1,5 +1,5 @@
 import React from 'react';
-import CommentItem from './CommentItem';
+import CommentItem from './Atoms/CommentItem';
 import CommentReplyList from './CommentReplyList';
 
 type Props = {

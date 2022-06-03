@@ -3,10 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useMessage } from '../Components/FlashMessageContext';
 
-import styles from './../../scss/ForgotPassword.modules.scss';
+import styles from 'scss/Pages/ForgotPassword.modules.scss';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import FormVaridateMessage from '../Components/atoms/FormVaridateMessage';
+import FormVaridateMessage from '../Components/Atoms/FormVaridateMessage';
 
 type ForgotPasswordForm = {
     email: string;

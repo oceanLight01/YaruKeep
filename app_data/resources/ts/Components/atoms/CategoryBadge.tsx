@@ -1,6 +1,6 @@
 import React from 'react';
 
-import styles from './../../../scss/CategoryBadge.modules.scss';
+import styles from 'scss/Components/Atoms/CategoryBadge.modules.scss';
 
 type Props = {
     category_id: number;

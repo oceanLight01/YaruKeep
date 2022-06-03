@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react';
 import axios from 'axios';
-import EmailChangeForm from '../Components/EmailChangeForm';
+import EmailChangeForm from '../Components/Molecules/Forms/EmailChangeForm';
 import { useAuth } from '../Components/Authenticate';
 import { useMessage } from '../Components/FlashMessageContext';
-import PasswordChangeForm from '../Components/PasswordChangeForm';
-import ProfileImageForm from '../Components/ProfileImageForm';
-import UserSettingsForm from '../Components/UserSettingsForm';
+import PasswordChangeForm from '../Components/Molecules/Forms/PasswordChangeForm';
+import ProfileImageForm from '../Components/Molecules/Forms/ProfileImageForm';
+import UserSettingsForm from '../Components/Molecules/Forms/UserSettingsForm';
 
-import styles from './../../scss/Settings.modules.scss';
-import Button from '../Components/atoms/Button';
+import styles from 'scss/Pages/Settings.modules.scss';
+import Button from '../Components/Atoms/Buttons/Button';
 
 const Settings = () => {
     const auth = useAuth();

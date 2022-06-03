@@ -2,7 +2,7 @@ import { Button } from '@mui/material';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import styles from './../../scss/Top.modules.scss';
+import styles from 'scss/Pages/Top.modules.scss';
 
 const Top = () => {
     return (

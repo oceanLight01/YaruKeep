@@ -2,10 +2,10 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useMessage } from '../Components/FlashMessageContext';
-import UserItem from '../Components/UserItem';
-import Circular from '../Components/atoms/Circular';
+import UserItem from '../Components/Atoms/UserItem';
+import Circular from '../Components/Atoms/Circular';
 
-import styles from './../../scss/FollowInfo.modules.scss';
+import styles from 'scss/Pages/FollowInfo.modules.scss';
 
 const FollowedUser = () => {
     const flashMessage = useMessage();

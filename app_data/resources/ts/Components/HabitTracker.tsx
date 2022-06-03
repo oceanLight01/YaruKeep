@@ -1,13 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import HabitDoneButton from './atoms/HabitDoneButton';
+import HabitDoneButton from './Atoms/Buttons/HabitDoneButton';
 import { useAuth } from './Authenticate';
-import ContributionCalendar from './ContributionCalendar';
-import formatText from './FormatText';
+import ContributionCalendar from './Atoms/ContributionCalendar';
+import formatText from './Atoms/FormatText';
 
-import styles from './../../scss/HabitTracker.modules.scss';
-import CategoryBadge from './atoms/CategoryBadge';
+import styles from 'scss/Components/HabitTracker.modules.scss';
+import CategoryBadge from './Atoms/CategoryBadge';
 
 type Props = {
     item: HabitItem;

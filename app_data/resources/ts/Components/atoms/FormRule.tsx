@@ -1,6 +1,6 @@
 import React from 'react';
 
-import styles from './../../../scss/FormRule.modules.scss';
+import styles from 'scss/Components/Atoms/FormRule.modules.scss';
 
 type Props = {
     rule: string;

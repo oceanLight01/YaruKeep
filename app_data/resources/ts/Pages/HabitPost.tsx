@@ -4,16 +4,16 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useAuth } from '../Components/Authenticate';
 import { useMessage } from '../Components/FlashMessageContext';
 
-import styles from './../../scss/HabitPost.modules.scss';
+import styles from 'scss/Pages/HabitPost.modules.scss';
 import TextField from '@mui/material/TextField';
 import Select from '@mui/material/Select';
 import RadioGroup from '@mui/material/RadioGroup';
 import MenuItem from '@mui/material/MenuItem';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
-import Button from '../Components/atoms/Button';
-import FormVaridateMessage from '../Components/atoms/FormVaridateMessage';
-import ValidateCountInput from '../Components/ValidateCountInput';
+import Button from '../Components/Atoms/Buttons/Button';
+import FormVaridateMessage from '../Components/Atoms/FormVaridateMessage';
+import ValidateCountInput from '../Components/Atoms/ValidateCountInput';
 
 type HabitForm = {
     title: string;

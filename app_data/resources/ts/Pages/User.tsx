@@ -2,16 +2,16 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useLocation, useParams } from 'react-router-dom';
-import FollowButton from '../Components/atoms/FollowButton';
+import FollowButton from '../Components/Atoms/Buttons/FollowButton';
 import { useAuth } from '../Components/Authenticate';
 import { useMessage } from '../Components/FlashMessageContext';
-import formatText from '../Components/FormatText';
+import formatText from '../Components/Atoms/FormatText';
 import HabitTracker from '../Components/HabitTracker';
-import Paginate from '../Components/atoms/Paginate';
+import Paginate from '../Components/Atoms/Paginate';
 import PageRender from './PageRender';
 
-import styles from './../../scss/User.modules.scss';
-import Circular from '../Components/atoms/Circular';
+import styles from 'scss/Pages/User.modules.scss';
+import Circular from '../Components/Atoms/Circular';
 
 type UserData = {
     id: number;

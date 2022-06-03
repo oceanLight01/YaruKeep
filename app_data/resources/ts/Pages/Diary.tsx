@@ -1,18 +1,16 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import DiaryDeleteButton from '../Components/atoms/DiaryDeleteButton';
 import { useAuth } from '../Components/Authenticate';
-import CommentForm from '../Components/CommentForm';
+import CommentForm from '../Components/Molecules/Forms/CommentForm';
 import commentList from '../Components/commentList';
-import EditDiaryForm from '../Components/EditDiaryForm';
+import EditDiaryForm from '../Components/Molecules/Forms/EditDiaryForm';
 import { useMessage } from '../Components/FlashMessageContext';
-import formatText from '../Components/FormatText';
-import LoginUserContent from '../Components/LoginUserContent';
+import formatText from '../Components/Atoms/FormatText';
+import LoginUserContent from '../Components/Atoms/LoginUserContent';
 import PageRender from './PageRender';
 
-import styles from './../../scss/Diary.modules.scss';
+import styles from 'scss/Pages/Diary.modules.scss';
 import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Menu from '@mui/material/Menu';

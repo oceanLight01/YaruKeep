@@ -7,7 +7,7 @@ import ProvideAuth, {
     PublicRoute,
 } from '../Components/Authenticate';
 
-import Loading from './../Components/Loading';
+import Loading from '../Components/Atoms/Loading';
 import Header from '../Components/Header';
 import Top from './Top';
 import Login from './Auth/Login';
@@ -27,7 +27,7 @@ import ForgotPassword from './ForgotPassword';
 import ResetPassword from './ResetPassword';
 import ProvideMessage, { FlashMessage } from '../Components/FlashMessageContext';
 
-import styles from './../../scss/App.modules.scss';
+import styles from 'scss/App.modules.scss';
 
 const App = () => {
     return (

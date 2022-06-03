@@ -3,11 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '../Components/Authenticate';
 import { useMessage } from '../Components/FlashMessageContext';
 import HabitTracker from '../Components/HabitTracker';
-import Paginate from '../Components/atoms/Paginate';
-import SearchForm from '../Components/SearchForm';
-import Circular from '../Components/atoms/Circular';
+import Paginate from '../Components/Atoms/Paginate';
+import SearchForm from '../Components/Molecules/Forms/SearchForm';
+import Circular from '../Components/Atoms/Circular';
 
-import styles from './../../scss/Search.modules.scss';
+import styles from 'scss/Pages/Search.modules.scss';
 
 type SearchFormData = {
     keyword: string;

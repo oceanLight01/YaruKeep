@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import LogoutButton from '../../Components/atoms/LogoutButton';
+import LogoutButton from '../../Components/Atoms/Buttons/LogoutButton';
 import { useMessage } from '../../Components/FlashMessageContext';
 
-import styles from './../../../scss/EmailVerified.modules.scss';
-import Button from '../../Components/atoms/Button';
+import styles from 'scss/Pages/Auth/EmailVerified.modules.scss';
+import Button from '../../Components/Atoms/Buttons/Button';
 
 const EmailVerified = () => {
     const flashMessage = useMessage();

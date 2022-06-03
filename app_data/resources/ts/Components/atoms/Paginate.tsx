@@ -1,6 +1,6 @@
 import React from 'react';
 
-import styles from './../../../scss/Paginate.modules.scss';
+import styles from 'scss/Components/Atoms/Paginate.modules.scss';
 
 type Props = {
     currentPage: number;

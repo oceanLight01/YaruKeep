@@ -2,11 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from './Authenticate';
 
-import styles from '../../scss/Header.modules.scss';
-import NavigationNotification from './NavigationNotification';
+import styles from 'scss/Components/Header.modules.scss';
+import NavigationNotification from './Atoms/NavigationNotification';
 import SearchIcon from '@mui/icons-material/Search';
-import Navigation from './Navigation';
-import SpMenu from './SpMenu';
+import Navigation from './Molecules/Header/Navigation';
+import SpMenu from './Molecules/Header/SpMenu';
 
 const Header = () => {
     const auth = useAuth();

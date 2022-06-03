@@ -1,23 +1,23 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link, Route, Routes, useNavigate, useParams } from 'react-router-dom';
-import Button from '../Components/atoms/Button';
+import Button from '../Components/Atoms/Buttons/Button';
 import { useAuth } from '../Components/Authenticate';
-import CommentForm from '../Components/CommentForm';
+import CommentForm from '../Components/Molecules/Forms/CommentForm';
 import commentList from '../Components/commentList';
-import ContributionCalendar from '../Components/ContributionCalendar';
-import DiaryForm from '../Components/DiaryForm';
+import ContributionCalendar from '../Components/Atoms/ContributionCalendar';
+import DiaryForm from '../Components/Molecules/Forms/DiaryForm';
 import DiaryList from '../Components/DiaryList';
-import EditHabitForm from '../Components/EditHabitForm';
+import EditHabitForm from '../Components/Molecules/Forms/EditHabitForm';
 import { useMessage } from '../Components/FlashMessageContext';
-import formatText from '../Components/FormatText';
-import LoginUserContent from '../Components/LoginUserContent';
-import Paginate from '../Components/atoms/Paginate';
+import formatText from '../Components/Atoms/FormatText';
+import LoginUserContent from '../Components/Atoms/LoginUserContent';
+import Paginate from '../Components/Atoms/Paginate';
 import Diary from './Diary';
 import PageRender from './PageRender';
 
-import styles from './../../scss/HabitStatus.modules.scss';
-import CategoryBadge from '../Components/atoms/CategoryBadge';
+import styles from 'scss/Pages/HabitStatus.modules.scss';
+import CategoryBadge from '../Components/Atoms/CategoryBadge';
 import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Menu from '@mui/material/Menu';
@@ -27,7 +27,7 @@ import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import { Box } from '@mui/material';
-import Circular from '../Components/atoms/Circular';
+import Circular from '../Components/Atoms/Circular';
 
 const HabitStatus = () => {
     const auth = useAuth();
