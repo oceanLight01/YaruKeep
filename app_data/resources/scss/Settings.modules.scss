@@ -28,3 +28,19 @@
     display: flex;
     justify-content: flex-end;
 }
+
+@media screen and (max-width: 599px) {
+    .settings_container {
+        .settings_wrapper {
+            margin: 2em 0;
+
+            .settings {
+                padding: 1em;
+            }
+        }
+    }
+
+    .settings_section:first-of-type {
+        margin-top: 0;
+    }
+}
