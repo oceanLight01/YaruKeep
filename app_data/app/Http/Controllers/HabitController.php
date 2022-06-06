@@ -133,7 +133,7 @@ class HabitController extends Controller
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $habit_id)
     {
         $validated = $request->validate([
             'title' => 'required|max:50',
@@ -142,9 +142,9 @@ class HabitController extends Controller
             'isPrivate' => 'required|boolean'
         ]);
 
-        if ($request->userId === Auth::id() && $id === (string)$request->habitId)
+        if ($request->userId === Auth::id() && $habit_id === (string)$request->habitId)
         {
-            $habit = Habit::find($id);
+            $habit = Habit::find($habit_id);
             $habit->title = $request->title;
             $habit->description = $request->description;
             $habit->category_id = $request->categoryId;
@@ -163,9 +163,9 @@ class HabitController extends Controller
      * @param  number  $id Habitのid
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($habit_id)
     {
-        $habit = Habit::where('id', $id);
+        $habit = Habit::where('id', $habit_id);
         if ($habit->exists() && $habit->first()->user_id === Auth::id())
         {
             $habit->delete();
@@ -184,10 +184,10 @@ class HabitController extends Controller
      */
     public function getTopPageHabits()
     {
-        $user_id = Auth::id();
+        $login_user_id = Auth::id();
 
         // フォロー中のユーザのハビットトラッカーを取得
-        $following_list = Follow::where('user_id', $user_id)->pluck('following_user_id');
+        $following_list = Follow::where('user_id', $login_user_id)->pluck('following_user_id');
         $following_user_habits = Habit::where('is_private', 0)
                                       ->whereIn('user_id', $following_list)
                                       ->inRandomOrder()
@@ -195,7 +195,7 @@ class HabitController extends Controller
                                       ->get();
 
         // 自身が投稿しているハビットトラッカーと同じカテゴリのハビットトラッカーを取得
-        $category = Habit::where('user_id', $user_id);
+        $category = Habit::where('user_id', $login_user_id);
         $category_id = null;
         $same_category_habits = [];
         $category_name = null;
@@ -225,7 +225,7 @@ class HabitController extends Controller
 
             // 自身が投稿しているカテゴリかつ自身の投稿を除いた同カテゴリのハビットトラッカーが最低一件あるものを取得
             $category_random_id = Habit::where('is_private', 0)
-                                       ->whereNotIn('user_id', [$user_id])
+                                       ->whereNotIn('user_id', [$login_user_id])
                                        ->whereIn('category_id', $category_ids)
                                        ->selectRaw('COUNT(*) as category_count, category_id')
                                        ->groupBy('category_id')
@@ -234,7 +234,7 @@ class HabitController extends Controller
                                        ->value('category_id');
 
             $same_category_habits = Habit::where('is_private', 0)
-                                         ->whereNotIn('user_id', [$user_id])
+                                         ->whereNotIn('user_id', [$login_user_id])
                                          ->where('category_id', $category_random_id)
                                          ->inRandomOrder()
                                          ->limit(10)

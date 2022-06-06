@@ -18,9 +18,9 @@ class DiaryController extends Controller
      * @param  string $diary_id 日記のID
      * @return Diary
      */
-    public function show($id, $diary_id)
+    public function show($habit_id, $diary_id)
     {
-        $diary = Diary::where('id', $diary_id)->where('habit_id', $id)->exists();
+        $diary = Diary::where('id', $diary_id)->where('habit_id', $habit_id)->exists();
         if ($diary)
         {
             return new DiaryResource(Diary::find($diary_id));
@@ -42,11 +42,11 @@ class DiaryController extends Controller
         ]);
 
         $now_time = date('Y-m-d');
-        $diary_latest = Diary::where('habit_id', $request->habitId)
+        $diary_latest_post = Diary::where('habit_id', $request->habitId)
                              ->whereDate('created_at', $now_time)
                              ->exists();
 
-        if (!$diary_latest)
+        if (!$diary_latest_post)
         {
             $diary = new Diary;
             $diary->text = $request->text;

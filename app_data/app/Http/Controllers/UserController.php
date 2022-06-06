@@ -33,9 +33,9 @@ class UserController extends Controller
      * @param string $id ユーザscreen_name
      * @return \Illuminate\Http\Response
      */
-    public function getUserInfo($id)
+    public function getUserInfo($screen_name)
     {
-        $user = User::where("screen_name", $id);
+        $user = User::where("screen_name", $screen_name);
         $user_data = $user->exists();
         if($user_data)
         {

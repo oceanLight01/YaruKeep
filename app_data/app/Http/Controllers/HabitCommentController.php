@@ -78,9 +78,9 @@ class HabitCommentController extends Controller
      * @param  number  $id HabitCommentのid
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($comment_id)
     {
-        $comment = HabitComment::where('id', $id);
+        $comment = HabitComment::where('id', $comment_id);
         $habit_id = $comment->value('habit_id');
 
         if ($comment->exists() && $comment->value('user_id') === Auth::id())

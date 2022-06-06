@@ -28,20 +28,20 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     // ユーザに関するルーティング
     Route::get('/user', 'UserController@getLoginUserInfo');
-    Route::get('/user/{id}', 'UserController@getUserInfo');
+    Route::get('/user/{screen_name}', 'UserController@getUserInfo');
     Route::post('/user/image', 'UserController@storeProfileImage');
 
     // Habitに関するルーティング
     Route::post('/habits', 'HabitController@store');
     Route::post('/habits/done', 'HabitController@isDone');
     Route::get('/user/{screen_name}/habits/{id}', 'HabitController@show');
-    Route::put('/habits/{id}', 'HabitController@update');
-    Route::delete('/habits/{id}', 'HabitController@destroy');
+    Route::put('/habits/{habit_id}', 'HabitController@update');
+    Route::delete('/habits/{habit_id}', 'HabitController@destroy');
     Route::get('/habits/top', 'HabitController@getTopPageHabits');
     Route::get('/habits/{screen_name}', 'HabitController@getUserHabits');
 
     // Diaryに関するルーティング
-    Route::get('/habits/{id}/diaries/{diary_id}', 'DiaryController@show');
+    Route::get('/habits/{habit_id}/diaries/{diary_id}', 'DiaryController@show');
     Route::post('/diaries', 'DiaryController@store');
     Route::put('/diaries/{diary_id}', 'DiaryController@update');
     Route::delete('/diaries/{diary_id}', 'DiaryController@destroy');
@@ -49,10 +49,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     // Commentに関するルーティング
     Route::post('/comments/habit', 'HabitCommentController@store');
-    Route::delete('/comments/{id}/habit', 'HabitCommentController@destroy');
+    Route::delete('/comments/{comment_id}/habit', 'HabitCommentController@destroy');
 
     Route::post('/comments/diary', 'DiaryCommentController@store');
-    Route::delete('/comments/{id}/diary', 'DiaryCommentController@destroy');
+    Route::delete('/comments/{comment_id}/diary', 'DiaryCommentController@destroy');
 
     // Followに関するルーティング
     Route::get('/following/{screen_name}', 'FollowController@getFollowingUser');

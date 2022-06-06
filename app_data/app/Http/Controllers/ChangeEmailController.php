@@ -43,7 +43,6 @@ class ChangeEmailController extends Controller
             $cange_email->email = $email;
             $cange_email->token = $token;
             $cange_email->save();
-            // $cange_email->sendChangeEmailNotification($token);
         } else {
             $cange_email = new EmailReset;
             $cange_email->user_id = $user_id;

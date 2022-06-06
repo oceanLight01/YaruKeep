@@ -79,9 +79,9 @@ class DiaryCommentController extends Controller
      * @param  number  $id DiaryCommentのid
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($comment_id)
     {
-        $comment = DiaryComment::where('id', $id);
+        $comment = DiaryComment::where('id', $comment_id);
         $diary_id = $comment->value('diary_id');
 
         if ($comment->exists() && $comment->value('user_id') === Auth::id())
