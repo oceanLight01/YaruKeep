@@ -30,7 +30,7 @@ class AuthServiceProvider extends ServiceProvider
 
         VerifyEmail::toMailUsing(function ($notifiable, $url) {
             return (new MailMessage)
-                ->subject('mail.verify_email.subject')
+                ->subject(Lang::get('mail.verify_email.subject'))
                 ->line(Lang::get('mail.verify_email.line_01'))
                 ->line(Lang::get('mail.verify_email.line_02'))
                 ->action(Lang::get('mail.verify_email.action'), $url)
