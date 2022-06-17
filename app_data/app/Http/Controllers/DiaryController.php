@@ -118,12 +118,17 @@ class DiaryController extends Controller
         if ($diary->exists())
         {
             $is_private = $diary->first()->habit->is_private;
+            $is_login_user = $diary->first()->habit->user_id === Auth::id();
 
             if ($is_private === 0)
             {
                 return DiaryResource::collection($diary->orderBy('id', 'desc')->paginate(20));
             } else {
-                return response(['message' => 'Not found diaries'], 404);
+                if ($is_login_user) {
+                    return DiaryResource::collection($diary->orderBy('id', 'desc')->paginate(20));
+                } else {
+                    return response(['message' => 'Not found diaries'], 204);
+                }
             }
         } else {
             return response([], 204);
