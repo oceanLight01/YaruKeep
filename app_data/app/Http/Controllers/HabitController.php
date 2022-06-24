@@ -241,7 +241,9 @@ class HabitController extends Controller
                                          ->get();
 
             $category_id = $category_random_id;
-            $category_name = $category_list[$category_random_id - 1];
+            if (!is_null($category_random_id)) {
+                $category_name = $category_list[$category_random_id - 1];
+            }
         }
 
         // 達成日時が最新のハビットトラッカーを取得

@@ -68,7 +68,7 @@ const TopPageHabit = () => {
                 )}
             </div>
 
-            {(category.categoryId === null || sameCategoryHabits.length === 0) && (
+            {category.categoryId !== null && sameCategoryHabits.length !== 0 && (
                 <div className={styles.container}>
                     <h2 className={styles.title}>
                         「{category.categoryName}」カテゴリのハビットトラッカー
