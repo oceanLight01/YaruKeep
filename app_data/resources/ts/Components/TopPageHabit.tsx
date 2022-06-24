@@ -53,17 +53,22 @@ const TopPageHabit = () => {
         <div>情報の取得に失敗しました。</div>
     ) : (
         <div>
-            {followUserHabits.length > 0 ? (
-                <div className={styles.container}>
-                    <h2 className={styles.title}>フォロー中のユーザーのハビットトラッカー</h2>
+            <div className={styles.container}>
+                <h2 className={styles.title}>フォロー中のユーザーのハビットトラッカー</h2>
+                {followUserHabits.length > 0 ? (
                     <ul className={styles.habit_list}>
                         {followUserHabits.map((item, index) => {
                             return <HabitTracker item={item} index={index} key={index} />;
                         })}
                     </ul>
-                </div>
-            ) : null}
-            {category.categoryId === null || sameCategoryHabits.length === 0 ? null : (
+                ) : (
+                    <div>
+                        ハビットトラッカーがありません。ユーザーをフォローして一緒に目標達成を目指しましょう。
+                    </div>
+                )}
+            </div>
+
+            {(category.categoryId === null || sameCategoryHabits.length === 0) && (
                 <div className={styles.container}>
                     <h2 className={styles.title}>
                         「{category.categoryName}」カテゴリのハビットトラッカー
