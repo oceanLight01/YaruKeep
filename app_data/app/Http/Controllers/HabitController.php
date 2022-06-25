@@ -151,7 +151,7 @@ class HabitController extends Controller
             $habit->is_private = $request->isPrivate;
             $habit->save();
 
-            return new HabitResource(Habit::find($id));
+            return new HabitResource(Habit::find($habit_id));
         } else {
             return response(['message' => 'failed'], 400);
         }
