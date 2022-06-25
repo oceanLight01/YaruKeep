@@ -1,0 +1,29 @@
+.search_container {
+    display: flex;
+    justify-content: center;
+    margin: 3em 0;
+
+    .search_wrapper {
+        width: 94%;
+        max-width: 1024px;
+
+        .title {
+            text-align: center;
+        }
+
+        .habit_list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+}
+
+@media screen and (max-width: 599px) {
+    .search_container {
+        .search_wrapper {
+            .habit_list {
+                display: block;
+            }
+        }
+    }
+}

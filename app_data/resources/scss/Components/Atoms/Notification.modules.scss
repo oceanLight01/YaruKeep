@@ -1,0 +1,65 @@
+@import 'scss/variables/variable';
+
+.notification_wrapper {
+    display: flex;
+    align-items: center;
+    position: relative;
+    height: 100%;
+
+    .notification_badge {
+        &:hover {
+            cursor: pointer;
+        }
+    }
+}
+
+.notification_icon {
+    color: $font_color;
+}
+
+.notification_inner {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: 100vw;
+    height: 100vh;
+}
+
+.notification {
+    display: none;
+    position: absolute;
+    top: 60px;
+    right: 0;
+    z-index: 2;
+    width: 300px;
+    box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.5);
+    background-color: #ffffff;
+
+    > ul {
+        max-height: 300px;
+        margin: 0;
+        overflow-y: scroll;
+    }
+}
+
+.notification_no_item {
+    height: 3em;
+    padding: 1em;
+    box-sizing: border-box;
+}
+
+.notification_all_read {
+    padding: 1em;
+    margin: 0;
+    box-sizing: border-box;
+
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+.notification_active {
+    display: block;
+}

@@ -1,0 +1,41 @@
+.comment_item {
+    margin-bottom: 1em;
+}
+
+.user_info_container {
+    margin-bottom: 0.3em;
+
+    a {
+        color: #000000;
+    }
+
+    .user_info_wapper {
+        display: inline-block;
+
+        .user_info {
+            display: flex;
+            align-items: center;
+
+            .username {
+                margin-left: 0.5em;
+            }
+        }
+    }
+}
+
+.comment {
+    margin: 0;
+    margin-bottom: 1em;
+}
+
+.reply {
+    display: inline-block;
+    margin-right: 1em;
+    font-size: 0.9em;
+    color: #808080;
+
+    &:hover {
+        cursor: pointer;
+        text-decoration: underline;
+    }
+}

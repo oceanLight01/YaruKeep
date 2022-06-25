@@ -1,0 +1,139 @@
+.user_container {
+    display: flex;
+    justify-content: center;
+    margin: 3em 0;
+
+    .user_wrapper {
+        width: 94%;
+        max-width: 1024px;
+    }
+}
+
+.user_profile_container {
+    display: flex;
+    padding: 1em 2em;
+
+    .user_profile_image_container {
+        width: 30%;
+        height: 100%;
+
+        .user_profile_image_wrapper {
+            position: relative;
+            width: 100%;
+            min-width: 100px;
+            max-width: 300px;
+            height: 100%;
+            min-height: 100px;
+            max-height: 300px;
+            margin: auto;
+
+            &::before {
+                content: '';
+                display: block;
+                padding-top: 100%;
+            }
+
+            .user_profile_image {
+                position: absolute;
+                top: 0;
+                left: 0;
+                border-radius: 50%;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+        }
+    }
+
+    .user_profile_info {
+        width: 70%;
+        height: 100%;
+        padding: 1em;
+        margin-left: 1em;
+
+        .user_profile_name {
+            > h1 {
+                margin: 0;
+                font-size: 2em;
+            }
+
+            > h2 {
+                margin: 0 0 0 0.3em;
+                font-size: 1em;
+                color: #808080;
+            }
+        }
+
+        .user_followed {
+            color: #808080;
+            font-size: 0.8em;
+        }
+
+        .user_profile_text {
+            margin: 1.5em 0;
+        }
+
+        .user_profile_followinfo {
+            display: flex;
+            justify-content: space-between;
+
+            a {
+                color: #000000;
+            }
+
+            a:hover {
+                border-bottom: #000000 1px solid;
+            }
+
+            a:first-of-type {
+                margin-right: 1em;
+            }
+
+            .count {
+                font-weight: 1000;
+            }
+
+            .text {
+                margin-left: 0.5em;
+            }
+        }
+    }
+}
+
+.title {
+    text-align: center;
+}
+
+.habit_list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+@media screen and (max-width: 599px) {
+    .user_profile_container {
+        display: block;
+        width: 100%;
+        padding: 1em 0;
+
+        .user_profile_image_container {
+            display: flex;
+            justify-content: center;
+            width: 50%;
+            margin: 0 auto;
+        }
+
+        .user_profile_info {
+            width: 100%;
+            padding: 0;
+            margin: 2em 0 1em;
+
+            .user_profile_name {
+                box-sizing: border-box;
+            }
+        }
+    }
+
+    .habit_list {
+        display: block;
+    }
+}

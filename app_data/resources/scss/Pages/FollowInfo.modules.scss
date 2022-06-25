@@ -1,0 +1,19 @@
+.container {
+    display: flex;
+    justify-content: center;
+    margin: 3em 0;
+
+    .wrapper {
+        width: 100%;
+        max-width: 1024px;
+
+        .title {
+            margin-bottom: 3em;
+            text-align: center;
+        }
+
+        .no_users {
+            margin: 3em 0;
+        }
+    }
+}

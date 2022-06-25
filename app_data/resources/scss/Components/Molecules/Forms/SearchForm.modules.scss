@@ -1,0 +1,29 @@
+.search_form {
+    padding: 1.5em 1em;
+    margin: 2em 0;
+    border-radius: 5px;
+    box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.2);
+}
+
+.form_input {
+    margin: 2em;
+}
+
+.form_button_wrapper {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.checkbox_item {
+    display: inline-block;
+}
+
+@media screen and (max-width: 599px) {
+    .search_form {
+        padding: 1em 0.5em;
+    }
+
+    .form_input {
+        margin: 1em;
+    }
+}

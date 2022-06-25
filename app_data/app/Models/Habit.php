@@ -48,6 +48,15 @@ class Habit extends Model
     }
 
     /**
+     * 日記を最新順で取得
+     */
+    public function diariesLatest($habit_id)
+    {
+        $diaries = Diary::where('habit_id', $habit_id)->latest()->get();
+        return $diaries;
+    }
+
+    /**
      * コメントを取得
      */
     public function habit_comments()

@@ -1,0 +1,111 @@
+.habit_status_container {
+    display: flex;
+    justify-content: center;
+    margin: 2em 0;
+
+    .habit_status_wrapper {
+        width: 94%;
+        max-width: 1024px;
+
+        .habit_tracker_title {
+            font-size: 2.5em;
+        }
+
+        .habit_tracker_description {
+            margin: 1em 1em 2em;
+            font-size: 1em;
+            color: #808080;
+        }
+
+        .calendar_container {
+            display: flex;
+
+            .calendar_wrapper {
+                width: 100%;
+                max-width: 720px;
+            }
+
+            .habit_tracker_done_info {
+                min-width: 150px;
+                margin: auto 1em;
+
+                > div {
+                    margin: 1em 0;
+                    font-size: 1em;
+
+                    .done_title {
+                        color: #808080;
+                        font-size: 0.8em;
+                    }
+
+                    .done_day {
+                        text-align: right;
+
+                        > span {
+                            margin-right: 0.5em;
+                            font-weight: 1000;
+                        }
+                    }
+                }
+            }
+        }
+
+        .habit_tracker_category_and_private {
+            display: flex;
+
+            .private {
+                margin: 1em 0 1em 0.5em;
+                border-radius: 100vh;
+                background-color: #dcdcdc;
+
+                > div {
+                    padding: 0.2em 1em;
+                    font-size: 0.8em;
+                    color: #696969;
+                }
+            }
+        }
+
+        .habit_tracker_created {
+            color: #808080;
+        }
+
+        .habit_tracker_user_name {
+            z-index: 100;
+            margin: 1em 0;
+
+            > a {
+                color: #000000;
+                font-weight: 1000;
+
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+
+        .habit_tracker_buttons {
+            display: flex;
+            justify-content: flex-end;
+        }
+    }
+}
+
+.modal_active {
+    width: 100vw;
+    overflow-y: hidden;
+}
+
+@media screen and (max-width: 599px) {
+    .habit_status_container {
+        .habit_status_wrapper {
+            .habit_tracker_title {
+                font-size: 2em;
+            }
+
+            .calendar_container {
+                display: block;
+            }
+        }
+    }
+}

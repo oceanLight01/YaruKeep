@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Notifications\ResetPasswordJP;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -58,7 +59,7 @@ class User extends Authenticatable
      */
     public function follows()
     {
-        return $this->belongsToMany(self::class, 'follows', 'following_id', 'user_id')->orderBy('follows.id', 'desc');
+        return $this->belongsToMany(self::class, 'follows', 'user_id', 'following_user_id')->orderBy('follows.id', 'desc');
     }
 
     /**
@@ -66,7 +67,7 @@ class User extends Authenticatable
      */
     public function followers()
     {
-        return $this->belongsToMany(self::class, 'follows', 'user_id', 'following_id')->orderBy('follows.id', 'desc');
+        return $this->belongsToMany(self::class, 'follows', 'following_user_id', 'user_id')->orderBy('follows.id', 'desc');
     }
 
     /**
@@ -83,5 +84,13 @@ class User extends Authenticatable
     public function diary_comments()
     {
         return $this->hasMany(DiaryComment::class);
+    }
+
+    /**
+     * 日本語化したパスワードリセットメールを送信
+     */
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPasswordJP($token));
     }
 }

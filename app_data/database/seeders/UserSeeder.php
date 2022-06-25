@@ -22,7 +22,7 @@ class UserSeeder extends Seeder
             [
                 'name' => 'oceanLight',
                 'screen_name' => 'oceanLight28',
-                'email' => 'oceanlight28@gmail.com',
+                'email' => 'example@example.com',
                 'password' => Hash::make('Qwer1234'),
                 'profile' => "毎日コツコツ頑張っています。\n 今は情報技術の勉強中です。",
                 'created_at' => DateTime::dateTimeThisDecade(),

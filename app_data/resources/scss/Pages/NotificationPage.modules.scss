@@ -1,0 +1,20 @@
+.container {
+    display: flex;
+    justify-content: center;
+    margin: 3em 0;
+
+    .wrapper {
+        width: 94%;
+        max-width: 1024px;
+
+        .title {
+            margin-bottom: 3em;
+            text-align: center;
+        }
+    }
+}
+
+.button_wrapper {
+    display: flex;
+    justify-content: center;
+}

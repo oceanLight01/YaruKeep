@@ -1,0 +1,17 @@
+.diary_container {
+    margin-bottom: 4em;
+}
+
+.created {
+    font-size: 0.8em;
+    color: #808080;
+}
+
+.diary_settings_container {
+    display: flex;
+    justify-content: flex-end;
+
+    .diary_settings {
+        display: inline-block;
+    }
+}

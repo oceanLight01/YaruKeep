@@ -1,0 +1,103 @@
+.container {
+    display: flex;
+    justify-content: center;
+    margin: 2rem 0;
+
+    .wrapper {
+        display: flex;
+        width: 94%;
+        max-width: 800px;
+    }
+}
+
+.profile_image_container {
+    width: 20%;
+    height: 100%;
+
+    .profile_image_wrapper {
+        position: relative;
+        width: 100%;
+        min-width: 100px;
+        max-width: 150px;
+        height: 100%;
+        min-height: 100px;
+        max-height: 150px;
+        margin: auto;
+
+        &::before {
+            content: '';
+            display: block;
+            padding-top: 100%;
+        }
+
+        .profile_image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-radius: 50%;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+}
+
+.user_names {
+    position: relative;
+    width: 100%;
+    margin: 0.5em 0 0.5em 2em;
+
+    .name {
+        margin-bottom: 0.2em;
+
+        a {
+            font-size: 1.5rem;
+            color: #000000;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+
+    .screen_name {
+        margin-bottom: 2em;
+        color: #808080;
+    }
+
+    .follow_button_wrapper {
+        display: inline-block;
+        position: absolute;
+        right: 0;
+    }
+
+    .is_follow {
+        color: #808080;
+        font-size: 0.8em;
+    }
+}
+
+@media screen and (max-width: 599px) {
+    .profile_image_container {
+        width: 30%;
+        height: 50%;
+    }
+
+    .user_names {
+        width: 100%;
+        margin: 0.5em 0 0.5em 0.5em;
+
+        .name {
+            a {
+                font-size: 1.1em;
+            }
+        }
+        .screen_name {
+            margin-bottom: 1em;
+        }
+
+        .follow_button_wrapper {
+            display: inline-block;
+        }
+    }
+}

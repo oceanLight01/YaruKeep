@@ -1,0 +1,10 @@
+.comment_delete_button {
+    display: inline-block;
+    font-size: 0.9em;
+    color: #808080;
+
+    &:hover {
+        cursor: pointer;
+        text-decoration: underline;
+    }
+}

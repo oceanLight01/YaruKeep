@@ -1,0 +1,20 @@
+.container {
+    margin-bottom: 5em;
+
+    .title {
+        text-align: center;
+    }
+
+    .habit_list {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media screen and (max-width: 599px) {
+    .container {
+        .habit_list {
+            display: block;
+        }
+    }
+}

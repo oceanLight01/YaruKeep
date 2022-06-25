@@ -1,0 +1,46 @@
+.settings_container {
+    display: flex;
+    justify-content: center;
+
+    .settings_wrapper {
+        margin: 2em 5em;
+        width: 94%;
+        max-width: 1024px;
+
+        .title {
+            margin-bottom: 2em;
+            text-align: center;
+        }
+
+        .settings {
+            padding: 1em 4em;
+            border-radius: 5px;
+            box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.2);
+        }
+    }
+}
+
+.settings_section {
+    margin: 3em 0;
+}
+
+.form_button_wrapper {
+    display: flex;
+    justify-content: flex-end;
+}
+
+@media screen and (max-width: 599px) {
+    .settings_container {
+        .settings_wrapper {
+            margin: 2em 0;
+
+            .settings {
+                padding: 1em;
+            }
+        }
+    }
+
+    .settings_section:first-of-type {
+        margin-top: 0;
+    }
+}

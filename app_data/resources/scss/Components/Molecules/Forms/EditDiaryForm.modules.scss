@@ -1,0 +1,12 @@
+.form_input {
+    margin-bottom: 1.5em;
+}
+
+.form_buttons {
+    display: flex;
+    justify-content: flex-end;
+
+    .button_wrapper:first-child {
+        margin-right: 1em;
+    }
+}
