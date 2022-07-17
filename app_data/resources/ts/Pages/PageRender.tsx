@@ -10,6 +10,8 @@ const PageRender = ({ children, status }: Props) => {
     switch (status) {
         case 0:
             return <Circular />;
+        case 400:
+            return <p>データの取得に失敗しました。</p>;
         case 404:
             return <p>お探しのページは存在しません。すでに削除された可能性があります。</p>;
         case 500:

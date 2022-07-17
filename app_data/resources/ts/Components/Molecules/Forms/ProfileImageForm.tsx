@@ -64,7 +64,7 @@ const ProfileImageForm = () => {
                     setClicked(false);
                 });
         } catch (error) {
-            if (axios.isAxiosError(error) && error.response !== undefined) {
+            if (axios.isAxiosError(error) && error.response) {
                 if (!unmounted) {
                     if (error.response.status === 413) {
                         setErrorMessage([

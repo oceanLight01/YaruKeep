@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link, Route, Routes, useNavigate, useParams } from 'react-router-dom';
 import Button from '../Components/Atoms/Buttons/Button';
@@ -29,32 +29,26 @@ import TabPanel from '@mui/lab/TabPanel';
 import { Box } from '@mui/material';
 import Circular from '../Components/Atoms/Circular';
 
+type Habit = {
+    data: HabitItem;
+};
+
+type Diaries = {
+    data: DiaryItem[];
+    meta: {
+        per_page: number;
+        total: number;
+        current_page: number;
+    };
+};
+
 const HabitStatus = () => {
     const auth = useAuth();
     const flashMessage = useMessage();
 
-    const [HabitItem, setHabitItem] = useState<HabitItem>({
-        id: 0,
-        title: '',
-        description: '',
-        category_id: 0,
-        category_name: '',
-        max_done_day: -1,
-        done_days_count: -1,
-        done_days_list: {},
-        is_private: false,
-        is_done: false,
-        user: {
-            id: 0,
-            name: '',
-            screen_name: '',
-        },
-        can_post_diary: false,
-        comments: [],
-        created_at: '',
-        updated_at: '',
-    });
+    const [habitItem, setHabitItem] = useState<HabitItem | null>(null);
     const [diaries, setDiaries] = useState<DiaryItem[]>([]);
+    const [statusCode, setStatusCode] = useState<number>(0);
     const [diariesFetch, setDiariesFetch] = useState<boolean>(false);
     const [paginateData, setPaginateData] = useState({
         perPage: 1,
@@ -62,58 +56,78 @@ const HabitStatus = () => {
         currentPage: 1,
     });
 
-    const [statusCode, setStatusCode] = useState<number>(0);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const [editing, setEditing] = useState<boolean>(false);
 
     const params = useParams<{ screenName: string; id: string }>();
     const navigate = useNavigate();
-    const userId = HabitItem.user.id;
+    const userId = habitItem?.user?.id;
 
     let unmounted = false;
 
     useEffect(() => {
-        axios
-            .get(`/api/user/${params.screenName}/habits/${params.id}`)
-            .then((res) => {
-                if (!unmounted) {
-                    setHabitItem(res.data.data);
-                    setStatusCode(res.data.status);
-                }
+        Promise.all([fetchHabitItem(), fetchPaginateDiary(params.id, paginateData.currentPage)])
+            .then(() => {
+                setStatusCode(200);
             })
             .catch((error) => {
-                if (!unmounted) {
-                    setStatusCode(error.response.status);
-                }
+                setStatusCode(error.response.status);
+            })
+            .finally(() => {
+                setIsLoading(false);
             });
-
-        getDiary(params.id, paginateData.currentPage);
 
         return () => {
             unmounted = true;
         };
     }, []);
 
-    const doneHabit = (habitId: number) => {
-        axios
-            .post('/api/habits/done', { userId: auth?.userData?.id, id: habitId })
-            .then((res) => {
-                if (!unmounted) {
-                    flashMessage?.setMessage('今日の目標を達成しました🎉 お疲れ様です!');
-                    setHabitItem(res.data.data);
-                }
-            })
-            .catch((error) => {
-                if (!unmounted) {
-                    flashMessage?.setErrorMessage('更新に失敗しました。', error.response.status);
-                }
-            });
+    // ハビットトラッカーを1つ取得
+    const fetchHabitItem = async () => {
+        const habit: AxiosResponse<Habit> = await axios.get(
+            `/api/user/${params.screenName}/habits/${params.id}`
+        );
+
+        if (!unmounted) {
+            setHabitItem(habit.data.data);
+        }
     };
 
-    const updateHabit = async (habitItem: HabitItem) => {
-        await getDiary(params.id, paginateData.currentPage);
+    // ハビットトラッカーの完了処理
+    const doneHabit = async (habitId: number) => {
+        try {
+            const done: AxiosResponse = await axios.post('/api/habits/done', {
+                userId: auth?.userData?.id,
+                id: habitId,
+            });
+
+            if (!unmounted && done.statusText === 'OK') {
+                setHabitItem({ ...habitItem!, is_done: true });
+                flashMessage?.setMessage('今日の目標を達成しました🎉 お疲れ様です!');
+            }
+        } catch (error) {
+            if (axios.isAxiosError(error))
+                if (!unmounted) {
+                    flashMessage?.setErrorMessage('更新に失敗しました。', error!.response!.status);
+                }
+        }
+    };
+
+    // ハビットトラッカーを更新する
+    const updateHabitItem = async (habitItem: HabitItem) => {
         if (!unmounted) {
-            await setHabitItem(habitItem);
+            setHabitItem(habitItem);
             setEditing(false);
+        }
+    };
+
+    // 日記フォームの表示切り替えs
+    const toggleRenderDiaryForm = () => {
+        if (habitItem) {
+            setHabitItem({
+                ...habitItem,
+                can_post_diary: !habitItem.can_post_diary,
+            });
         }
     };
 
@@ -138,111 +152,47 @@ const HabitStatus = () => {
         }
     };
 
-    const getDiary = async (id?: string, page = paginateData.currentPage) => {
+    const fetchPaginateDiary = async (id?: string, page = paginateData.currentPage) => {
         setDiariesFetch(true);
 
-        return axios
-            .get(`/api/habits/${id}/diaries?page=${page}`)
-            .then((res) => {
-                if (!unmounted) {
-                    const data = res.data.data;
-                    if (data) {
-                        setDiaries(data);
+        try {
+            const diaries: AxiosResponse<Diaries> = await axios.get(
+                `/api/habits/${id}/diaries?page=${page}`
+            );
 
-                        const paginate = res.data.meta;
-                        setPaginateData({
-                            ...paginateData,
-                            perPage: paginate.per_page,
-                            totalItem: paginate.total,
-                            currentPage: paginate.current_page,
-                        });
-                    }
-                }
-            })
-            .catch((error) => {
+            if (!unmounted) {
+                setDiaries(diaries.data.data);
+
+                const paginate = diaries.data.meta;
+                setPaginateData({
+                    ...paginateData,
+                    perPage: paginate.per_page,
+                    totalItem: paginate.total,
+                    currentPage: paginate.current_page,
+                });
+            }
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
                 if (!unmounted) {
                     flashMessage?.setErrorMessage(
                         '日記の取得に失敗しました。',
-                        error.response.status
+                        error!.response!.status
                     );
                 }
-            })
-            .finally(() => {
-                setDiariesFetch(false);
-            });
+            }
+        }
+
+        setDiariesFetch(false);
     };
 
     const paginateDiary = (page: number) => {
-        getDiary(params.id, page);
+        fetchPaginateDiary(params.id, page);
     };
 
     // タブコンポーネントのstateHook
     const [tabValue, setTabValue] = useState('1');
     const handleChange = (event: any, newValue: string) => {
         setTabValue(newValue);
-    };
-
-    const TabContents = () => {
-        return (
-            <>
-                {HabitItem.can_post_diary && (
-                    <LoginUserContent userId={userId}>
-                        <DiaryForm habitId={HabitItem.id} updateHabit={updateHabit} />
-                    </LoginUserContent>
-                )}
-                <CommentForm
-                    {...{
-                        userId: auth?.userData?.id!,
-                        itemId: HabitItem.id,
-                        parentId: null,
-                        commentType: 'habit',
-                        updateItem: updateHabit,
-                    }}
-                    habitComment
-                />
-
-                <TabContext value={tabValue}>
-                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                        <TabList onChange={handleChange}>
-                            <Tab label="日記" value="1" />
-                            <Tab label="コメント" value="2" />
-                        </TabList>
-                    </Box>
-                    <TabPanel value="1">
-                        <>
-                            {diariesFetch ? (
-                                <Circular />
-                            ) : diaries.length > 0 ? (
-                                <>
-                                    <DiaryList diaries={diaries} />
-
-                                    <Paginate
-                                        perPage={paginateData.perPage}
-                                        itemCount={paginateData.totalItem}
-                                        currentPage={paginateData.currentPage}
-                                        handleClick={paginateDiary}
-                                    />
-                                </>
-                            ) : (
-                                <p>日記はありません。</p>
-                            )}
-                        </>
-                    </TabPanel>
-                    <TabPanel value="2">
-                        <ul>
-                            {HabitItem.comments.map((item, index) => {
-                                return commentList({
-                                    item,
-                                    updateItem: updateHabit,
-                                    commentType: 'habit',
-                                    index,
-                                });
-                            })}
-                        </ul>
-                    </TabPanel>
-                </TabContext>
-            </>
-        );
     };
 
     // モーダルウィンドウの処理
@@ -281,115 +231,210 @@ const HabitStatus = () => {
         setAnchorEl(null);
     };
 
-    return (
-        <div className={styles.habit_status_container}>
-            <div className={styles.habit_status_wrapper}>
-                <PageRender status={statusCode}>
-                    <>
-                        <div>
-                            <h1 className={styles.habit_tracker_title}>{HabitItem.title}</h1>
-                            <p className={styles.habit_tracker_description}>
-                                {formatText(HabitItem.description)}
-                            </p>
+    return isLoading ? (
+        <Circular />
+    ) : (
+        <PageRender status={statusCode}>
+            <>
+                {habitItem && (
+                    <div className={styles.habit_status_container}>
+                        <div className={styles.habit_status_wrapper}>
+                            <div>
+                                <h1 className={styles.habit_tracker_title}>{habitItem.title}</h1>
+                                <p className={styles.habit_tracker_description}>
+                                    {formatText(habitItem.description)}
+                                </p>
 
-                            <div className={styles.calendar_container}>
-                                <div className={styles.calendar_wrapper}>
-                                    <ContributionCalendar values={HabitItem.done_days_list} />
-                                </div>
-                                <div className={styles.habit_tracker_done_info}>
-                                    <div>
-                                        <div className={styles.done_title}>合計達成日数</div>
-                                        <div className={styles.done_day}>
-                                            <span>{HabitItem.done_days_count}</span>日
+                                <div className={styles.calendar_container}>
+                                    <div className={styles.calendar_wrapper}>
+                                        <ContributionCalendar values={habitItem.done_days_list} />
+                                    </div>
+                                    <div className={styles.habit_tracker_done_info}>
+                                        <div>
+                                            <div className={styles.done_title}>合計達成日数</div>
+                                            <div className={styles.done_day}>
+                                                <span>{habitItem.done_days_count}</span>日
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div className={styles.done_title}>
+                                                最大連続達成日数
+                                            </div>
+                                            <div className={styles.done_day}>
+                                                <span>{habitItem.max_done_day}</span>日
+                                            </div>
                                         </div>
                                     </div>
-                                    <div>
-                                        <div className={styles.done_title}>最大連続達成日数</div>
-                                        <div className={styles.done_day}>
-                                            <span>{HabitItem.max_done_day}</span>日
+                                </div>
+                                <div className={styles.habit_tracker_category_and_private}>
+                                    <CategoryBadge
+                                        {...{
+                                            category_id: habitItem.category_id,
+                                            category_name: habitItem.category_name,
+                                        }}
+                                    />
+                                    {habitItem.is_private && (
+                                        <div className={styles.private}>
+                                            <div>非公開</div>
+                                        </div>
+                                    )}
+                                </div>
+                                <div className={styles.habit_tracker_created}>
+                                    {habitItem.created_at}
+                                </div>
+                                <div className={styles.habit_tracker_user_name}>
+                                    <Link to={`/user/${habitItem.user.screen_name}`}>
+                                        {habitItem.user.name}
+                                    </Link>
+                                </div>
+                                <LoginUserContent userId={userId!}>
+                                    <div className={styles.habit_tracker_buttons}>
+                                        <Button
+                                            value="完了"
+                                            clickHandler={() => doneHabit(habitItem.id)}
+                                            disabled={habitItem.is_done}
+                                        />
+                                        <div>
+                                            <IconButton onClick={handleClick}>
+                                                <MoreVertIcon />
+                                            </IconButton>
+                                            <Menu
+                                                open={open}
+                                                anchorEl={anchorEl}
+                                                onClose={handleClose}
+                                            >
+                                                <MenuItem
+                                                    onClick={() => {
+                                                        handleClose();
+                                                        setEditing(!editing);
+                                                        toggleModal();
+                                                    }}
+                                                >
+                                                    編集
+                                                </MenuItem>
+                                                <MenuItem
+                                                    onClick={() => {
+                                                        handleClose();
+                                                        deleteHabit(habitItem.id);
+                                                    }}
+                                                >
+                                                    削除
+                                                </MenuItem>
+                                            </Menu>
                                         </div>
                                     </div>
-                                </div>
+                                </LoginUserContent>
                             </div>
-                            <div className={styles.habit_tracker_category_and_private}>
-                                <CategoryBadge
+
+                            <LoginUserContent userId={userId!}>
+                                <EditHabitForm
                                     {...{
-                                        category_id: HabitItem.category_id,
-                                        category_name: HabitItem.category_name,
+                                        title: habitItem.title,
+                                        description: habitItem.description
+                                            ? habitItem.description
+                                            : '',
+                                        categoryId: habitItem.category_id,
+                                        isPrivate: habitItem.is_private ? 'true' : 'false',
+                                        habitId: habitItem.id,
+                                        activeModal: !modalActive,
+                                        toggleModal: toggleModal,
+                                        updateHabit: updateHabitItem,
                                     }}
                                 />
-                                {HabitItem.is_private && (
-                                    <div className={styles.private}>
-                                        <div>非公開</div>
-                                    </div>
-                                )}
-                            </div>
-                            <div className={styles.habit_tracker_created}>
-                                {HabitItem.created_at}
-                            </div>
-                            <div className={styles.habit_tracker_user_name}>
-                                <Link to={`/user/${HabitItem.user.screen_name}`}>
-                                    {HabitItem.user.name}
-                                </Link>
-                            </div>
-                            <LoginUserContent userId={userId}>
-                                <div className={styles.habit_tracker_buttons}>
-                                    <Button
-                                        value="完了"
-                                        clickHandler={() => doneHabit(HabitItem.id)}
-                                        disabled={HabitItem.is_done}
-                                    />
-                                    <div>
-                                        <IconButton onClick={handleClick}>
-                                            <MoreVertIcon />
-                                        </IconButton>
-                                        <Menu open={open} anchorEl={anchorEl} onClose={handleClose}>
-                                            <MenuItem
-                                                onClick={() => {
-                                                    handleClose();
-                                                    setEditing(!editing);
-                                                    toggleModal();
-                                                }}
-                                            >
-                                                編集
-                                            </MenuItem>
-                                            <MenuItem
-                                                onClick={() => {
-                                                    handleClose();
-                                                    deleteHabit(HabitItem.id);
-                                                }}
-                                            >
-                                                削除
-                                            </MenuItem>
-                                        </Menu>
-                                    </div>
-                                </div>
                             </LoginUserContent>
-                        </div>
+                            <hr />
+                            <Routes>
+                                <Route
+                                    path=""
+                                    element={
+                                        <>
+                                            {habitItem.can_post_diary && (
+                                                <LoginUserContent userId={userId!}>
+                                                    <DiaryForm
+                                                        habitId={habitItem.id}
+                                                        updateDiaries={fetchPaginateDiary}
+                                                        toggleRenderDiaryForm={
+                                                            toggleRenderDiaryForm
+                                                        }
+                                                    />
+                                                </LoginUserContent>
+                                            )}
 
-                        <LoginUserContent userId={userId}>
-                            <EditHabitForm
-                                {...{
-                                    title: HabitItem.title,
-                                    description: HabitItem.description ? HabitItem.description : '',
-                                    categoryId: HabitItem.category_id,
-                                    isPrivate: HabitItem.is_private ? 'true' : 'false',
-                                    habitId: HabitItem.id,
-                                    activeModal: !modalActive,
-                                    toggleModal: toggleModal,
-                                    updateHabit: updateHabit,
-                                }}
-                            />
-                        </LoginUserContent>
-                        <hr />
-                        <Routes>
-                            <Route path="" element={<TabContents />} />
-                            <Route path="diary/:did" element={<Diary />} />
-                        </Routes>
-                    </>
-                </PageRender>
-            </div>
-        </div>
+                                            <CommentForm
+                                                {...{
+                                                    userId: auth?.userData?.id!,
+                                                    itemId: habitItem.id,
+                                                    parentId: null,
+                                                    commentType: 'habit',
+                                                    updateItem: updateHabitItem,
+                                                }}
+                                                habitComment
+                                            />
+
+                                            <TabContext value={tabValue}>
+                                                <Box
+                                                    sx={{ borderBottom: 1, borderColor: 'divider' }}
+                                                >
+                                                    <TabList onChange={handleChange}>
+                                                        <Tab label="日記" value="1" />
+                                                        <Tab label="コメント" value="2" />
+                                                    </TabList>
+                                                </Box>
+                                                <TabPanel value="1">
+                                                    <>
+                                                        {diariesFetch ? (
+                                                            <Circular />
+                                                        ) : diaries.length > 0 ? (
+                                                            <>
+                                                                <DiaryList diaries={diaries} />
+
+                                                                <Paginate
+                                                                    perPage={paginateData.perPage}
+                                                                    itemCount={
+                                                                        paginateData.totalItem
+                                                                    }
+                                                                    currentPage={
+                                                                        paginateData.currentPage
+                                                                    }
+                                                                    handleClick={paginateDiary}
+                                                                />
+                                                            </>
+                                                        ) : (
+                                                            <p>日記はありません。</p>
+                                                        )}
+                                                    </>
+                                                </TabPanel>
+                                                <TabPanel value="2">
+                                                    <ul>
+                                                        {habitItem.comments.map((item, index) => {
+                                                            return commentList({
+                                                                item,
+                                                                updateItem: updateHabitItem,
+                                                                commentType: 'habit',
+                                                                index,
+                                                            });
+                                                        })}
+                                                    </ul>
+                                                </TabPanel>
+                                            </TabContext>
+                                        </>
+                                    }
+                                />
+                                <Route
+                                    path="diary/:did"
+                                    element={
+                                        <Diary
+                                            updateDiaries={fetchPaginateDiary}
+                                            toggleRenderDiaryForm={toggleRenderDiaryForm}
+                                        />
+                                    }
+                                />
+                            </Routes>
+                        </div>
+                    </div>
+                )}
+            </>
+        </PageRender>
     );
 };
 

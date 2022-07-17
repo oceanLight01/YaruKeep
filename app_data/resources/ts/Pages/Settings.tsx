@@ -21,23 +21,23 @@ const Settings = () => {
         };
     });
 
-    const deleteUser = () => {
+    const deleteUser = async () => {
         if (
             window.confirm('アカウントを削除します。削除するともとに戻せませんがよろしいですか？')
         ) {
-            axios
-                .delete('/api/user/delete', { data: { id: auth?.userData?.id } })
-                .then(() => {
-                    auth?.logout();
-                })
-                .catch((error) => {
+            try {
+                await axios.delete('/api/user/delete', { data: { id: auth?.userData?.id } });
+                auth?.logout();
+            } catch (error) {
+                if (axios.isAxiosError(error) && error.response) {
                     if (!unmounted) {
                         flashMessage?.setErrorMessage(
                             'アカウント削除に失敗しました。',
                             error.response.status
                         );
                     }
-                });
+                }
+            }
         }
     };
 

@@ -8,7 +8,7 @@ import styles from 'scss/Components/Atoms/UserItem.modules.scss';
 type Props = {
     userItem: UserItem;
     index: number;
-    updateFollowInfo: (userItem: UserItem, index: number) => void;
+    updateFollowInfo: (index: number) => void;
 };
 
 const UserItem = ({ userItem, index, updateFollowInfo }: Props) => {

@@ -17,26 +17,26 @@ const EmailVerified = () => {
         };
     }, []);
 
-    const sendVerifiedEmail = () => {
+    const sendVerifiedEmail = async () => {
         setClicked(true);
-        axios
-            .post('api/email/verification-notification')
-            .then(() => {
-                if (!unmounted) {
-                    flashMessage?.setMessage('新しいメールを送信しました。');
-                }
-            })
-            .catch((error) => {
+        try {
+            await axios.post('api/email/verification-notification');
+
+            if (!unmounted) {
+                flashMessage?.setMessage('新しいメールを送信しました。');
+            }
+        } catch (error) {
+            if (axios.isAxiosError(error) && error.response) {
                 if (!unmounted) {
                     flashMessage?.setErrorMessage(
                         'メールの再送信に失敗しました。',
                         error.response.status
                     );
                 }
-            })
-            .finally(() => {
-                setClicked(false);
-            });
+            }
+        } finally {
+            setClicked(false);
+        }
     };
 
     return (

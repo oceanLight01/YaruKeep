@@ -42,7 +42,7 @@ const ResetPassword = () => {
         watch,
     } = useForm<ResetPasswordForm>({ mode: 'onBlur' });
 
-    const onSubmit: SubmitHandler<ResetPasswordForm> = (data) => {
+    const onSubmit: SubmitHandler<ResetPasswordForm> = async (data) => {
         setClicked(true);
 
         const postData = {
@@ -51,27 +51,26 @@ const ResetPassword = () => {
             token: token![0],
         };
 
-        axios
-            .post('/api/reset-password', postData)
-            .then(() => {
-                if (!unmounted) {
-                    flashMessage?.setMessage('パスワードをリセットしました。');
-                    navigate('/login');
-                }
-            })
-            .catch((error) => {
+        try {
+            await axios.post('/api/reset-password', postData);
+            if (!unmounted) {
+                flashMessage?.setMessage('パスワードをリセットしました。');
+                navigate('/login');
+            }
+        } catch (error) {
+            if (axios.isAxiosError(error) && error.response) {
                 if (!unmounted) {
                     flashMessage?.setErrorMessage(
                         'パスワードのリセットに失敗しました。',
                         error.response.status
                     );
                 }
-            })
-            .finally(() => {
-                if (!unmounted) {
-                    setClicked(false);
-                }
-            });
+            }
+        } finally {
+            if (!unmounted) {
+                setClicked(false);
+            }
+        }
     };
 
     return (

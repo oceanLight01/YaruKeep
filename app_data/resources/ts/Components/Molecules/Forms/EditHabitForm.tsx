@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useAuth } from '../../Authenticate';
@@ -46,7 +46,7 @@ const EditHabitForm = (props: HabitForm) => {
         };
     }, []);
 
-    const onSubmit: SubmitHandler<HabitForm> = (data) => {
+    const onSubmit: SubmitHandler<HabitForm> = async (data) => {
         setIsLoading(true);
 
         const habitData = {
@@ -58,28 +58,28 @@ const EditHabitForm = (props: HabitForm) => {
             isPrivate: data.isPrivate === 'true',
         };
 
-        axios
-            .put(`/api/habits/${props.habitId}`, habitData)
-            .then(async (res) => {
-                if (!unmounted) {
-                    await props.updateHabit(res.data.data);
-                    flashMessage?.setMessage('ハビットトラッカーを編集しました。');
-                    props.toggleModal();
-                }
-            })
-            .catch((error) => {
+        try {
+            const habit: AxiosResponse = await axios.put(`/api/habits/${props.habitId}`, habitData);
+
+            if (!unmounted) {
+                await props.updateHabit(habit.data.data);
+                flashMessage?.setMessage('ハビットトラッカーを編集しました。');
+                props.toggleModal();
+            }
+        } catch (error) {
+            if (axios.isAxiosError(error) && error.response) {
                 if (!unmounted) {
                     flashMessage?.setErrorMessage(
                         'ハビットトラッカーの編集に失敗しました。',
                         error.response.status
                     );
                 }
-            })
-            .finally(() => {
-                if (!unmounted) {
-                    setIsLoading(false);
-                }
-            });
+            }
+        } finally {
+            if (!unmounted) {
+                setIsLoading(false);
+            }
+        }
     };
 
     return (

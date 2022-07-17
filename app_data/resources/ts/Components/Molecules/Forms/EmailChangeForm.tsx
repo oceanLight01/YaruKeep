@@ -35,7 +35,7 @@ const EmailChangeForm = () => {
         };
     }, []);
 
-    const onSubmit: SubmitHandler<EmailChangeForm> = (data) => {
+    const onSubmit: SubmitHandler<EmailChangeForm> = async (data) => {
         setClicked(true);
 
         const postData = {
@@ -43,14 +43,14 @@ const EmailChangeForm = () => {
             user_id: auth?.userData?.id,
         };
 
-        axios
-            .post('/api/email/change', postData)
-            .then(() => {
-                if (!unmounted) {
-                    flashMessage?.setMessage('確認用メッセージを送信しました。');
-                }
-            })
-            .catch((error) => {
+        try {
+            await axios.post('/api/email/change', postData);
+
+            if (!unmounted) {
+                flashMessage?.setMessage('確認用メッセージを送信しました。');
+            }
+        } catch (error) {
+            if (axios.isAxiosError(error) && error.response) {
                 if (!unmounted) {
                     if (error.response.status >= 500) {
                         flashMessage?.setErrorMessage('', error.response.status);
@@ -61,12 +61,12 @@ const EmailChangeForm = () => {
                         });
                     }
                 }
-            })
-            .finally(() => {
-                if (!unmounted) {
-                    setClicked(false);
-                }
-            });
+            }
+        } finally {
+            if (!unmounted) {
+                setClicked(false);
+            }
+        }
     };
 
     return (

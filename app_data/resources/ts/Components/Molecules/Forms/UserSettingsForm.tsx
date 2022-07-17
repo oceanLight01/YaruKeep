@@ -8,6 +8,7 @@ import TextField from '@mui/material/TextField';
 import Button from '../../Atoms/Buttons/Button';
 import FormVaridateMessage from '../../Atoms/FormVaridateMessage';
 import ValidateCountInput from '../../Atoms/ValidateCountInput';
+import axios from 'axios';
 
 type SettingsForm = {
     name: string;
@@ -46,7 +47,7 @@ const UserSettingsForm = () => {
         };
     }, []);
 
-    const onSubmit: SubmitHandler<SettingsForm> = (data) => {
+    const onSubmit: SubmitHandler<SettingsForm> = async (data) => {
         setClicked(true);
 
         const editData = {
@@ -54,31 +55,32 @@ const UserSettingsForm = () => {
             id: auth?.userData?.id,
         };
 
-        auth?.edit(editData)
-            .then((value) => {
-                if (!unmounted) {
-                    if (value[0] === undefined) {
-                        flashMessage?.setMessage('ユーザー情報を更新しました。');
-                    } else {
-                        setErrorMessage({
-                            screen_name: value[0].screen_name ? value[0].screen_name : [],
-                        });
-                    }
+        try {
+            const user = await auth?.edit(editData);
+
+            if (!unmounted) {
+                if (user[0] === undefined) {
+                    flashMessage?.setMessage('ユーザー情報を更新しました。');
+                } else {
+                    setErrorMessage({
+                        screen_name: user[0].screen_name ? user[0].screen_name : [],
+                    });
                 }
-            })
-            .catch((error) => {
+            }
+        } catch (error) {
+            if (axios.isAxiosError(error) && error.response) {
                 if (!unmounted) {
                     flashMessage?.setErrorMessage(
                         'ユーザー情報の更新に失敗しました。',
                         error.response.status
                     );
                 }
-            })
-            .finally(() => {
-                if (!unmounted) {
-                    setClicked(false);
-                }
-            });
+            }
+        } finally {
+            if (!unmounted) {
+                setClicked(false);
+            }
+        }
     };
 
     return (

@@ -30,25 +30,24 @@ const ForgotPassword = () => {
         };
     }, []);
 
-    const onSubmit: SubmitHandler<ForgotPasswordForm> = (data) => {
+    const onSubmit: SubmitHandler<ForgotPasswordForm> = async (data) => {
         setClicked(true);
         setFormStatus({
             ...formStatus,
             error: '',
         });
 
-        axios
-            .post('/api/forgot-password', data)
-            .then(() => {
-                if (!unmounted) {
-                    flashMessage?.setMessage('パスワードリセット用のメールを送信しました。');
-                    setFormStatus({
-                        ...formStatus,
-                        error: '',
-                    });
-                }
-            })
-            .catch((error) => {
+        try {
+            await axios.post('/api/forgot-password', data);
+            if (!unmounted) {
+                flashMessage?.setMessage('パスワードリセット用のメールを送信しました。');
+                setFormStatus({
+                    ...formStatus,
+                    error: '',
+                });
+            }
+        } catch (error) {
+            if (axios.isAxiosError(error) && error.response) {
                 if (!unmounted) {
                     if (error.response.status >= 500) {
                         flashMessage?.setErrorMessage('', error.response.status);
@@ -59,12 +58,12 @@ const ForgotPassword = () => {
                         });
                     }
                 }
-            })
-            .finally(() => {
-                if (!unmounted) {
-                    setClicked(false);
-                }
-            });
+            }
+        } finally {
+            if (!unmounted) {
+                setClicked(false);
+            }
+        }
     };
 
     return (

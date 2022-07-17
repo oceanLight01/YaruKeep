@@ -80,7 +80,7 @@ class FollowController extends Controller
         );
         broadcast(new NotificationPusher($following_user));
 
-        return new FollowUserResource($notification_user);
+        return response(['status' => 'success'], 200);
     }
 
     /**

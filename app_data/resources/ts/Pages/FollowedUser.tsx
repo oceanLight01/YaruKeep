@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useMessage } from '../Components/FlashMessageContext';
@@ -15,36 +15,40 @@ const FollowedUser = () => {
     let unmounted = false;
 
     useEffect(() => {
-        axios
-            .get(`/api/followed/${screenName}`)
-            .then((res) => {
+        const fetchFollowedList = async () => {
+            try {
+                const followedList: AxiosResponse = await axios.get(`/api/followed/${screenName}`);
+
                 if (!unmounted) {
-                    setFollowedList(res.data.data);
+                    setFollowedList(followedList.data.data);
                 }
-            })
-            .catch((error) => {
-                if (!unmounted) {
-                    flashMessage?.setErrorMessage(
-                        'フォローされているユーザーの取得に失敗しました。',
-                        error.response.status
-                    );
+            } catch (error) {
+                if (axios.isAxiosError(error) && error.response) {
+                    if (!unmounted) {
+                        flashMessage?.setErrorMessage(
+                            'フォローされているユーザーの取得に失敗しました。',
+                            error.response.status
+                        );
+                    }
                 }
-            })
-            .finally(() => {
+            } finally {
                 if (!unmounted) {
                     setIsLoding(false);
                 }
-            });
+            }
+        };
+
+        fetchFollowedList();
 
         return () => {
             unmounted = true;
         };
     }, []);
 
-    const updateFollowInfo = (userItem: UserItem, index: number) => {
+    const updateFollowInfo = (index: number) => {
         setFollowedList(
             followedList.map((user, key) => {
-                return key === index ? userItem : user;
+                return key === index ? { ...user, following: !user.following } : user;
             })
         );
     };

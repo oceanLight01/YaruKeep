@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../Components/Authenticate';
@@ -16,26 +16,21 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
-const Diary = () => {
-    const initialData = {
-        id: 0,
-        habit_id: 0,
-        text: '',
-        user: {
-            id: 0,
-            screen_name: '',
-            name: '',
-            profile_image: '',
-        },
-        comments: [],
-        created_at: '',
-    };
+type Props = {
+    updateDiaries: (id?: string, page?: number) => Promise<void>;
+    toggleRenderDiaryForm: () => void;
+};
 
+type Diary = {
+    data: DiaryItem;
+};
+
+const Diary = ({ updateDiaries, toggleRenderDiaryForm }: Props) => {
     const params = useParams<{ id: string; did: string }>();
     const locationPath = useLocation().pathname;
     const navigate = useNavigate();
 
-    const [diary, setDiary] = useState<DiaryItem>({ ...initialData });
+    const [diary, setDiary] = useState<DiaryItem | null>(null);
     const [statusCode, setStatusCode] = useState<number>(0);
     const [editing, setEditing] = useState<boolean>(false);
 
@@ -44,53 +39,70 @@ const Diary = () => {
     let unmounted = false;
 
     useEffect(() => {
-        setDiary({ ...initialData });
+        const fetchDiaryItem = async () => {
+            try {
+                const diaryItem: AxiosResponse<Diary> = await axios.get(
+                    `/api/habits/${params.id}/diaries/${params.did}`
+                );
+                if (!unmounted) {
+                    setDiary(diaryItem.data.data);
+                    setStatusCode(diaryItem.status);
+                }
+            } catch (error) {
+                if (axios.isAxiosError(error) && error.response) {
+                    if (!unmounted) {
+                        setStatusCode(error.response.status);
+                    }
+                }
+            }
+        };
 
-        axios
-            .get(`/api/habits/${params.id}/diaries/${params.did}`)
-            .then((res) => {
-                if (!unmounted) {
-                    setDiary(res.data.data);
-                    setStatusCode(res.data.status);
-                }
-            })
-            .catch((error) => {
-                if (!unmounted) {
-                    setStatusCode(error.response.status);
-                }
-            });
+        fetchDiaryItem();
 
         return () => {
             unmounted = true;
         };
     }, [locationPath]);
 
+    // 日記のデータを受け取ってstateを更新
     const updateDiary = (diaryItem: DiaryItem) => {
         setDiary(diaryItem);
         setEditing(false);
     };
 
-    const deleteDiary = (diaryId: number) => {
+    const deleteDiary = async (diaryId: number) => {
         if (window.confirm('日記を削除します。もとに戻せませんがよろしいですか？')) {
-            axios
-                .delete(`/api/diaries/${diaryId}`)
-                .then(() => {
-                    if (!unmounted) {
-                        flashMessage?.setMessage('日記を削除しました。');
-                        navigate(`/user/${auth?.userData?.screen_name}/habit/${diary.habit_id}`);
-                    }
-                })
-                .catch((error) => {
+            try {
+                await axios.delete(`/api/diaries/${diaryId}`);
+
+                if (!unmounted) {
+                    toggleRenderDiaryForm();
+                    flashMessage?.setMessage('日記を削除しました。');
+
+                    // 日記のリストを更新
+                    updateDiaries(String(diary?.habit_id)).catch((error) => {
+                        flashMessage?.setErrorMessage(
+                            '情報の取得に失敗しました。',
+                            error.response.status
+                        );
+                    });
+                }
+
+                navigate(`/user/${auth?.userData?.screen_name}/habit/${diary!.habit_id}`);
+            } catch (error) {
+                if (axios.isAxiosError(error)) {
                     if (!unmounted) {
                         flashMessage?.setErrorMessage(
                             '日記の削除に失敗しました。',
-                            error.response.status
+                            error!.response!.status
                         );
                     }
-                });
+                }
+            }
         }
     };
 
+    // 設定
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event: any) => {
@@ -104,71 +116,78 @@ const Diary = () => {
         <PageRender status={statusCode}>
             <>
                 <h2>日記</h2>
-                {!editing ? (
-                    <div className={styles.diary_container}>
-                        <p>{formatText(diary.text)}</p>
-                        <div className={styles.created}>{diary.created_at}</div>
-                        <LoginUserContent userId={diary.user.id}>
-                            <div className={styles.diary_settings_container}>
-                                <div className={styles.diary_settings}>
-                                    <IconButton onClick={handleClick}>
-                                        <MoreVertIcon />
-                                    </IconButton>
-                                    <Menu open={open} anchorEl={anchorEl} onClose={handleClose}>
-                                        <MenuItem
-                                            onClick={() => {
-                                                handleClose();
-                                                setEditing(!editing);
-                                            }}
-                                        >
-                                            編集
-                                        </MenuItem>
-                                        <MenuItem
-                                            onClick={() => {
-                                                handleClose();
-                                                deleteDiary(diary.id);
-                                            }}
-                                        >
-                                            削除
-                                        </MenuItem>
-                                    </Menu>
-                                </div>
+                {diary && (
+                    <>
+                        {!editing ? (
+                            <div className={styles.diary_container}>
+                                <p>{formatText(diary.text)}</p>
+                                <div className={styles.created}>{diary.created_at}</div>
+                                <LoginUserContent userId={diary.user.id}>
+                                    <div className={styles.diary_settings_container}>
+                                        <div className={styles.diary_settings}>
+                                            <IconButton onClick={handleClick}>
+                                                <MoreVertIcon />
+                                            </IconButton>
+                                            <Menu
+                                                open={open}
+                                                anchorEl={anchorEl}
+                                                onClose={handleClose}
+                                            >
+                                                <MenuItem
+                                                    onClick={() => {
+                                                        handleClose();
+                                                        setEditing(!editing);
+                                                    }}
+                                                >
+                                                    編集
+                                                </MenuItem>
+                                                <MenuItem
+                                                    onClick={() => {
+                                                        handleClose();
+                                                        deleteDiary(diary.id);
+                                                    }}
+                                                >
+                                                    削除
+                                                </MenuItem>
+                                            </Menu>
+                                        </div>
+                                    </div>
+                                </LoginUserContent>
                             </div>
-                        </LoginUserContent>
-                    </div>
-                ) : (
-                    <div>
-                        <EditDiaryForm
+                        ) : (
+                            <div>
+                                <EditDiaryForm
+                                    {...{
+                                        id: diary.id,
+                                        text: diary.text,
+                                        habitId: diary.habit_id,
+                                        updateDiary: updateDiary,
+                                        setEditing: setEditing,
+                                    }}
+                                />
+                            </div>
+                        )}
+                        <h2>日記のコメント</h2>
+                        <CommentForm
                             {...{
-                                id: diary.id,
-                                text: diary.text,
-                                habitId: diary.habit_id,
-                                updateDiary: updateDiary,
-                                setEditing: setEditing,
+                                userId: auth?.userData?.id!,
+                                itemId: diary.id,
+                                parentId: null,
+                                updateItem: updateDiary,
                             }}
                         />
-                    </div>
+                        <ul>
+                            {diary.comments.map((item, index) => {
+                                return commentList({
+                                    item,
+                                    updateItem: updateDiary,
+                                    commentType: 'diary',
+                                    index,
+                                });
+                            })}
+                        </ul>
+                    </>
                 )}
-
-                <h2>日記のコメント</h2>
-                <CommentForm
-                    {...{
-                        userId: auth?.userData?.id!,
-                        itemId: diary.id,
-                        parentId: null,
-                        updateItem: updateDiary,
-                    }}
-                />
-                <ul>
-                    {diary.comments.map((item, index) => {
-                        return commentList({
-                            item,
-                            updateItem: updateDiary,
-                            commentType: 'diary',
-                            index,
-                        });
-                    })}
-                </ul>
             </>
         </PageRender>
     );

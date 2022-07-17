@@ -10,6 +10,7 @@ import Button from '@mui/material/Button';
 import FormVaridateMessage from '../../Components/Atoms/FormVaridateMessage';
 import FormRule from '../../Components/Atoms/FormRule';
 import ValidateCountInput from '../../Components/Atoms/ValidateCountInput';
+import axios from 'axios';
 
 type RegisterForm = {
     name: string;
@@ -46,14 +47,15 @@ const Register = () => {
         };
     }, []);
 
-    const onSubmit: SubmitHandler<RegisterForm> = (data) => {
+    const onSubmit: SubmitHandler<RegisterForm> = async (data) => {
         setIsLoading(true);
 
-        auth?.register(data)
-            .then(() => {
-                navigate('/home');
-            })
-            .catch((error) => {
+        try {
+            await auth?.register(data);
+
+            navigate('/home');
+        } catch (error) {
+            if (axios.isAxiosError(error) && error.response) {
                 const data = error.response.data.errors;
                 if (error.response.status >= 500) {
                     flashMessage?.setErrorMessage('', error.response.status);
@@ -63,12 +65,12 @@ const Register = () => {
                         screen_name: data.screen_name ? data.screen_name : [],
                     });
                 }
-            })
-            .finally(() => {
-                if (!unmounted) {
-                    setIsLoading(false);
-                }
-            });
+            }
+        } finally {
+            if (!unmounted) {
+                setIsLoading(false);
+            }
+        }
     };
 
     return (

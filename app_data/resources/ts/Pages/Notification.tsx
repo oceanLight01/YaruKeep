@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import NotificationItem from '../Components/Atoms/NotificationItem';
 import { useMessage } from '../Components/FlashMessageContext';
 
@@ -18,7 +18,7 @@ const Notification = () => {
     });
     let unmounted = false;
 
-    const getNotificationData = (nextCursor?: string) => {
+    const getNotificationData = async (nextCursor?: string) => {
         setClicked(true);
 
         let cursor = '';
@@ -26,33 +26,33 @@ const Notification = () => {
             cursor = `?cursor=${nextCursor}`;
         }
 
-        axios
-            .get(`/api/notifications${cursor}`)
-            .then((res) => {
-                if (!unmounted) {
-                    const data = res.data;
-                    setNotification([...notification, ...data.notification]);
-                    setPaginate({
-                        ...paginate,
-                        nextCursor: data.next_cursor,
-                        hasNext: data.has_next,
-                    });
-                }
-            })
-            .catch((error) => {
+        try {
+            const res: AxiosResponse = await axios.get(`/api/notifications${cursor}`);
+
+            if (!unmounted) {
+                const data = res.data;
+                setNotification([...notification, ...data.notification]);
+                setPaginate({
+                    ...paginate,
+                    nextCursor: data.next_cursor,
+                    hasNext: data.has_next,
+                });
+            }
+        } catch (error) {
+            if (axios.isAxiosError(error) && error.response) {
                 if (!unmounted) {
                     flashMessage?.setErrorMessage(
                         '通知情報の取得に失敗しました。',
                         error.response.status
                     );
                 }
-            })
-            .finally(() => {
-                if (!unmounted) {
-                    setClicked(false);
-                    setIsLoading(false);
-                }
-            });
+            }
+        } finally {
+            if (!unmounted) {
+                setClicked(false);
+                setIsLoading(false);
+            }
+        }
     };
 
     useEffect(() => {

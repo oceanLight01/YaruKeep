@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../Authenticate';
@@ -15,20 +16,21 @@ const LogoutButton = () => {
         };
     }, []);
 
-    const logout = () => {
+    const logout = async () => {
         if (window.confirm('ログアウトします。よろしいですか？')) {
-            auth?.logout()
-                .then(() => {
-                    navigate('/login');
-                })
-                .catch((error) => {
+            try {
+                await auth?.logout();
+                navigate('/login');
+            } catch (error) {
+                if (axios.isAxiosError(error) && error.response) {
                     if (!unmounted) {
                         flashMessage?.setErrorMessage(
                             'ログアウトに失敗しました。',
                             error.response.status
                         );
                     }
-                });
+                }
+            }
         }
     };
 

@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useMessage } from '../../FlashMessageContext';
@@ -6,6 +6,7 @@ import { useMessage } from '../../FlashMessageContext';
 import styles from 'scss/Components/Molecules/Forms/CommentForm.modules.scss';
 import TextField from '@mui/material/TextField';
 import Button from '../../Atoms/Buttons/Button';
+import FormVaridateMessage from '../../Atoms/FormVaridateMessage';
 
 type Props = {
     id?: number;
@@ -40,9 +41,8 @@ const CommentForm = (props: Props) => {
         };
     }, []);
 
-    const onSubmit: SubmitHandler<CommentForm> = (data) => {
+    const onSubmit: SubmitHandler<CommentForm> = async (data) => {
         setClicked(true);
-        console.log('commentForm');
 
         const postData = {
             ...data,
@@ -51,25 +51,29 @@ const CommentForm = (props: Props) => {
             parentId: props.id,
         };
 
-        axios
-            .post(`/api/comments/${commentType}`, postData)
-            .then((res) => {
-                props.updateItem(res.data.data);
+        try {
+            const comment: AxiosResponse = await axios.post(
+                `/api/comments/${commentType}`,
+                postData
+            );
+            props.updateItem(comment.data.data);
 
-                flashMessage?.setMessage('コメントを投稿しました。');
-                reset();
-            })
-            .catch((error) => {
-                flashMessage?.setErrorMessage(
-                    'コメントの投稿に失敗しました。',
-                    error.response.status
-                );
-            })
-            .finally(() => {
+            flashMessage?.setMessage('コメントを投稿しました。');
+            reset();
+        } catch (error) {
+            if (axios.isAxiosError(error) && error.response) {
                 if (!unmounted) {
-                    setClicked(false);
+                    flashMessage?.setErrorMessage(
+                        'コメントの投稿に失敗しました。',
+                        error.response.status
+                    );
                 }
-            });
+            }
+        } finally {
+            if (!unmounted) {
+                setClicked(false);
+            }
+        }
     };
 
     return (
@@ -92,9 +96,11 @@ const CommentForm = (props: Props) => {
                     )}
                 />
                 {errors.comment?.type === 'maxLength' && (
-                    <p>コメントは300文字以下で入力してください。</p>
+                    <FormVaridateMessage message="コメントは300文字以下で入力してください。" />
                 )}
-                {errors.comment?.type === 'required' && <p>内容を入力してください。</p>}
+                {errors.comment?.type === 'required' && (
+                    <FormVaridateMessage message="内容を入力してください。" />
+                )}
             </div>
             <div className={styles.button_wrapper}>
                 <Button value="コメント" type="submit" disabled={clicked} />

@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useMessage } from '../Components/FlashMessageContext';
@@ -15,36 +15,42 @@ const FollowingUser = () => {
     let unmounted = false;
 
     useEffect(() => {
-        axios
-            .get(`/api/following/${screenName}`)
-            .then((res) => {
+        const fetchFollowingList = async () => {
+            try {
+                const followingList: AxiosResponse = await axios.get(
+                    `/api/following/${screenName}`
+                );
+
                 if (!unmounted) {
-                    setFollowingList(res.data.data);
+                    setFollowingList(followingList.data.data);
                 }
-            })
-            .catch((error) => {
-                if (!unmounted) {
-                    flashMessage?.setErrorMessage(
-                        'フォロー中ユーザーの取得に失敗しました。',
-                        error.response.status
-                    );
+            } catch (error) {
+                if (axios.isAxiosError(error) && error.response) {
+                    if (!unmounted) {
+                        flashMessage?.setErrorMessage(
+                            'フォロー中ユーザーの取得に失敗しました。',
+                            error.response.status
+                        );
+                    }
                 }
-            })
-            .finally(() => {
+            } finally {
                 if (!unmounted) {
                     setIsLoding(false);
                 }
-            });
+            }
+        };
+
+        fetchFollowingList();
 
         return () => {
             unmounted = true;
         };
     }, []);
 
-    const updateFollowInfo = (userItem: UserItem, index: number) => {
+    const updateFollowInfo = (index: number) => {
         setFollowingList(
             followingList.map((user, key) => {
-                return key === index ? userItem : user;
+                return key === index ? { ...user, following: !user.following } : user;
             })
         );
     };

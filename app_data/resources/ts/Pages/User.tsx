@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useLocation, useParams } from 'react-router-dom';
@@ -14,22 +14,35 @@ import styles from 'scss/Pages/User.modules.scss';
 import Circular from '../Components/Atoms/Circular';
 
 type UserData = {
-    id: number;
-    name: string;
-    screen_name: string;
-    profile: string;
-    profile_image: string;
-    following_count: number;
-    followed_count: number;
-    following: boolean;
-    followed_by: boolean;
-    created_at: string;
-    updated_at: string;
+    data: {
+        user: {
+            id: number;
+            name: string;
+            screen_name: string;
+            profile: string;
+            profile_image: string;
+            following_count: number;
+            followed_count: number;
+            following: boolean;
+            followed_by: boolean;
+            created_at: string;
+            updated_at: string;
+        };
+    };
+};
+
+type Habits = {
+    data: HabitItem[];
+    meta: {
+        per_page: number;
+        total: number;
+        current_page: number;
+    };
 };
 
 const User = () => {
     const { screenName } = useParams<{ screenName: string }>();
-    const [userData, setUserData] = useState<UserData | null>(null);
+    const [userData, setUserData] = useState<UserData['data']['user'] | null>(null);
     const [habits, setHabits] = useState<HabitItem[] | []>([]);
     const [statusCode, setStatusCode] = useState<number>(0);
     const locationPath = useLocation().pathname;
@@ -45,84 +58,98 @@ const User = () => {
         currentPage: 1,
     });
 
-    const getUserData = (screenName?: string) => {
-        axios
-            .get(`/api/user/${screenName}`)
-            .then((res) => {
-                const data = res.data.data.user;
+    const fetchUserData = async (screenName?: string) => {
+        const user: AxiosResponse<UserData> = await axios.get(`/api/user/${screenName}`);
 
-                if (!unmounted) {
-                    setUserData(data);
-                    setStatusCode(res.data.status);
-                }
-            })
-            .catch((error) => {
-                if (!unmounted) {
-                    setStatusCode(error.response.status);
-                }
-            });
+        if (!unmounted) {
+            setUserData(user.data.data.user);
+            setStatusCode(user.status);
+        }
     };
 
-    const doneHabit = (habitId: number, index?: number) => {
-        axios
-            .post('/api/habits/done', { userId: auth?.userData?.id, id: habitId })
-            .then((res) => {
-                flashMessage?.setMessage('今日の目標を達成しました🎉 お疲れ様です!');
-                const data = res.data.data;
-                if (!unmounted) {
-                    if (index !== undefined) {
-                        setHabits(
-                            habits.map((habit, key) => {
-                                return key === index ? data : habit;
-                            })
-                        );
-                    }
-                }
-            })
-            .catch((error) => {
-                if (!unmounted) {
-                    flashMessage?.setErrorMessage('更新に失敗しました。', error.response.status);
-                }
-            });
-    };
-
-    const getUserHabits = (screenName?: string, page = paginateData.currentPage) => {
+    const fetchUserHabits = async (screenName?: string, page = paginateData.currentPage) => {
         setIsFetch(true);
-        axios
-            .get(`/api/habits/${screenName}?page=${page}`)
-            .then((res) => {
-                if (!unmounted) {
-                    setHabits(res.data.data);
 
-                    const paginate = res.data.meta;
-                    setPaginateData({
-                        ...paginateData,
-                        perPage: paginate.per_page,
-                        totalItem: paginate.total,
-                        currentPage: paginate.current_page,
-                    });
-                }
-            })
-            .catch((error) => {
+        try {
+            const userHabits: AxiosResponse<Habits> = await axios.get(
+                `/api/habits/${screenName}?page=${page}`
+            );
+
+            if (!unmounted) {
+                setHabits(userHabits.data.data);
+
+                const paginate = userHabits.data.meta;
+                setPaginateData({
+                    ...paginateData,
+                    perPage: paginate.per_page,
+                    totalItem: paginate.total,
+                    currentPage: paginate.current_page,
+                });
+            }
+        } catch (error) {
+            if (axios.isAxiosError(error) && error.response)
                 if (!unmounted) {
                     setStatusCode(error.response.status);
                 }
-            })
-            .finally(() => {
-                setIsFetch(false);
+        }
+
+        setIsFetch(false);
+    };
+
+    const doneHabit = async (habitId: number, index?: number) => {
+        try {
+            const done: AxiosResponse = await axios.post('/api/habits/done', {
+                userId: auth?.userData?.id,
+                id: habitId,
             });
+
+            if (!unmounted) {
+                flashMessage?.setMessage('今日の目標を達成しました🎉 お疲れ様です!');
+                if (done.statusText === 'OK') {
+                    setHabits(
+                        habits.map((habit, key) => {
+                            return key === index ? { ...habit, is_done: true } : habit;
+                        })
+                    );
+                }
+            }
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                if (!unmounted) {
+                    flashMessage?.setErrorMessage('更新に失敗しました。', error!.response!.status);
+                }
+            }
+        }
     };
 
     const paginateHabit = (page: number) => {
-        getUserHabits(screenName, page);
+        fetchUserHabits(screenName, page);
+    };
+
+    const toggleFollowing = () => {
+        if (userData) {
+            setUserData({
+                ...userData,
+                followed_count: userData.following
+                    ? userData.followed_count - 1
+                    : userData.followed_count + 1,
+                following: !userData.following,
+            });
+        }
     };
 
     useEffect(() => {
         setUserData(null);
         setHabits([]);
         setStatusCode(0);
-        getUserData(screenName);
-        getUserHabits(screenName);
+
+        const fetchUserAllData = async () => {
+            Promise.all([fetchUserData(screenName), fetchUserHabits(screenName)]);
+        };
+
+        fetchUserAllData().catch((error) => {
+            setStatusCode(error.response.status);
+        });
 
         return () => {
             unmounted = true;
@@ -170,7 +197,7 @@ const User = () => {
                                     <FollowButton
                                         following={userData?.following!}
                                         following_id={userData?.id!}
-                                        getUserData={() => getUserData(userData?.screen_name)!}
+                                        toggleFollowing={toggleFollowing}
                                     />
                                 )}
                             </div>

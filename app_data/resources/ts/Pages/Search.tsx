@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../Components/Authenticate';
 import { useMessage } from '../Components/FlashMessageContext';
@@ -12,6 +12,15 @@ import styles from 'scss/Pages/Search.modules.scss';
 type SearchFormData = {
     keyword: string;
     categories: string;
+};
+
+type Search = {
+    habits: HabitItem[];
+    meta: {
+        per_page: number;
+        total: number;
+        current_page: number;
+    };
 };
 
 const Search = () => {
@@ -46,7 +55,7 @@ const Search = () => {
     };
 
     // 検索情報をもとにデータを取得
-    const searchHabit = (page = paginateData.currentPage, searchFormData?: SearchForm) => {
+    const searchHabit = async (page = paginateData.currentPage, searchFormData?: SearchForm) => {
         setSearching(true);
 
         const data = searchFormData === undefined ? searchData : searchFormData;
@@ -59,36 +68,36 @@ const Search = () => {
             page: page,
         };
 
-        axios
-            .post('/api/search', searchInfo)
-            .then((res) => {
-                if (!unmounted) {
-                    const data = res.data.habits;
-                    if (data !== undefined) {
-                        setSearchResult(data);
-                    } else {
-                        setNoContent(true);
-                    }
+        try {
+            const search: AxiosResponse<Search> = await axios.post('/api/search', searchInfo);
 
-                    const paginate = res.data.meta;
-                    setPaginateData({
-                        ...paginateData,
-                        perPage: paginate.per_page,
-                        totalItem: paginate.total,
-                        currentPage: paginate.current_page,
-                    });
+            if (!unmounted) {
+                const data = search.data.habits;
+                if (data !== undefined) {
+                    setSearchResult(data);
+                } else {
+                    setNoContent(true);
                 }
-            })
-            .catch((error) => {
+
+                const paginate = search.data.meta;
+                setPaginateData({
+                    ...paginateData,
+                    perPage: paginate.per_page,
+                    totalItem: paginate.total,
+                    currentPage: paginate.current_page,
+                });
+            }
+        } catch (error) {
+            if (axios.isAxiosError(error) && error.response) {
                 if (!unmounted) {
                     flashMessage?.setErrorMessage('検索に失敗しました。', error.response.status);
                 }
-            })
-            .finally(() => {
-                if (!unmounted) {
-                    setSearching(false);
-                }
-            });
+            }
+        } finally {
+            if (!unmounted) {
+                setSearching(false);
+            }
+        }
     };
 
     const doneHabit = (habitId: number, index?: number) => {

@@ -1,5 +1,5 @@
 import TextField from '@mui/material/TextField';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import Button from '../../Atoms/Buttons/Button';
@@ -41,7 +41,7 @@ const EditDiaryForm = (props: Props) => {
         };
     }, []);
 
-    const onSubmit: SubmitHandler<Diary> = (data) => {
+    const onSubmit: SubmitHandler<Diary> = async (data) => {
         setClicked(true);
 
         const postData = {
@@ -50,27 +50,27 @@ const EditDiaryForm = (props: Props) => {
             userId: auth?.userData?.id,
         };
 
-        axios
-            .put(`/api/diaries/${props.id}`, postData)
-            .then((res) => {
-                if (!unmounted) {
-                    props.updateDiary(res.data.data);
-                    flashMessage?.setMessage('日記を編集しました。');
-                }
-            })
-            .catch((error) => {
+        try {
+            const diary: AxiosResponse = await axios.put(`/api/diaries/${props.id}`, postData);
+
+            if (!unmounted) {
+                props.updateDiary(diary.data.data);
+                flashMessage?.setMessage('日記を編集しました。');
+            }
+        } catch (error) {
+            if (axios.isAxiosError(error) && error.response) {
                 if (!unmounted) {
                     flashMessage?.setErrorMessage(
                         '日記の編集に失敗しました。',
                         error.response.status
                     );
                 }
-            })
-            .finally(() => {
-                if (!unmounted) {
-                    setClicked(false);
-                }
-            });
+            }
+        } finally {
+            if (!unmounted) {
+                setClicked(false);
+            }
+        }
     };
 
     return (

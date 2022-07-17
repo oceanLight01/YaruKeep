@@ -8,6 +8,7 @@ import ValidateCountInput from '../../Atoms/ValidateCountInput';
 import styles from 'scss/Components/Molecules/Forms/SettingsForm.modules.scss';
 import TextField from '@mui/material/TextField';
 import Button from '../../Atoms/Buttons/Button';
+import axios from 'axios';
 
 type PasswordChangeForm = {
     current_password: string;
@@ -43,7 +44,7 @@ const PasswordChangeForm = () => {
         watch,
     } = useForm<PasswordChangeForm>();
 
-    const onSubmit: SubmitHandler<PasswordChangeForm> = (data) => {
+    const onSubmit: SubmitHandler<PasswordChangeForm> = async (data) => {
         setClicked(true);
 
         const postData = {
@@ -52,21 +53,22 @@ const PasswordChangeForm = () => {
             password_confirmation: data.password_confirmation,
         };
 
-        auth?.changePassword(postData)
-            .then(() => {
-                if (!unmounted) {
-                    flashMessage?.setMessage('パスワードを変更しました。');
-                    setFormStatus({
-                        ...formStatus,
-                        errors: {
-                            curren_password: '',
-                            password: '',
-                        },
-                    });
-                    reset();
-                }
-            })
-            .catch((error) => {
+        try {
+            await auth?.changePassword(postData);
+
+            if (!unmounted) {
+                flashMessage?.setMessage('パスワードを変更しました。');
+                setFormStatus({
+                    ...formStatus,
+                    errors: {
+                        curren_password: '',
+                        password: '',
+                    },
+                });
+                reset();
+            }
+        } catch (error) {
+            if (axios.isAxiosError(error) && error.response) {
                 if (!unmounted) {
                     if (error.response.status >= 500) {
                         flashMessage?.setErrorMessage('', error.response.status);
@@ -83,10 +85,10 @@ const PasswordChangeForm = () => {
                         });
                     }
                 }
-            })
-            .finally(() => {
-                setClicked(false);
-            });
+            }
+        } finally {
+            setClicked(false);
+        }
     };
 
     return (

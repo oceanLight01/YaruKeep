@@ -42,7 +42,7 @@ const HabitPost = () => {
         };
     }, []);
 
-    const onSubmit: SubmitHandler<HabitForm> = (data) => {
+    const onSubmit: SubmitHandler<HabitForm> = async (data) => {
         setIsLoading(true);
 
         const habitData = {
@@ -53,27 +53,26 @@ const HabitPost = () => {
             isPrivate: data.isPrivate === 'true',
         };
 
-        axios
-            .post('/api/habits', habitData)
-            .then(() => {
-                if (!unmounted) {
-                    flashMessage?.setMessage('ハビットトラッカーを作成しました。');
-                    reset();
-                }
-            })
-            .catch((error) => {
+        try {
+            await axios.post('/api/habits', habitData);
+            if (!unmounted) {
+                flashMessage?.setMessage('ハビットトラッカーを作成しました。');
+                reset();
+            }
+        } catch (error) {
+            if (axios.isAxiosError(error) && error.response) {
                 if (!unmounted) {
                     flashMessage?.setErrorMessage(
                         'ハビットトラッカーの作成に失敗しました。',
                         error.response.status
                     );
                 }
-            })
-            .finally(() => {
-                if (!unmounted) {
-                    setIsLoading(false);
-                }
-            });
+            }
+        } finally {
+            if (!unmounted) {
+                setIsLoading(false);
+            }
+        }
     };
 
     return (

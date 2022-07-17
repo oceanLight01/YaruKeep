@@ -131,7 +131,8 @@ class DiaryController extends Controller
                 }
             }
         } else {
-            return response([], 204);
+            $no_diary = DiaryResource::collection([]);
+            return $no_diary;
         }
     }
 }

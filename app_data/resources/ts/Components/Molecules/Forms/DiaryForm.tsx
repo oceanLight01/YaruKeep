@@ -15,10 +15,11 @@ type Diary = {
 
 type Props = {
     habitId: number;
-    updateHabit: (habitItem: HabitItem) => void;
+    updateDiaries: (id?: string, page?: number) => Promise<void>;
+    toggleRenderDiaryForm: () => void;
 };
 
-const DiaryForm = (props: Props) => {
+const DiaryForm = ({ habitId, updateDiaries, toggleRenderDiaryForm }: Props) => {
     const flashMessage = useMessage();
     const [clicked, setClicked] = useState<boolean>(false);
     const {
@@ -36,23 +37,32 @@ const DiaryForm = (props: Props) => {
         };
     }, []);
 
-    const onSubmit: SubmitHandler<Diary> = (data) => {
+    const onSubmit: SubmitHandler<Diary> = async (data) => {
         setClicked(true);
 
         const postData = {
             ...data,
-            habitId: props.habitId,
+            habitId: habitId,
         };
 
-        axios
-            .post('/api/diaries', postData)
-            .then((res) => {
+        try {
+            await axios.post('/api/diaries', postData);
+
+            if (!unmounted) {
+                flashMessage?.setMessage('日記を投稿しました。');
+            }
+            toggleRenderDiaryForm();
+
+            updateDiaries(String(habitId)).catch((error) => {
                 if (!unmounted) {
-                    props.updateHabit(res.data.data);
-                    flashMessage?.setMessage('日記を投稿しました。');
+                    flashMessage?.setErrorMessage(
+                        '情報の取得に失敗しました。',
+                        error.response.status
+                    );
                 }
-            })
-            .catch((error) => {
+            });
+        } catch (error) {
+            if (axios.isAxiosError(error) && error.response) {
                 if (!unmounted) {
                     flashMessage?.setErrorMessage(
                         '日記の投稿に失敗しました。',
@@ -60,7 +70,8 @@ const DiaryForm = (props: Props) => {
                     );
                     setClicked(false);
                 }
-            });
+            }
+        }
     };
 
     return (

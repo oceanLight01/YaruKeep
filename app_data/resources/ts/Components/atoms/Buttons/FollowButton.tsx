@@ -9,8 +9,8 @@ type Props = {
     following_id: number;
     following: boolean;
     index?: number;
-    updateFollowInfo?: (userItem: UserItem, index: number) => void;
-    getUserData?: () => void;
+    updateFollowInfo?: (index: number) => void;
+    toggleFollowing?: () => void;
 };
 
 const FollowButton = (props: Props) => {
@@ -33,13 +33,13 @@ const FollowButton = (props: Props) => {
         };
         axios
             .post(`/api/follow`, data)
-            .then((res) => {
+            .then(() => {
                 if (props.updateFollowInfo) {
-                    props.updateFollowInfo(res.data.data, props.index!);
+                    props.updateFollowInfo(props.index!);
                 }
 
-                if (props.getUserData) {
-                    props.getUserData();
+                if (props.toggleFollowing) {
+                    props.toggleFollowing();
                 }
             })
             .catch((error) => {
@@ -65,13 +65,13 @@ const FollowButton = (props: Props) => {
         };
         axios
             .post(`/api/unfollow`, data)
-            .then((res) => {
+            .then(() => {
                 if (props.updateFollowInfo) {
-                    props.updateFollowInfo(res.data.data, props.index!);
+                    props.updateFollowInfo(props.index!);
                 }
 
-                if (props.getUserData) {
-                    props.getUserData();
+                if (props.toggleFollowing) {
+                    props.toggleFollowing();
                 }
             })
             .catch((error) => {

@@ -36,10 +36,10 @@ const Login = () => {
         };
     }, []);
 
-    const onSubmit: SubmitHandler<LoginForm> = (data) => {
+    const onSubmit: SubmitHandler<LoginForm> = async (data) => {
         setIsLoading(true);
 
-        axios
+        await axios
             .get('/sanctum/scrf-cookie')
             .then(() => {
                 auth?.login(data)
