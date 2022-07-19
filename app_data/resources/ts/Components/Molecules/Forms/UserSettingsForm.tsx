@@ -17,13 +17,19 @@ type SettingsForm = {
 };
 
 type ErrorMessage = {
+    name: string[];
     screen_name: string[];
+    profile: string[];
 };
 
 const UserSettingsForm = () => {
     const auth = useAuth();
     const flashMessage = useMessage();
-    const [errorMessage, setErrorMessage] = useState<ErrorMessage>({ screen_name: [] });
+    const [errorMessage, setErrorMessage] = useState<ErrorMessage>({
+        name: [],
+        screen_name: [],
+        profile: [],
+    });
     const [clicked, setClicked] = useState<boolean>(false);
     const {
         register,
@@ -55,32 +61,29 @@ const UserSettingsForm = () => {
             id: auth?.userData?.id,
         };
 
-        try {
-            const user = await auth?.edit(editData);
+        const user = await auth?.edit(editData);
+        const editResponse = user[0];
+        setClicked(false);
 
-            if (!unmounted) {
-                if (user[0] === undefined) {
-                    flashMessage?.setMessage('ユーザー情報を更新しました。');
-                } else {
-                    setErrorMessage({
-                        screen_name: user[0].screen_name ? user[0].screen_name : [],
-                    });
-                }
-            }
-        } catch (error) {
-            if (axios.isAxiosError(error) && error.response) {
-                if (!unmounted) {
-                    flashMessage?.setErrorMessage(
-                        'ユーザー情報の更新に失敗しました。',
-                        error.response.status
-                    );
-                }
-            }
-        } finally {
-            if (!unmounted) {
-                setClicked(false);
-            }
+        if (unmounted) {
+            return;
         }
+
+        if (editResponse !== undefined) {
+            flashMessage?.setErrorMessage(
+                'ユーザー情報の更新に失敗しました。',
+                editResponse.data.status
+            );
+            const error = editResponse.data.errors;
+            setErrorMessage({
+                name: error.name ? error.name : [],
+                screen_name: error.screen_name ? error.screen_name : [],
+                profile: error.profile ? error.profile : [],
+            });
+            return;
+        }
+
+        flashMessage?.setMessage('ユーザー情報を更新しました。');
     };
 
     return (
@@ -108,6 +111,9 @@ const UserSettingsForm = () => {
                 {errors.name?.type === 'required' && (
                     <FormVaridateMessage message="アカウント名を入力してください。" />
                 )}
+                {errorMessage.name.map((str, index) => {
+                    return <FormVaridateMessage message={str} key={index} />;
+                })}
             </div>
             <div className={styles.form_input}>
                 <div className={styles.form_label}>
@@ -164,6 +170,9 @@ const UserSettingsForm = () => {
                 {errors.profile?.type === 'maxLength' && (
                     <FormVaridateMessage message="プロフィールは300文字以下で入力してください。" />
                 )}
+                {errorMessage.profile.map((str, index) => {
+                    return <FormVaridateMessage message={str} key={index} />;
+                })}
             </div>
             <div className={styles.form_button_wrapper}>
                 <Button type="submit" value="変更" disabled={clicked} />

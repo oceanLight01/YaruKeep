@@ -138,7 +138,7 @@ const useProvideAuth = () => {
                 return Promise.resolve();
             })
             .catch((error) => {
-                return error.response.data.errors;
+                return error.response;
             });
 
         const getUser = await axios

@@ -27,6 +27,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
                 Rule::unique('users')->ignore($user->id),
             ],
             'profile' => [
+                'nullable',
                 'string',
                 'max:300',
             ]
