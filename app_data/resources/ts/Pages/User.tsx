@@ -105,7 +105,7 @@ const User = () => {
 
             if (!unmounted) {
                 flashMessage?.setMessage('今日の目標を達成しました🎉 お疲れ様です!');
-                if (done.statusText === 'OK') {
+                if (done.status === 200) {
                     setHabits(
                         habits.map((habit, key) => {
                             return key === index ? { ...habit, is_done: true } : habit;

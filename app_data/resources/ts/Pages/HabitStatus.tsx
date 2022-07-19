@@ -101,7 +101,7 @@ const HabitStatus = () => {
                 id: habitId,
             });
 
-            if (!unmounted && done.statusText === 'OK') {
+            if (!unmounted && done.status === 200) {
                 setHabitItem({ ...habitItem!, is_done: true });
                 flashMessage?.setMessage('今日の目標を達成しました🎉 お疲れ様です!');
             }
