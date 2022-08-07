@@ -108,7 +108,7 @@ const User = () => {
                 if (done.status === 200) {
                     setHabits(
                         habits.map((habit, key) => {
-                            return key === index ? { ...habit, is_done: true } : habit;
+                            return key === index ? { ...done.data.data } : habit;
                         })
                     );
                 }

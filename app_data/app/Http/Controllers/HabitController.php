@@ -121,7 +121,7 @@ class HabitController extends Controller
                 return response(["message" => "This habit already done."], 400);
             }
 
-            return response(['status' => 'success'], 200);
+            return new HabitResource(Habit::find($habit_id));
         } else {
             return response(['message' => 'Faild to update Habit'], 403);
         }
